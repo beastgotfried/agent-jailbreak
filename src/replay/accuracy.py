@@ -69,13 +69,16 @@ def main():
     else:
         if not args.source_commit or args.toxic_test is None or args.xstest is None:
             parser.error("--source-commit, --toxic-test, and --xstest are required")
+        cards = json.loads((args.models / "model-cards.json").read_text())
         report = run(args.data, args.models, args.output, source_commit=args.source_commit,
                      toxic_test=args.toxic_test, xstest=args.xstest,
                      extra_report_fields={"evaluation_status": "exposed_synthetic_and_external_regression",
                                           "fresh_independent_confirmation": False,
                                           "additional_training_source": "Aegis human prompt labels",
                                           "cross_source_semantic_independence_proven": False,
-                                          "runtime_rules_unchanged": True, "canary_unchanged": True})
+                                          "runtime_rules_unchanged": True, "canary_unchanged": True,
+                                          "guardrail_components": cards.get("guardrail_components", ["tfidf_guardrail"]),
+                                          "cost_scope": "Guardrail counts are composite input evaluations; every constituent classifier executes without a model-output cache."})
         print(json.dumps({"overall": report["overall"]}, sort_keys=True))
 
 

@@ -33,6 +33,7 @@ The selected classifiers fit our **100,000-row synthetic study** with a 70,000/1
 | [XSTest](https://github.com/paul-rottger/xstest) | Recovery evaluation and external regression | CC-BY-4.0 |
 | [Dolly 15k](https://github.com/databrickslabs/dolly) | Unlabelled traffic-profile study | CC-BY-SA-3.0 |
 | [OASST1](https://huggingface.co/datasets/OpenAssistant/oasst1) | Acquisition only; profile study paused | Apache-2.0 |
+| [Nemotron Content Safety V2 / Aegis 2.0](https://huggingface.co/datasets/nvidia/Aegis-AI-Content-Safety-Dataset-2.0) | Human request labels for the accuracy experiment | CC-BY-4.0 |
 
 Public access does not imply unrestricted reuse. [Source records](releases/baseline-20261017/data-sources.json) contain pinned revisions, licenses, and roles.
 

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "phase": "two_score_calibration",
+  "reason": "The completed first phase improves Aegis discrimination but fails validation with one common score threshold. No test inference occurs in that phase.",
+  "goal": "Exceed 0.84 complete-stream operational accuracy on the unchanged exposed 60-episode regression; separately evaluate first-use Aegis test data.",
+  "fixed_base_models": {
+    "original": "Released TF-IDF guardrail",
+    "mixed": "First-phase tfidf_mixed_75_25, selected by the higher first-phase development objective, not test results",
+    "mixed_models_sha256": "b3684b1e8279fc26245942a32e51b7d528c7a20464e68dad9de22f8c380207f2",
+    "mixed_cards_sha256": "97dffd2b677929e4681fd6e070774ceb109ed9162307a8ab979d2c8510509de4",
+    "development_manifest_sha256": "3fef09fde1d650157d68801ed166ab7ddfe3748bd0b26f9e79adec5442a2ea14",
+    "additional_base_model_fits": 0,
+    "canary": "Original frozen canary; not an input to the guardrail ensemble"
+  },
+  "input": "Text only. Each guardrail evaluation executes both base guardrails and a calibration head. The head receives only their clipped logits, with scores clipped to [1e-6,1-1e-6]. No model-output cache, source IDs, labels, domain IDs, or fault metadata enter inference.",
+  "development_roles": {
+    "synthetic_head_fit": "Original 3000-row fallback_calibration role",
+    "synthetic_threshold": "Original 5000-row threshold role",
+    "aegis": "Split the existing development validation groups in half within group-label strata. Sort by SHA256([42,stack-role-v1,group_id]); first floor(n/2) groups fit heads, remainder select thresholds.",
+    "synthetic_role_scope": "Disjoint matched cases and rows, but the calibration roles share ten intent families; no claim of independent family-level validation.",
+    "test": "Neither original test nor prepared Aegis test enters calibration or candidate selection."
+  },
+  "fixed_heads": [
+    {"id": "two_score_logistic_C1", "algorithm": "LogisticRegression", "C": 1, "max_iter": 500, "random_state": 42, "class_weight": null},
+    {"id": "two_score_hgb100_leaf7", "algorithm": "HistGradientBoostingClassifier", "max_iter": 100, "max_leaf_nodes": 7, "min_samples_leaf": 30, "max_bins": 63, "learning_rate": 0.05, "l2_regularization": 10, "early_stopping": false, "random_state": 42}
+  ],
+  "head_sample_weights": "Equal source shares and class shares; equal group weight within each source/class.",
+  "maximum_head_fits": 2,
+  "retries_after_nonconvergence": 0,
+  "selection": {
+    "objective": "Equal-source group-balanced validation accuracy",
+    "maximum_raw_and_group_weighted_per_source_fpr": 0.05,
+    "minimum_raw_and_group_weighted_synthetic_balanced_accuracy": 0.90,
+    "minimum_raw_and_group_weighted_aegis_harmful_recall": 0.50,
+    "minimum_gain_over_released_baseline_on_the_same_threshold_roles": 0.005,
+    "ties": "Objectives rounded to 12 decimals, then higher mean recall, then earlier fixed head. Threshold ties prefer higher threshold.",
+    "test_driven_changes": false
+  },
+  "runtime": "Unchanged scenario rules, seeds, streams, fault timing, probes, cadence, response delay, verification tolerance, approvals, containment, and complete-stream denominators. Guardrail counts refer to composite evaluations, not primitive classifier calls.",
+  "execution": "Native s390x LinuxONE, pinned environment, one thread, exact committed source. Preserve all first-phase artifacts and both heads. Evaluate only the validation-selected head.",
+  "promotion": "Do not mutate the published release. Report both successful and unsuccessful results."
+}

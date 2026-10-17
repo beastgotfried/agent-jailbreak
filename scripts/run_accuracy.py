@@ -41,7 +41,11 @@ def main():
     for name in ("source-archive", "baseline-study", "raw-aegis", "toxic-train", "toxic-test", "xstest", "pools", "dolly", "output"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--source-commit", required=True)
+    parser.add_argument("--phase", choices=("mixed", "stack"), default="mixed")
+    parser.add_argument("--first-phase", type=Path)
     args = parser.parse_args()
+    if args.phase == "stack" and args.first_phase is None:
+        parser.error("--first-phase is required for stack calibration")
     if platform.machine() != "s390x" or platform.system() != "Linux":
         raise ValueError("native_s390x_required")
     verify_source(args.source_archive, args.source_commit)
@@ -50,7 +54,7 @@ def main():
     out = args.output.resolve()
     out.mkdir(mode=0o700, parents=True, exist_ok=False)
     (out / "tmp").mkdir(mode=0o700)
-    protocol = SOURCE / "experiments/accuracy-above-84/protocol.json"
+    protocol = SOURCE / "experiments/accuracy-above-84" / ("stack-protocol.json" if args.phase == "stack" else "protocol.json")
     env = dict(os.environ, PYTHONPATH=str(SOURCE), PYTHONDONTWRITEBYTECODE="1", PYTHONUNBUFFERED="1",
                OMP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1", MKL_NUM_THREADS="1", NUMEXPR_NUM_THREADS="1",
                TOKENIZERS_PARALLELISM="false", HF_HUB_OFFLINE="1", TMPDIR=str(out / "tmp"))
@@ -71,17 +75,31 @@ def main():
         if result.returncode:
             raise RuntimeError("experiment_stage_failed_inspect_private_log")
 
-    receipt = {"source_commit": args.source_commit, "source_archive_sha256": file_hash(args.source_archive),
+    receipt = {"phase": args.phase, "source_commit": args.source_commit, "source_archive_sha256": file_hash(args.source_archive),
                "protocol_sha256": file_hash(protocol), "architecture": platform.machine(), "stages": stages}
     try:
         stage("01-tests", [sys.executable, "-m", "pytest", "-q", "-rs", "-p", "no:cacheprovider", "--basetemp", out / "tmp/pytest"], 180)
-        stage("02-data", [sys.executable, "-m", "src.data.aegis", "--raw", args.raw_aegis,
-              "--output", out / "development", "--synthetic", args.baseline_study / "data",
-              "--toxic-train", args.toxic_train, "--toxic-test", args.toxic_test, "--xstest", args.xstest,
-              "--pools", args.pools, "--dolly", args.dolly, "--source-commit", args.source_commit], 300)
-        stage("03-fit", [sys.executable, "-m", "src.models.accuracy", "--synthetic", args.baseline_study / "data",
+        if args.phase == "mixed":
+            stage("02-data", [sys.executable, "-m", "src.data.aegis", "--raw", args.raw_aegis,
+                  "--output", out / "development", "--synthetic", args.baseline_study / "data",
+                  "--toxic-train", args.toxic_train, "--toxic-test", args.toxic_test, "--xstest", args.xstest,
+                  "--pools", args.pools, "--dolly", args.dolly, "--source-commit", args.source_commit], 300)
+            module, extra = "src.models.accuracy", []
+        else:
+            previous = json.loads((args.first_phase / "execution-receipt.json").read_text())
+            if previous["status"] != "completed_no_eligible_candidate" or previous["test_scored"] is not False:
+                raise ValueError("unexpected_first_phase_state")
+            freeze = json.loads((args.first_phase / "freeze-manifest.json").read_text())
+            for name, expected in freeze["files"].items():
+                if file_hash(args.first_phase / name) != expected:
+                    raise ValueError("first_phase_artifact_changed")
+            (out / "development").symlink_to(os.path.relpath(args.first_phase / "development", out), target_is_directory=True)
+            receipt["first_phase_freeze_sha256"] = file_hash(args.first_phase / "freeze-manifest.json")
+            module = "src.models.calibrated"
+            extra = ["--mixed-models", args.first_phase / "candidates/tfidf_mixed_75_25"]
+        stage("03-fit", [sys.executable, "-m", module, "--synthetic", args.baseline_study / "data",
               "--development", out / "development", "--baseline-models", args.baseline_study / "models",
-              "--output", out / "candidates", "--protocol", protocol, "--source-commit", args.source_commit], 1200)
+              "--output", out / "candidates", "--protocol", protocol, "--source-commit", args.source_commit, *extra], 1200)
         selection = json.loads((out / "candidates/selection.json").read_text())
         receipt["selected"] = selection["selected"]
         if selection["selected"] is None:
