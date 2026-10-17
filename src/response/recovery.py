@@ -462,6 +462,60 @@ class RecoveryManager:
             }
         return make_plan(backend=None, record_dict=record, handle=handle)
 
+    def propose_restart(self, verification_baseline, *, verification_prompts,
+                        restart_factory: Callable[[], Backend], approved=False, actor=""):
+        """Verify a trusted replacement when active scores cannot be collected.
+
+        These probes supply archived baseline targets, not current observations.
+        No affine fit or fabricated current score enters this path. Activation
+        still uses the manager-owned store and the existing fresh apply check.
+        """
+        if type(approved) is not bool:
+            raise RecoveryError("invalid_recovery_authority")
+        if not approved:
+            return self.propose([], [], verification_prompts=[], restart_factory=restart_factory, approved=False)
+        if not isinstance(actor, str) or re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", actor) is None:
+            raise RecoveryError("invalid_recovery_actor")
+        rows = validate_batch(verification_baseline, "verification")
+        prompts = tuple(verification_prompts)
+        if set(self.policy.calibration_ids) & {row.prompt_id for row in rows}:
+            raise RecoveryError("policy_probe_overlap")
+        if len(prompts) != len(rows) or any(not isinstance(text, str) or identity_text(text) != row.prompt_id
+                                          for row, text in zip(rows, prompts)):
+            raise RecoveryError("verification_text_identity_mismatch")
+        with self._lock:
+            generation, binding = self._generation, self._backend.model_pair_id
+        record = {"applied": False, "status": "recovery_rejected", "approval_actor": actor,
+                  "policy_weights_changed": False, "policy_thresholds_changed": False,
+                  "active_current_observations_available": False,
+                  "attempts": [{"method": "paired_affine_correction", "rejected": "current_scores_unavailable"}]}
+        candidate = None
+        try:
+            replacement = restart_factory()
+            if replacement.model_pair_id != binding:
+                raise RecoveryError("restart_model_binding_mismatch")
+            values = replacement.score(list(prompts))
+            _validate_score_batch(prompts, values)
+            check = verify_outputs(self.policy, rows, [v["guardrail_score"] for v in values],
+                                   canary_outputs=[v["canary_score"] for v in values])
+            record["attempts"].append({"method": "trusted_scorer_restart", "verification": check})
+            if check["accepted"]:
+                candidate = replacement
+                record.update(status="verified", method="trusted_scorer_restart")
+        except Exception as exc:
+            record["attempts"].append({"method": "trusted_scorer_restart",
+                                       "rejected": _safe_reject_code(exc, "restart_unavailable_or_invalid")})
+        evidence = identity({"generation": generation, "policy_id": self.policy.policy_id,
+                             "model_pair_id": binding, "path": "restart_without_current_scores",
+                             "verification_ids": tuple(sorted(row.prompt_id for row in rows))})
+        handle = self._next_handle(evidence)
+        with self._lock:
+            self._store[handle] = {"generation": generation, "policy_id": self.policy.policy_id,
+                "model_pair_id": binding, "candidate": candidate, "verification_prompts": prompts,
+                "verification_probes": rows, "record": copy.deepcopy(record), "consumed": False,
+                "evidence_digest": evidence}
+        return RecoveryPlan(generation, self.policy.policy_id, binding, candidate, copy.deepcopy(record), handle)
+
     def apply(self, plan):
         with self._lock:
             return self._apply_locked(plan)

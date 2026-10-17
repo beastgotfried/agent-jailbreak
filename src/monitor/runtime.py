@@ -138,6 +138,17 @@ class RuntimeWatch:
             raise RuntimeCheckError("runtime_error_sequence_mismatch")
         self._open(index, generation, "runtime_output_unavailable")
 
+    def verified_release(self, generation):
+        """Close a held incident after authorized full-pair verification."""
+        if type(generation) is not int or generation < self._generation:
+            raise RuntimeCheckError("invalid_runtime_generation")
+        if self._active is not None:
+            self._active.update(status="released_after_full_verification", closed_index=self._last_index,
+                                final_generation=generation)
+            self._active = None
+        self._generation = generation
+        self._last_health = "matched_full_verification"
+
     def begin_response(self, index):
         if (self._active is None or self._active["attempted"]
                 or index != self._last_index or index < self._active["due_index"]):

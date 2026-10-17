@@ -176,7 +176,7 @@ def test_invalid_output_immediately_prevents_execution(mode):
     assert runtime.watch.incidents[0]["confirmed_index"] == 0
 
 
-def test_fault_after_activation_enters_hold_on_score_failure():
+def test_fault_after_activation_enters_hold_and_reaches_verified_restart():
     runtime, registry = setup("scale")
     stream(runtime, registry, 8)
     assert runtime.manager.generation == 1
@@ -184,6 +184,13 @@ def test_fault_after_activation_enters_hold_on_score_failure():
     event = runtime.step(8, "neutral live harmful example 0")
     assert event["decision"] == "hold" and not event["execute"]
     assert len(runtime.watch.incidents) == 2
+    runtime.step(9, "neutral live harmful example 1")
+    response = runtime.step(10, "neutral live harmful example 2")
+    assert response["response"]["applied"]
+    assert response["response"]["method"] == "trusted_scorer_restart"
+    assert response["response"]["active_current_observations_available"] is False
+    assert runtime.manager.generation == 2 and runtime.held
+    assert runtime.release_hold(approved=True, actor="unit-test")["released"]
 
 
 def test_hold_release_requires_fresh_full_pair_verification():
@@ -194,6 +201,68 @@ def test_hold_release_requires_fresh_full_pair_verification():
     receipt = runtime.release_hold(approved=True, actor="unit-test")
     assert receipt["released"] and receipt["verification"]["pair_verified"]
     assert not runtime.held
+
+
+def test_release_then_refault_opens_a_new_incident_without_healthy_tick():
+    runtime, registry = setup("constant", persistent=True)
+    stream(runtime, registry, 8)
+    registry[0].mode = "healthy"
+    assert runtime.release_hold(approved=True, actor="unit-test")["released"]
+    assert runtime.watch.incidents[0]["status"] == "released_after_full_verification"
+    registry[0].mode = "constant"
+    events = [runtime.step(i, f"neutral live harmful example {i % 20}") for i in range(8, 16)]
+    assert len(runtime.watch.incidents) == 2 and runtime.response_count == 2
+    assert runtime.watch.incidents[1]["confirmed_index"] == 11
+    assert runtime.watch.incidents[1]["response_index"] == 13
+    assert runtime.held and all(not event["execute"] for event in events[5:])
+
+
+@pytest.mark.parametrize("mode", ["error", "invalid"])
+def test_failed_current_samples_still_allow_independently_verified_restart(mode):
+    runtime, registry = setup(mode)
+    events = stream(runtime, registry, 4)
+    response = events[2]["response"]
+    assert response["applied"] and response["method"] == "trusted_scorer_restart"
+    assert response["active_current_observations_available"] is False
+    assert response["attempts"][0]["rejected"] == "current_scores_unavailable"
+    assert len(registry) == 2 and runtime.manager.generation == 1
+    assert runtime.held and all(not event["execute"] for event in events)
+    assert runtime.release_hold(approved=True, actor="unit-test")["released"]
+    assert runtime.step(4, "neutral live harmful example 0")["decision"] == "refuse"
+
+
+def test_failed_samples_do_not_bypass_restart_approval():
+    runtime, registry = setup("error", approve=False)
+    events = stream(runtime, registry, 4)
+    assert events[2]["response"]["status"] == "approval_required"
+    assert len(registry) == 1 and runtime.manager.generation == 0
+    assert runtime.held
+
+
+def test_unreadable_runtime_and_bad_restart_remain_held():
+    runtime, registry = setup("error", persistent=True)
+    events = stream(runtime, registry, 4)
+    assert events[2]["response"]["status"] == "recovery_rejected"
+    assert len(registry) == 2 and runtime.manager.generation == 0
+    assert runtime.held and all(not event["execute"] for event in events)
+
+
+def test_restart_only_plan_keeps_authority_identity_and_fresh_verification():
+    runtime, registry = setup("error")
+    reference = runtime.verification
+    texts = runtime.verification_texts
+    candidate = Backend()
+    with pytest.raises(RecoveryError, match="verification_text_identity_mismatch"):
+        runtime.manager.propose_restart(reference, verification_prompts=texts[::-1],
+            restart_factory=lambda: candidate, approved=True, actor="unit-test")
+    with pytest.raises(RecoveryError, match="invalid_probe_batch"):
+        runtime.manager.propose_restart(runtime.fit, verification_prompts=runtime.fit_texts,
+            restart_factory=lambda: candidate, approved=True, actor="unit-test")
+    plan = runtime.manager.propose_restart(reference, verification_prompts=texts,
+        restart_factory=lambda: candidate, approved=True, actor="unit-test")
+    candidate.mode = "canary"
+    assert not runtime.manager.apply(plan)["applied"]
+    assert runtime.manager.generation == 0
 
 
 def test_selective_fault_outside_panel_remains_explicit_blind_spot():

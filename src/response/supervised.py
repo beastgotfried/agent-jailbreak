@@ -74,12 +74,19 @@ class SupervisedRuntime:
         incident_id = self.watch.begin_response(index)
         self.response_count += 1
         try:
-            with self._phase("response_fit"):
-                fit = self._sample(self.fit, self.fit_texts)
-                verification = self._sample(self.verification, self.verification_texts)
-            with self._phase("response_proposal"):
-                plan = self.manager.propose(fit, verification, verification_prompts=self.verification_texts,
-                    restart_factory=self.restart_factory, approved=self.approve_recovery, actor=self.actor)
+            try:
+                with self._phase("response_fit"):
+                    fit = self._sample(self.fit, self.fit_texts)
+                    verification = self._sample(self.verification, self.verification_texts)
+            except Exception:
+                with self._phase("response_proposal"):
+                    plan = self.manager.propose_restart(self.verification,
+                        verification_prompts=self.verification_texts, restart_factory=self.restart_factory,
+                        approved=self.approve_recovery, actor=self.actor)
+            else:
+                with self._phase("response_proposal"):
+                    plan = self.manager.propose(fit, verification, verification_prompts=self.verification_texts,
+                        restart_factory=self.restart_factory, approved=self.approve_recovery, actor=self.actor)
             with self._phase("response_activation"):
                 receipt = self.manager.apply(plan)
         except Exception:
@@ -143,5 +150,6 @@ class SupervisedRuntime:
                 return {"status": "release_rejected", "released": False, "code": "verification_unavailable"}
             if not check["accepted"]:
                 return {"status": "release_rejected", "released": False, "verification": check}
+            self.watch.verified_release(self.manager.generation)
             self._held, self._unavailable, self._hold_reason = False, False, None
             return {"status": "released", "released": True, "actor": actor, "verification": check}
