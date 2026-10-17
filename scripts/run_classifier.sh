@@ -19,7 +19,7 @@ case "$COMMAND" in
     PYTHON_ARGS=("-m" "pytest" "-q" "-p" "no:cacheprovider" "/workspace/tests" "$@")
     ;;
   *)
-    echo "Usage: scripts/run_classifier.sh {train|export|score|evaluate|test} [arguments]" >&2
+    echo "Usage: scripts/run_classifier.sh {train|export|score|evaluate|canary|test} [arguments]" >&2
     exit 2
     ;;
 esac
