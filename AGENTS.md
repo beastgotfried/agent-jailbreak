@@ -8,7 +8,11 @@ A change signal does not establish harm. Independent labels and review must esta
 
 Current work includes frozen baseline classifiers, verified prompt pools, a native score monitor, gated conformal response code, and deterministic paired replay.
 
-The native benchmark detects 5/5 simulated score faults and 3/5 attack-mixture changes. Its five stationary controls produce no alarms. All eight response candidates fail the review-rate gate, so no repair applies. Read `docs/BENCHMARK-RESULTS.md` before any effectiveness claim.
+The ORIGINAL native benchmark detects 5/5 simulated score faults and 3/5 attack-mixture changes. Its five stationary controls produce no alarms. All eight quantile candidates fail the review-rate gate. Read `docs/BENCHMARK-RESULTS.md` for that preserved result.
+
+The new `src/response/recovery.py` implements probe-fitted affine correction and verified trusted-scorer restart. It restores baseline outputs in 35/40 constructed fault episodes on XSTest. A persistent fault rejects all five responses. The baseline still requires 84% review. Read the current `README.md` before interpreting these results.
+
+The unchanged monitor alarms in all five NEW safe controls. Twenty-one recoveries follow pre-shift alarms and delayed probes, not correct fault detection. The controller applies no response in the ten no-fault episodes. Do not combine these results with the original control counts.
 
 The dashboard, production approval service, real-agent integration, and approved safe fallback remain unbuilt. Continuous multi-drift operation is not qualified.
 
@@ -48,7 +52,9 @@ The threshold is an empirical whole-episode maximum quantile. Calibration replay
 
 Validate paired event IDs, contiguous sequences, finite scores, and model/configuration identities. Treat broken telemetry as a data fault, not verified safety degradation.
 
-The monitor has no action authority. The offline response requires explicit simulated approval and disjoint candidate verification. It changes prediction sets, not classifier weights or raw recall. Every measured candidate fails the fixed utility gate. No dimension projection is mandatory for these scalar scores.
+The monitor has no action authority. Each offline response requires explicit simulated approval and disjoint candidate verification.
+
+The original quantile response changes prediction sets; all eight measured candidates fail its fixed utility gate. The separate runtime recovery path preserves the original policy and verifies baseline score recovery for BOTH models. It does not improve original classifier quality. No dimension projection is mandatory for these scalar scores.
 
 ## Work rules
 
