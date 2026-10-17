@@ -9,7 +9,7 @@
 # Data and models (live on the VM)
 data/raw/
 data/pools/
-models/
+/models/
 results/
 logs/
 cache/
