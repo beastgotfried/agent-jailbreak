@@ -15,6 +15,9 @@ case "$COMMAND" in
   train|export|score|evaluate)
     PYTHON_ARGS=("/workspace/scripts/${COMMAND}_classifier.py" "$@")
     ;;
+  canary)
+    PYTHON_ARGS=("/workspace/scripts/canary_classifier.py" "$@")
+    ;;
   test)
     PYTHON_ARGS=("-m" "pytest" "-q" "-p" "no:cacheprovider" "/workspace/tests" "$@")
     ;;
