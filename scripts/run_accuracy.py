@@ -41,11 +41,11 @@ def main():
     for name in ("source-archive", "baseline-study", "raw-aegis", "toxic-train", "toxic-test", "xstest", "pools", "dolly", "output"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--source-commit", required=True)
-    parser.add_argument("--phase", choices=("mixed", "stack"), default="mixed")
+    parser.add_argument("--phase", choices=("mixed", "stack", "auxiliary"), default="mixed")
     parser.add_argument("--first-phase", type=Path)
     args = parser.parse_args()
-    if args.phase == "stack" and args.first_phase is None:
-        parser.error("--first-phase is required for stack calibration")
+    if args.phase != "mixed" and args.first_phase is None:
+        parser.error("--first-phase is required for calibration")
     if platform.machine() != "s390x" or platform.system() != "Linux":
         raise ValueError("native_s390x_required")
     verify_source(args.source_archive, args.source_commit)
@@ -54,7 +54,8 @@ def main():
     out = args.output.resolve()
     out.mkdir(mode=0o700, parents=True, exist_ok=False)
     (out / "tmp").mkdir(mode=0o700)
-    protocol = SOURCE / "experiments/accuracy-above-84" / ("stack-protocol.json" if args.phase == "stack" else "protocol.json")
+    protocol_name = {"mixed": "protocol.json", "stack": "stack-protocol.json", "auxiliary": "auxiliary-protocol.json"}[args.phase]
+    protocol = SOURCE / "experiments/accuracy-above-84" / protocol_name
     env = dict(os.environ, PYTHONPATH=str(SOURCE), PYTHONDONTWRITEBYTECODE="1", PYTHONUNBUFFERED="1",
                OMP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1", MKL_NUM_THREADS="1", NUMEXPR_NUM_THREADS="1",
                TOKENIZERS_PARALLELISM="false", HF_HUB_OFFLINE="1", TMPDIR=str(out / "tmp"))
@@ -97,6 +98,15 @@ def main():
             receipt["first_phase_freeze_sha256"] = file_hash(args.first_phase / "freeze-manifest.json")
             module = "src.models.calibrated"
             extra = ["--mixed-models", args.first_phase / "candidates/tfidf_mixed_75_25"]
+            if args.phase == "auxiliary":
+                stage("02-auxiliary-fit", [sys.executable, "-m", "src.models.auxiliary",
+                      "--development", out / "development", "--baseline-models", args.baseline_study / "models",
+                      "--output", out / "auxiliary", "--protocol", protocol,
+                      "--head-template", SOURCE / "experiments/accuracy-above-84/stack-protocol.json",
+                      "--source-commit", args.source_commit], 600)
+                protocol = out / "auxiliary/head-protocol.json"
+                receipt["derived_head_protocol_sha256"] = file_hash(protocol)
+                extra = ["--mixed-models", out / "auxiliary"]
         stage("03-fit", [sys.executable, "-m", module, "--synthetic", args.baseline_study / "data",
               "--development", out / "development", "--baseline-models", args.baseline_study / "models",
               "--output", out / "candidates", "--protocol", protocol, "--source-commit", args.source_commit, *extra], 1200)

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "phase": "independent_human_data_expert",
+  "reason": "The first two phases fail development gates without test inference. Both prior experts share synthetic training data. This phase removes that shared training source from the auxiliary expert.",
+  "new_fit": {
+    "data": "Frozen prepared Aegis train only; no synthetic, validation, or test rows",
+    "features": "Unchanged word/character TF-IDF specification",
+    "estimator": "LogisticRegression(C=4,max_iter=500,class_weight=None,random_state=42)",
+    "weights": "Equal class totals and equal lexical-group weights within each class",
+    "maximum_auxiliary_fits": 1,
+    "nonconvergence_retry": false,
+    "canary": "Frozen released canary; no fit"
+  },
+  "heads": "Use the exact two fixed heads, calibration role split, validation objective, FPR caps, recall/accuracy floors, and tie rules from stack-protocol.json. Substitute only the Aegis-only auxiliary expert. No score or source metadata enters text inference.",
+  "bindings": "Freeze the auxiliary file hashes and derived head protocol before fitting either head. Record the parent protocol hash in the derived protocol.",
+  "maximum_head_fits": 2,
+  "test_driven_changes": false,
+  "runtime_rule_changes": false,
+  "released_model_changes": false,
+  "stop": "If no head passes the unchanged gates, preserve the release and stop this experiment batch. Do not relax gates or inspect test scores to choose another candidate."
+}
