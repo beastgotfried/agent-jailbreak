@@ -209,6 +209,62 @@ def test_new_method_end_to_end_and_unrecoverable_controls():
         assert all("text" not in event for event in events)
 
 
+def test_shared_guardrail_canary_fault_requires_full_pair_restart():
+    transform = lambda value: value * 0.25
+    fit, _ = batch("fit", transform)
+    verification, texts = batch("verification", transform)
+    fit = [replace(row, healthy_canary_score=row.healthy_score, current_canary_score=row.current_score) for row in fit]
+    verification = [replace(row, healthy_canary_score=row.healthy_score, current_canary_score=row.current_score) for row in verification]
+    manager = RecoveryManager(StubBackend(transform), POLICY)
+    plan = manager.propose(fit, verification, verification_prompts=texts,
+        restart_factory=StubBackend, approved=True, actor="unit-test")
+    assert plan.record["method"] == "trusted_scorer_restart"
+    assert plan.record["attempts"][0]["verification"]["reasons"] == ["baseline_canary_scores_not_restored"]
+    assert plan.record["attempts"][-1]["verification"]["pair_verified"]
+    assert manager.apply(plan)["applied"]
+
+
+def test_canary_only_corruption_does_not_count_as_no_degradation():
+    fit, _ = batch("fit", lambda s: s)
+    verification, texts = batch("verification", lambda s: s)
+    fit = [replace(row, healthy_canary_score=row.healthy_score, current_canary_score=0.1) for row in fit]
+    verification = [replace(row, healthy_canary_score=row.healthy_score, current_canary_score=0.1) for row in verification]
+    manager = RecoveryManager(StubBackend(), POLICY)
+    plan = manager.propose(fit, verification, verification_prompts=texts,
+        restart_factory=StubBackend, approved=True, actor="unit-test")
+    assert plan.record["method"] == "trusted_scorer_restart"
+
+
+def test_corrected_binary_flag_matches_corrected_score():
+    class FlagBackend(StubBackend):
+        guardrail_threshold = 0.5
+        def score(self, prompts):
+            return [{**row, "guardrail_unsafe": row["guardrail_score"] >= 0.5} for row in super().score(prompts)]
+    transform = lambda value: value * 0.25
+    fit, _ = batch("fit", transform)
+    verification, texts = batch("verification", transform)
+    manager = RecoveryManager(FlagBackend(transform), POLICY)
+    plan = manager.propose(fit, verification, verification_prompts=texts,
+        restart_factory=StubBackend, approved=True, actor="unit-test")
+    manager.apply(plan)
+    rows = manager.backend.score(texts)
+    assert all(row["guardrail_unsafe"] == (row["guardrail_score"] >= 0.5) for row in rows)
+
+
+def test_fault_outside_probes_remains_unresolved_not_claimed_repaired():
+    class SelectiveBackend(StubBackend):
+        def score(self, prompts):
+            return [{"guardrail_score": 0.01 if "evaluation" in text else healthy(text),
+                "canary_score": healthy(text)} for text in prompts]
+    manager = RecoveryManager(SelectiveBackend(), POLICY)
+    fit, _ = batch("fit", lambda s: s)
+    verification, texts = batch("verification", lambda s: s)
+    plan = manager.propose(fit, verification, verification_prompts=texts,
+        restart_factory=StubBackend, approved=True, actor="unit-test")
+    assert manager.apply(plan)["status"] == "no_probe_degradation"
+    assert manager.backend.score(["neutral evaluation harmful example 0"])[0]["guardrail_score"] == 0.01
+
+
 def test_source_family_separation_and_unknown_values_fail():
     from src.replay.recovery_data import family_for
     assert family_for("contrast_homonyms") == family_for("homonyms")

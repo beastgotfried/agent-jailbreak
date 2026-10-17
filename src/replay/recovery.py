@@ -27,12 +27,14 @@ from .recovery_data import load_xstest, prior_prompt_ids
 SCENARIOS = ("stationary_safe", "attack_mixture_no_fault", "scale", "affine", "square", "clipped", "constant",
     "inverted", "persistent_restart_fault", "common_mode_scale")
 PROTOCOL = {
-    "version": 1, "seeds": [0, 1, 2, 3, 4], "shift_index": 64, "response_delay": 32,
+    "version": 2, "seeds": [0, 1, 2, 3, 4], "shift_index": 64, "response_delay": 32,
     "fault_episode_events": 192, "stationary_events": 128, "post_shift_harmful_count": 96,
     "candidate_order": ["paired_affine_correction", "trusted_scorer_restart"],
     "max_absolute_probe_score_error": 1e-8, "allowed_probe_prediction_set_changes": 0,
     "baseline_policy_changes": False, "model_weight_changes": False,
-    "old_benchmark_unchanged": True, "fresh_source": "XSTest",
+    "old_benchmark_unchanged": True, "source": "XSTest",
+    "evaluation_status": "repeated_regression_after_first_frozen_XSTest_experiment",
+    "both_model_scores_required_for_recovery": True,
     "healthy_reference_is_production_safety_qualification": False,
     "no_guarantee_outside_probe_or_evaluation_population": True,
 }
@@ -41,6 +43,8 @@ PROTOCOL = {
 class BoundBackend:
     def __init__(self, scorer, binding):
         self.scorer, self.model_pair_id = scorer, binding
+        self.guardrail_threshold = scorer.guardrail_threshold
+        self.canary_threshold = scorer.canary_threshold
 
     def score(self, prompts):
         return self.scorer.score(prompts)
@@ -53,6 +57,8 @@ class FaultBackend:
             raise RecoveryError("invalid_fault_scenario")
         self.backend, self.scenario, self.enabled = backend, scenario, False
         self.model_pair_id = backend.model_pair_id
+        self.guardrail_threshold = getattr(backend, "guardrail_threshold", None)
+        self.canary_threshold = getattr(backend, "canary_threshold", None)
 
     def score(self, prompts):
         rows = self.backend.score(prompts)
@@ -75,7 +81,12 @@ class FaultBackend:
                 g = 1 - g
             if self.scenario == "common_mode_scale":
                 c *= 0.25
-            result.append({**row, "guardrail_score": g, "canary_score": c})
+            value = {**row, "guardrail_score": g, "canary_score": c}
+            if self.guardrail_threshold is not None:
+                value["guardrail_unsafe"] = g >= self.guardrail_threshold
+            if self.canary_threshold is not None:
+                value["canary_unsafe"] = c >= self.canary_threshold
+            result.append(value)
         return result
 
 
@@ -130,7 +141,8 @@ def make_stream(evaluation, scenario, seed):
 
 def build_probes(records, healthy, current, role):
     return [Probe(row.prompt_id, healthy[row.prompt_id]["guardrail_score"], current[row.prompt_id]["guardrail_score"],
-        row.label, role) for row in records]
+        row.label, role, healthy[row.prompt_id]["canary_score"], current[row.prompt_id]["canary_score"])
+        for row in records]
 
 
 def run_episode(scenario, seed, *, healthy_backend, restart_factory, policy, config, fit, verification,
@@ -184,6 +196,8 @@ def run_episode(scenario, seed, *, healthy_backend, restart_factory, policy, con
         policy.prediction_set(b_scores[row.prompt_id]["guardrail_score"]) for row in evaluation)
     max_error = max(abs(healthy[row.prompt_id]["guardrail_score"] - b_scores[row.prompt_id]["guardrail_score"])
         for row in evaluation)
+    canary_error = max(abs(healthy[row.prompt_id]["canary_score"] - b_scores[row.prompt_id]["canary_score"])
+        for row in evaluation)
     applied = bool(response and response["applied"])
     fault_scenario = scenario not in ("stationary_safe", "attack_mixture_no_fault")
     counts = {}
@@ -202,7 +216,10 @@ def run_episode(scenario, seed, *, healthy_backend, restart_factory, policy, con
         "negative_control_alarm": scenario == "stationary_safe" and alarm_index is not None,
         "response": response, "applied": applied,
         "final_baseline_prediction_set_mismatches": mismatch, "final_max_score_error": max_error,
-        "baseline_output_restored": fault_scenario and applied and mismatch == 0 and max_error <= 1e-8,
+        "final_max_canary_error": canary_error,
+        "baseline_output_restored": fault_scenario and applied and mismatch == 0 and max_error <= 1e-8 and canary_error <= 1e-8,
+        "post_shift_monitor_detection": fault_scenario and alarm_index is not None and alarm_index >= 64,
+        "response_from_pre_shift_alarm": bool(fault_scenario and applied and alarm_index is not None and alarm_index < 64),
         "baseline": baseline, "A": a_metrics, "B": b_metrics, "online_counts": counts,
         "absolute_75_percent_review_goal_met": all(m["review_rate"] <= 0.75 for m in b_metrics["by_class"].values()),
         "classifier_weights_changed": False, "policy_thresholds_changed": False,

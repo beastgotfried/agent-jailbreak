@@ -9,6 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 import re
+import threading
 from typing import Callable, Protocol
 
 from .conformal import ConformalPolicy, LabelledScore, identity, measure, valid_hash, valid_score
@@ -32,12 +33,19 @@ class Probe:
     current_score: float
     label: int
     role: str
+    healthy_canary_score: float | None = None
+    current_canary_score: float | None = None
 
     def __post_init__(self):
         if not valid_hash(self.prompt_id) or not all(valid_score(s) for s in (self.healthy_score, self.current_score)):
             raise RecoveryError("invalid_recovery_probe")
         if type(self.label) is not int or self.label not in (0, 1) or self.role not in ("fit", "verification"):
             raise RecoveryError("invalid_probe_label_or_role")
+        if (self.healthy_canary_score is None) != (self.current_canary_score is None):
+            raise RecoveryError("incomplete_canary_probe")
+        if self.healthy_canary_score is not None and not all(valid_score(value)
+                for value in (self.healthy_canary_score, self.current_canary_score)):
+            raise RecoveryError("invalid_canary_probe")
 
 
 @dataclass(frozen=True)
@@ -103,7 +111,7 @@ def metrics(policy, probes, scores):
         for row, score in zip(probes, scores)])
 
 
-def verify_outputs(policy, probes, outputs, *, tolerance=1e-8):
+def verify_outputs(policy, probes, outputs, *, canary_outputs=None, tolerance=1e-8):
     rows = validate_batch(probes, "verification")
     outputs = tuple(outputs)
     if len(outputs) != len(rows) or any(not valid_score(value) for value in outputs):
@@ -116,6 +124,18 @@ def verify_outputs(policy, probes, outputs, *, tolerance=1e-8):
     changes = sum(policy.prediction_set(value) != policy.prediction_set(row.healthy_score)
         for row, value in zip(rows, outputs))
     reasons = []
+    canary_error = None
+    if any(row.healthy_canary_score is not None for row in rows):
+        if any(row.healthy_canary_score is None for row in rows):
+            raise RecoveryError("mixed_canary_probe_schema")
+        if canary_outputs is None:
+            raise RecoveryError("missing_canary_verification")
+        canary_outputs = tuple(canary_outputs)
+        if len(canary_outputs) != len(rows) or any(not valid_score(value) for value in canary_outputs):
+            raise RecoveryError("invalid_canary_verification")
+        canary_error = max(abs(value - row.healthy_canary_score) for row, value in zip(rows, canary_outputs))
+        if canary_error > tolerance:
+            reasons.append("baseline_canary_scores_not_restored")
     if score_error > tolerance:
         reasons.append("baseline_scores_not_restored")
     if changes:
@@ -129,6 +149,7 @@ def verify_outputs(policy, probes, outputs, *, tolerance=1e-8):
     if candidate["by_class"]["0"]["refused"] > baseline["by_class"]["0"]["refused"]:
         reasons.append("safe_refusal_regression")
     return {"accepted": not reasons, "reasons": reasons, "max_score_error": score_error,
+        "max_canary_score_error": canary_error, "pair_verified": canary_error is not None,
         "prediction_set_changes": changes, "baseline": baseline, "candidate": candidate,
         "scope": "finite_probe_agreement_not_universal_recovery_or_safety"}
 
@@ -139,12 +160,22 @@ class CorrectedBackend:
             raise RecoveryError("recovery_model_binding_mismatch")
         self.backend, self.correction = backend, correction
         self.model_pair_id = backend.model_pair_id
+        self.guardrail_threshold = getattr(backend, "guardrail_threshold", None)
 
     def score(self, prompts):
         result = self.backend.score(prompts)
         if len(result) != len(prompts):
             raise RecoveryError("runtime_score_length_mismatch")
-        return [{**row, "guardrail_score": self.correction.apply(row["guardrail_score"])} for row in result]
+        corrected = []
+        for row in result:
+            score = self.correction.apply(row["guardrail_score"])
+            value = {**row, "guardrail_score": score}
+            if "guardrail_unsafe" in row:
+                if not valid_score(self.guardrail_threshold):
+                    raise RecoveryError("missing_binary_threshold_binding")
+                value["guardrail_unsafe"] = score >= self.guardrail_threshold
+            corrected.append(value)
+        return corrected
 
 
 @dataclass
@@ -165,13 +196,16 @@ class RecoveryManager:
         self.backend, self.policy = backend, policy
         self.generation = 0
         self.previous_backend = None
+        self._lock = threading.RLock()
 
     def propose(self, fit, verification, *, verification_prompts, restart_factory: Callable[[], Backend],
                 approved=False, actor="", allow_restart=True):
+        with self._lock:
+            generation, current_backend = self.generation, self.backend
         record = {"applied": False, "status": "approval_required", "attempts": [],
             "policy_weights_changed": False, "policy_thresholds_changed": False}
         def result(backend=None):
-            return RecoveryPlan(self.generation, self.policy.policy_id, self.backend.model_pair_id, backend, record)
+            return RecoveryPlan(generation, self.policy.policy_id, current_backend.model_pair_id, backend, record)
         if type(approved) is not bool or type(allow_restart) is not bool:
             raise RecoveryError("invalid_recovery_authority")
         if not approved:
@@ -190,31 +224,35 @@ class RecoveryManager:
         for row, text in zip(verification, verification_prompts):
             if not isinstance(text, str) or identity_text(text) != row.prompt_id:
                 raise RecoveryError("verification_text_identity_mismatch")
-        changed = max(abs(row.current_score - row.healthy_score) for row in (*fit, *verification)) > 1e-8
+        changed = any(abs(row.current_score - row.healthy_score) > 1e-8 or
+            row.healthy_canary_score is not None and abs(row.current_canary_score - row.healthy_canary_score) > 1e-8
+            for row in (*fit, *verification))
         if not changed:
             record["status"] = "no_probe_degradation"
             return result()
         try:
-            correction = fit_affine(fit, self.policy, self.backend.model_pair_id)
+            correction = fit_affine(fit, self.policy, current_backend.model_pair_id)
             outputs = [correction.apply(row.current_score) for row in verification]
-            check = verify_outputs(self.policy, verification, outputs)
+            check = verify_outputs(self.policy, verification, outputs,
+                canary_outputs=[row.current_canary_score for row in verification])
             attempt = {"method": "paired_affine_correction", "verification": check,
                 "slope": correction.slope, "intercept": correction.intercept,
                 "fit_error": correction.fit_error, "correction_id": correction.correction_id}
             record["attempts"].append(attempt)
             if check["accepted"]:
                 record.update(status="verified", method="paired_affine_correction")
-                return result(CorrectedBackend(self.backend, correction))
+                return result(CorrectedBackend(current_backend, correction))
         except RecoveryError as exc:
             record["attempts"].append({"method": "paired_affine_correction", "rejected": str(exc)})
         if allow_restart:
             try:
                 replacement = restart_factory()
-                if replacement.model_pair_id != self.backend.model_pair_id:
+                if replacement.model_pair_id != current_backend.model_pair_id:
                     raise RecoveryError("restart_model_binding_mismatch")
                 values = replacement.score(list(verification_prompts))
                 outputs = [row["guardrail_score"] for row in values]
-                check = verify_outputs(self.policy, verification, outputs)
+                check = verify_outputs(self.policy, verification, outputs,
+                    canary_outputs=[row["canary_score"] for row in values])
                 record["attempts"].append({"method": "trusted_scorer_restart", "verification": check})
                 if check["accepted"]:
                     record.update(status="verified", method="trusted_scorer_restart")
@@ -225,6 +263,10 @@ class RecoveryManager:
         return result()
 
     def apply(self, plan):
+        with self._lock:
+            return self._apply_locked(plan)
+
+    def _apply_locked(self, plan):
         if (plan.generation != self.generation or plan.policy_id != self.policy.policy_id
                 or plan.model_pair_id != self.backend.model_pair_id):
             raise RecoveryError("stale_recovery_plan")
@@ -237,6 +279,10 @@ class RecoveryManager:
         return {**plan.record, "status": "applied", "applied": True, "generation": self.generation}
 
     def rollback(self, *, approved=False):
+        with self._lock:
+            return self._rollback_locked(approved=approved)
+
+    def _rollback_locked(self, *, approved):
         if approved is not True or self.previous_backend is None:
             raise RecoveryError("rollback_not_authorized_or_available")
         self.backend, self.previous_backend = self.previous_backend, None
