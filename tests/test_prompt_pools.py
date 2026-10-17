@@ -1404,9 +1404,9 @@ def test_semantic_caveat_present(tmp_path):
     manifest = json.loads((out / "pool-manifest.json").read_text(encoding="utf-8"))
     caveats = "\n".join(manifest["caveats"])
     assert "Exact normalized disjointness does not prove semantic" in caveats
-    # Also check docs
-    docs = (REPO_ROOT / "docs" / "PROMPT-POOLS.md").read_text(encoding="utf-8")
-    assert "Exact normalized disjointness does not prove semantic" in docs
+    # Public provenance stays machine-readable after the Markdown cleanup.
+    sources = json.loads((REPO_ROOT / "releases" / "baseline-20261017" / "data-sources.json").read_text(encoding="utf-8"))
+    assert "Exact normalized disjointness does not prove semantic" in sources["semantic_scope"]
 
 def test_unknown_wainject_path_rejected(tmp_path):
     (tmp_path / "case18").mkdir(parents=True, exist_ok=True)

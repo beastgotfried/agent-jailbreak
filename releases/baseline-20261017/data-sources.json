@@ -92,6 +92,7 @@
   ],
   "rights_scope": "Public availability does not imply unrestricted reuse. Dataset and model licenses are separate. Unverified dataset rights remain unverified.",
   "schema_version": 1,
+  "semantic_scope": "Exact normalized disjointness does not prove semantic or attack-family independence. Generated rows and exact repeat runs are not independent human trials.",
   "selected_training_data": {
     "catalog_sha256": "852370c8b0edca168aeaaf1be845813429595d1bb49550cfdd887b874f1d53eb",
     "kind": "synthetic",
