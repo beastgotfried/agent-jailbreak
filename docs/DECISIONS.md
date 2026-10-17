@@ -10,5 +10,6 @@
 8. **The product is the watcher.** Never pitch a new guardrail, a firewall, or injection detection. The comparison set stays empty; the firewall market stays out.
 9. **Replay-study framing.** Real prompts, constructed stream order. Never claim production traces.
 10. **Detection proves change, not correctness.** Common-mode failure is a declared limitation in every write-up.
+11. **IBM Z / LinuxONE compliance is a main goal.** Native s390x everywhere. Every dependency needs a working s390x build. CPU-only inference. The full pipeline runs on the VM. The demo video shows the live instance. Anything that cannot run on s390x is cut, not worked around.
 
 Supersedes: any earlier chat, pitch, or doc that conflicts with this list.

@@ -35,6 +35,17 @@ All datasets are on the VM under `~/safety-watch/data/`. Details and hashes: `do
 5. The canary must come from a different model family than the guardrail. Measure error correlation; report it.
 6. Detection proves change, not correctness. Claims follow evidence labels: verified, research, proposed, unverified.
 
+## IBM Z / LinuxONE compliance — first-class requirement
+
+This is a main goal, not a checkbox.
+
+- Every dependency must have a working s390x build: a manylinux s390x wheel or an Ubuntu port. Check before adding anything. The WhyLabs stack failed this test and is excluded.
+- CPU-only inference. No GPU assumptions. No Telum or Spyre claims without evidence.
+- The full pipeline runs on the VM: data, training, monitoring, repair, evidence, dashboard. LinuxONE carries the workload, not just the label.
+- The demo video must show the live LinuxONE instance and the running model.
+- No x86 emulation, no amd64-only images, no silent off-platform compute. Anything that cannot run on s390x is cut, not worked around.
+- Datasets are fetched on the VM. The Jupyter upload limit is about 200 MB.
+
 ## The method in 8 lines
 
 1. Train guardrail (char n-grams + logistic regression) and canary (word n-grams + logistic regression) on ToxicChat train.
