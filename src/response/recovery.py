@@ -41,10 +41,10 @@ class Probe:
             raise RecoveryError("invalid_recovery_probe")
         if type(self.label) is not int or self.label not in (0, 1) or self.role not in ("fit", "verification"):
             raise RecoveryError("invalid_probe_label_or_role")
-        if (self.healthy_canary_score is None) != (self.current_canary_score is None):
+        # Require complete canary evidence
+        if self.healthy_canary_score is None or self.current_canary_score is None:
             raise RecoveryError("incomplete_canary_probe")
-        if self.healthy_canary_score is not None and not all(valid_score(value)
-                for value in (self.healthy_canary_score, self.current_canary_score)):
+        if not all(valid_score(value) for value in (self.healthy_canary_score, self.current_canary_score)):
             raise RecoveryError("invalid_canary_probe")
 
 
@@ -118,24 +118,23 @@ def verify_outputs(policy, probes, outputs, *, canary_outputs=None, tolerance=1e
         raise RecoveryError("invalid_recovery_output_batch")
     if set(policy.calibration_ids) & {row.prompt_id for row in rows}:
         raise RecoveryError("policy_probe_overlap")
+    # Require complete canary evidence
+    if any(row.healthy_canary_score is None or row.current_canary_score is None for row in rows):
+        raise RecoveryError("incomplete_canary_probe")
+    if canary_outputs is None:
+        raise RecoveryError("missing_canary_verification")
+    canary_outputs = tuple(canary_outputs)
+    if len(canary_outputs) != len(rows) or any(not valid_score(value) for value in canary_outputs):
+        raise RecoveryError("invalid_canary_verification")
     baseline = metrics(policy, rows, [row.healthy_score for row in rows])
     candidate = metrics(policy, rows, outputs)
     score_error = max(abs(value - row.healthy_score) for row, value in zip(rows, outputs))
     changes = sum(policy.prediction_set(value) != policy.prediction_set(row.healthy_score)
         for row, value in zip(rows, outputs))
     reasons = []
-    canary_error = None
-    if any(row.healthy_canary_score is not None for row in rows):
-        if any(row.healthy_canary_score is None for row in rows):
-            raise RecoveryError("mixed_canary_probe_schema")
-        if canary_outputs is None:
-            raise RecoveryError("missing_canary_verification")
-        canary_outputs = tuple(canary_outputs)
-        if len(canary_outputs) != len(rows) or any(not valid_score(value) for value in canary_outputs):
-            raise RecoveryError("invalid_canary_verification")
-        canary_error = max(abs(value - row.healthy_canary_score) for row, value in zip(rows, canary_outputs))
-        if canary_error > tolerance:
-            reasons.append("baseline_canary_scores_not_restored")
+    canary_error = max(abs(value - row.healthy_canary_score) for row, value in zip(rows, canary_outputs))
+    if canary_error > tolerance:
+        reasons.append("baseline_canary_scores_not_restored")
     if score_error > tolerance:
         reasons.append("baseline_scores_not_restored")
     if changes:
@@ -149,9 +148,26 @@ def verify_outputs(policy, probes, outputs, *, canary_outputs=None, tolerance=1e
     if candidate["by_class"]["0"]["refused"] > baseline["by_class"]["0"]["refused"]:
         reasons.append("safe_refusal_regression")
     return {"accepted": not reasons, "reasons": reasons, "max_score_error": score_error,
-        "max_canary_score_error": canary_error, "pair_verified": canary_error is not None,
+        "max_canary_score_error": canary_error, "pair_verified": True,
         "prediction_set_changes": changes, "baseline": baseline, "candidate": candidate,
         "scope": "finite_probe_agreement_not_universal_recovery_or_safety"}
+
+
+def _validate_score_batch(prompts, values):
+    if not isinstance(values, (list, tuple)):
+        raise RecoveryError("runtime_score_length_mismatch")
+    if len(values) != len(prompts):
+        raise RecoveryError("runtime_score_length_mismatch")
+    for row in values:
+        if not isinstance(row, dict):
+            raise RecoveryError("invalid_runtime_score_batch")
+        if "guardrail_score" not in row or "canary_score" not in row:
+            raise RecoveryError("invalid_runtime_score_batch")
+        if not valid_score(row["guardrail_score"]) or not valid_score(row["canary_score"]):
+            raise RecoveryError("invalid_runtime_score_batch")
+        for flag in ("guardrail_unsafe", "canary_unsafe"):
+            if flag in row and type(row[flag]) is not bool:
+                raise RecoveryError("invalid_runtime_flag")
 
 
 class CorrectedBackend:
@@ -161,11 +177,13 @@ class CorrectedBackend:
         self.backend, self.correction = backend, correction
         self.model_pair_id = backend.model_pair_id
         self.guardrail_threshold = getattr(backend, "guardrail_threshold", None)
+        self.canary_threshold = getattr(backend, "canary_threshold", None)
 
     def score(self, prompts):
         result = self.backend.score(prompts)
         if len(result) != len(prompts):
             raise RecoveryError("runtime_score_length_mismatch")
+        _validate_score_batch(prompts, result)
         corrected = []
         for row in result:
             score = self.correction.apply(row["guardrail_score"])
@@ -174,6 +192,15 @@ class CorrectedBackend:
                 if not valid_score(self.guardrail_threshold):
                     raise RecoveryError("missing_binary_threshold_binding")
                 value["guardrail_unsafe"] = score >= self.guardrail_threshold
+            # keep canary_unsafe consistent with unchanged canary_score
+            if "canary_unsafe" in row:
+                thresh = getattr(self.backend, "canary_threshold", None)
+                if valid_score(thresh):
+                    value["canary_unsafe"] = row["canary_score"] >= thresh
+                else:
+                    # if no threshold, keep original if bool, else validate
+                    if type(row["canary_unsafe"]) is not bool:
+                        raise RecoveryError("invalid_runtime_flag")
             corrected.append(value)
         return corrected
 
@@ -185,6 +212,7 @@ class RecoveryPlan:
     model_pair_id: str
     backend: Backend | None
     record: dict
+    handle: str | None = None
 
 
 class RecoveryManager:
@@ -193,101 +221,271 @@ class RecoveryManager:
     def __init__(self, backend, policy):
         if backend.model_pair_id != policy.model_pair_id:
             raise RecoveryError("recovery_model_binding_mismatch")
-        self.backend, self.policy = backend, policy
-        self.generation = 0
-        self.previous_backend = None
+        self._backend = backend
+        self._policy = policy
+        self._generation = 0
+        self._previous_backend = None
         self._lock = threading.RLock()
+        self._store = {}
+
+    @property
+    def backend(self):
+        return self._backend
+
+    @backend.setter
+    def backend(self, value):
+        self._backend = value
+
+    @property
+    def policy(self):
+        return self._policy
+
+    @property
+    def generation(self):
+        return self._generation
+
+    @property
+    def previous_backend(self):
+        return self._previous_backend
 
     def propose(self, fit, verification, *, verification_prompts, restart_factory: Callable[[], Backend],
                 approved=False, actor="", allow_restart=True):
         with self._lock:
-            generation, current_backend = self.generation, self.backend
+            generation, current_backend = self._generation, self._backend
+        verification_prompts = list(verification_prompts)
         record = {"applied": False, "status": "approval_required", "attempts": [],
             "policy_weights_changed": False, "policy_thresholds_changed": False}
-        def result(backend=None):
-            return RecoveryPlan(generation, self.policy.policy_id, current_backend.model_pair_id, backend, record)
+
+        def make_plan(backend=None, record_dict=record, handle=None):
+            # defensive copy for public record
+            return RecoveryPlan(generation, self.policy.policy_id, current_backend.model_pair_id, backend, dict(record_dict), handle)
+
         if type(approved) is not bool or type(allow_restart) is not bool:
             raise RecoveryError("invalid_recovery_authority")
         if not approved:
-            return result()
+            # store handle for approval_required as well to allow apply to return same status
+            handle = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "status": "approval_required"})
+            with self._lock:
+                self._store[handle] = {
+                    "generation": generation,
+                    "policy_id": self.policy.policy_id,
+                    "model_pair_id": current_backend.model_pair_id,
+                    "candidate": None,
+                    "verification_prompts": tuple(verification_prompts),
+                    "verification_probes": tuple(verification) if isinstance(verification, (list, tuple)) else (),
+                    "record": dict(record),
+                    "consumed": False,
+                }
+            return make_plan(backend=None, record_dict=record, handle=handle)
         if not isinstance(actor, str) or re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", actor) is None:
             raise RecoveryError("invalid_recovery_actor")
         record["approval_actor"] = actor
-        fit, verification = validate_batch(fit, "fit"), validate_batch(verification, "verification")
+        fit = validate_batch(fit, "fit")
+        verification = validate_batch(verification, "verification")
         if {row.prompt_id for row in fit} & {row.prompt_id for row in verification}:
             raise RecoveryError("recovery_fit_verification_overlap")
         if set(self.policy.calibration_ids) & {row.prompt_id for row in (*fit, *verification)}:
             raise RecoveryError("policy_probe_overlap")
         if len(verification_prompts) != len(verification):
             raise RecoveryError("verification_text_identity_mismatch")
-        # Text never enters the plan, report, exceptions, or public evidence.
         for row, text in zip(verification, verification_prompts):
             if not isinstance(text, str) or identity_text(text) != row.prompt_id:
                 raise RecoveryError("verification_text_identity_mismatch")
-        changed = any(abs(row.current_score - row.healthy_score) > 1e-8 or
-            row.healthy_canary_score is not None and abs(row.current_canary_score - row.healthy_canary_score) > 1e-8
+        # Refresh actual current verification observations before deciding no degradation
+        fresh_values = None
+        fresh_error = None
+        try:
+            fresh_values = current_backend.score(list(verification_prompts))
+            _validate_score_batch(verification_prompts, fresh_values)
+        except Exception as exc:
+            # Preserve stale detection: treat as degraded if scoring fails
+            fresh_error = str(exc)
+            fresh_values = None
+        # Probe evidence indicates degradation if any fit/verification current differs from healthy
+        probe_changed = any(abs(row.current_score - row.healthy_score) > 1e-8 or
+            abs(row.current_canary_score - row.healthy_canary_score) > 1e-8
             for row in (*fit, *verification))
-        if not changed:
+        if fresh_values is not None:
+            fresh_changed = any(abs(val["guardrail_score"] - row.healthy_score) > 1e-8 or
+                abs(val["canary_score"] - row.healthy_canary_score) > 1e-8
+                for row, val in zip(verification, fresh_values))
+            changed = probe_changed or fresh_changed
+        else:
+            # If fresh scoring failed, consider degraded
+            changed = True
+        if fresh_values is not None and not changed:
             record["status"] = "no_probe_degradation"
-            return result()
+            handle = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "status": "no_probe_degradation", "verification_ids": tuple(sorted(row.prompt_id for row in verification))})
+            with self._lock:
+                self._store[handle] = {
+                    "generation": generation,
+                    "policy_id": self.policy.policy_id,
+                    "model_pair_id": current_backend.model_pair_id,
+                    "candidate": None,
+                    "verification_prompts": tuple(verification_prompts),
+                    "verification_probes": tuple(verification),
+                    "record": dict(record),
+                    "consumed": False,
+                }
+            return make_plan(backend=None, record_dict=record, handle=handle)
+        # Try paired affine correction - actually execute candidate on verification_prompts
         try:
             correction = fit_affine(fit, self.policy, current_backend.model_pair_id)
-            outputs = [correction.apply(row.current_score) for row in verification]
-            check = verify_outputs(self.policy, verification, outputs,
-                canary_outputs=[row.current_canary_score for row in verification])
+            candidate = CorrectedBackend(current_backend, correction)
+            outputs = candidate.score(list(verification_prompts))
+            _validate_score_batch(verification_prompts, outputs)
+            guardrail_outputs = [row["guardrail_score"] for row in outputs]
+            canary_outputs = [row["canary_score"] for row in outputs]
+            check = verify_outputs(self.policy, verification, guardrail_outputs,
+                canary_outputs=canary_outputs)
             attempt = {"method": "paired_affine_correction", "verification": check,
                 "slope": correction.slope, "intercept": correction.intercept,
                 "fit_error": correction.fit_error, "correction_id": correction.correction_id}
             record["attempts"].append(attempt)
             if check["accepted"]:
                 record.update(status="verified", method="paired_affine_correction")
-                return result(CorrectedBackend(current_backend, correction))
+                handle = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "method": "paired_affine_correction", "correction_id": correction.correction_id, "verification_ids": tuple(sorted(row.prompt_id for row in verification))})
+                with self._lock:
+                    self._store[handle] = {
+                        "generation": generation,
+                        "policy_id": self.policy.policy_id,
+                        "model_pair_id": current_backend.model_pair_id,
+                        "candidate": candidate,
+                        "verification_prompts": tuple(verification_prompts),
+                        "verification_probes": tuple(verification),
+                        "record": dict(record),
+                        "consumed": False,
+                    }
+                return make_plan(backend=candidate, record_dict=record, handle=handle)
         except RecoveryError as exc:
-            record["attempts"].append({"method": "paired_affine_correction", "rejected": str(exc)})
+            # Avoid exposing private text in rejected string
+            msg = str(exc)
+            if "private" in msg.lower():
+                msg = "restart_unavailable_or_invalid"
+            record["attempts"].append({"method": "paired_affine_correction", "rejected": msg})
+        except Exception:
+            record["attempts"].append({"method": "paired_affine_correction", "rejected": "candidate_scoring_failed"})
         if allow_restart:
             try:
                 replacement = restart_factory()
                 if replacement.model_pair_id != current_backend.model_pair_id:
                     raise RecoveryError("restart_model_binding_mismatch")
                 values = replacement.score(list(verification_prompts))
-                outputs = [row["guardrail_score"] for row in values]
-                check = verify_outputs(self.policy, verification, outputs,
-                    canary_outputs=[row["canary_score"] for row in values])
+                _validate_score_batch(verification_prompts, values)
+                guardrail_outputs = [row["guardrail_score"] for row in values]
+                canary_outputs = [row["canary_score"] for row in values]
+                check = verify_outputs(self.policy, verification, guardrail_outputs,
+                    canary_outputs=canary_outputs)
                 record["attempts"].append({"method": "trusted_scorer_restart", "verification": check})
                 if check["accepted"]:
                     record.update(status="verified", method="trusted_scorer_restart")
-                    return result(replacement)
+                    handle = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "method": "trusted_scorer_restart", "verification_ids": tuple(sorted(row.prompt_id for row in verification))})
+                    with self._lock:
+                        self._store[handle] = {
+                            "generation": generation,
+                            "policy_id": self.policy.policy_id,
+                            "model_pair_id": current_backend.model_pair_id,
+                            "candidate": replacement,
+                            "verification_prompts": tuple(verification_prompts),
+                            "verification_probes": tuple(verification),
+                            "record": dict(record),
+                            "consumed": False,
+                        }
+                    return make_plan(backend=replacement, record_dict=record, handle=handle)
+            except RecoveryError as exc:
+                msg = str(exc)
+                # redact private text
+                if "private" in msg.lower():
+                    msg = "restart_unavailable_or_invalid"
+                if msg == "restart_model_binding_mismatch":
+                    record["attempts"].append({"method": "trusted_scorer_restart", "rejected": msg})
+                else:
+                    # for other RecoveryErrors, treat redacted
+                    record["attempts"].append({"method": "trusted_scorer_restart", "rejected": msg if "private" not in msg.lower() else "restart_unavailable_or_invalid"})
             except (OSError, KeyError, TypeError, ValueError):
                 record["attempts"].append({"method": "trusted_scorer_restart", "rejected": "restart_unavailable_or_invalid"})
+            except Exception:
+                record["attempts"].append({"method": "trusted_scorer_restart", "rejected": "restart_unavailable_or_invalid"})
         record["status"] = "recovery_rejected"
-        return result()
+        handle = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "status": "recovery_rejected", "verification_ids": tuple(sorted(row.prompt_id for row in verification)), "attempts": len(record["attempts"])})
+        with self._lock:
+            self._store[handle] = {
+                "generation": generation,
+                "policy_id": self.policy.policy_id,
+                "model_pair_id": current_backend.model_pair_id,
+                "candidate": None,
+                "verification_prompts": tuple(verification_prompts),
+                "verification_probes": tuple(verification),
+                "record": dict(record),
+                "consumed": False,
+            }
+        return make_plan(backend=None, record_dict=record, handle=handle)
 
     def apply(self, plan):
         with self._lock:
             return self._apply_locked(plan)
 
     def _apply_locked(self, plan):
-        if (plan.generation != self.generation or plan.policy_id != self.policy.policy_id
-                or plan.model_pair_id != self.backend.model_pair_id):
+        if not isinstance(plan, RecoveryPlan):
+            raise RecoveryError("invalid_recovery_plan")
+        handle = getattr(plan, "handle", None)
+        # Generation/policy/model must match current
+        if (plan.generation != self._generation or plan.policy_id != self.policy.policy_id
+                or plan.model_pair_id != self._backend.model_pair_id):
             raise RecoveryError("stale_recovery_plan")
-        if plan.backend is None or plan.record["status"] != "verified":
-            return {**plan.record, "generation": self.generation}
-        if plan.backend.model_pair_id != plan.model_pair_id:
+        entry = self._store.get(handle) if handle is not None else None
+        if entry is None:
+            raise RecoveryError("stale_recovery_plan")
+        if (entry["generation"] != self._generation or entry["policy_id"] != self.policy.policy_id
+                or entry["model_pair_id"] != self._backend.model_pair_id):
+            raise RecoveryError("stale_recovery_plan")
+        if entry.get("consumed"):
+            raise RecoveryError("stale_recovery_plan")
+        # Use internal record, not caller-supplied plan.record
+        internal = dict(entry["record"])
+        candidate = entry["candidate"]
+        # If not verified or no candidate, return without activation
+        if candidate is None or internal.get("status") != "verified":
+            entry["consumed"] = True
+            return {**internal, "generation": self._generation}
+        # Reverify actual candidate on internally retained verification requests
+        verification = entry["verification_probes"]
+        prompts = entry["verification_prompts"]
+        try:
+            values = candidate.score(list(prompts))
+            _validate_score_batch(prompts, values)
+            guardrail_outputs = [row["guardrail_score"] for row in values]
+            canary_outputs = [row["canary_score"] for row in values]
+            check = verify_outputs(self.policy, verification, guardrail_outputs, canary_outputs=canary_outputs)
+            if not check["accepted"]:
+                entry["consumed"] = True
+                # Preserve explicit unresolved status without activation
+                failure = dict(internal)
+                failure.update(status="recovery_rejected", applied=False, reverification=check, warning="previous_backend_may_remain_degraded")
+                return {**failure, "generation": self._generation}
+        except Exception:
+            entry["consumed"] = True
+            failure = dict(internal)
+            failure.update(status="recovery_rejected", applied=False, warning="previous_backend_may_remain_degraded", reverification_error="candidate_scoring_failed")
+            return {**failure, "generation": self._generation}
+        # Validate model binding mismatch for candidate
+        if candidate.model_pair_id != entry["model_pair_id"]:
             raise RecoveryError("recovery_model_binding_mismatch")
-        self.previous_backend, self.backend = self.backend, plan.backend
-        self.generation += 1
-        return {**plan.record, "status": "applied", "applied": True, "generation": self.generation}
+        self._previous_backend, self._backend = self._backend, candidate
+        self._generation += 1
+        entry["consumed"] = True
+        return {**internal, "status": "applied", "applied": True, "generation": self._generation}
 
     def rollback(self, *, approved=False):
         with self._lock:
             return self._rollback_locked(approved=approved)
 
     def _rollback_locked(self, *, approved):
-        if approved is not True or self.previous_backend is None:
+        if approved is not True or self._previous_backend is None:
             raise RecoveryError("rollback_not_authorized_or_available")
-        self.backend, self.previous_backend = self.previous_backend, None
-        self.generation += 1
-        return {"status": "rolled_back", "generation": self.generation,
+        self._backend, self._previous_backend = self._previous_backend, None
+        self._generation += 1
+        return {"status": "rolled_back", "generation": self._generation,
             "incident_resolved": False, "warning": "previous_backend_may_remain_degraded"}
 
 
