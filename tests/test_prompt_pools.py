@@ -539,6 +539,42 @@ def test_converter_preserves_nested_and_exact(tmp_path):
         assert "source_relative_path" in f and "output_relative_path" in f
 
 
+@pytest.mark.parametrize("link_kind", ["file", "parent"])
+def test_converter_rejects_escaping_input_symlinks(tmp_path, link_kind):
+    if not HAS_PYARROW:
+        pytest.skip("pyarrow is needed only for converter tests")
+    from src.data.convert_parquet import convert_parquet
+
+    input_root = tmp_path / "input"
+    input_root.mkdir()
+    external = tmp_path / "external"
+    external.mkdir()
+    filename = "train-00000-of-00001.parquet"
+    target = external / filename
+    pq.write_table(pa.table({"content": [["neutral converter fixture"]]}), target)
+    source = input_root / "jbb-attacks" / "data" / filename
+    source.parent.parent.mkdir()
+    if link_kind == "file":
+        source.parent.mkdir()
+        source.symlink_to(target)
+    else:
+        source.parent.symlink_to(external, target_is_directory=True)
+
+    manifest = [{
+        "repo": "fixture/jbb",
+        "revision": "1" * 40,
+        "local_dir": "/fixture/jbb-attacks",
+        "files": [{"path": f"data/{filename}", "sha256": sha256_file(target)}],
+    }]
+    manifest_path = tmp_path / "download.json"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    output_root = tmp_path / "output"
+    with pytest.raises(SystemExit, match="escapes root"):
+        convert_parquet(input_root, output_root, manifest_path)
+    assert not list(output_root.rglob("*.jsonl"))
+    assert not (output_root / "conversion-manifest.json").exists()
+
+
 def test_converter_rejects_hash_mismatch_and_nonempty(tmp_path):
     if not HAS_PYARROW:
         pytest.skip("pyarrow not available")
@@ -1127,6 +1163,40 @@ def test_valid_multi_member_reference_eligibility(tmp_path):
     # Ensure its sources include both members? Actually candidate is per qualifying row, but dedup merges; but we have 2 rows but only qualifying rows create candidates. There is 1 qualifying row (human true) and 1 non-qualifying (human false) -> only 1 candidate, but group has 2 source ids. However our candidate per qualifying row will create 1 candidate with 1 source, not 2. But the test expects presence.
     # For our synthetic, group has 2 source ids but only 1 qualifies, so candidate will be 1.
     # That's expected to still qualify.
+
+@pytest.mark.parametrize("field", ["toxicity", "jailbreaking", "human_annotation"])
+def test_malformed_flag_diagnostics_redact_source_values(tmp_path, capsys, field):
+    env = build_synthetic_environment(tmp_path)
+    with env["toxic_train"].open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        columns = reader.fieldnames
+        rows = list(reader)
+    row = next(row for row in rows if row["conv_id"] == "train-002")
+    sentinel = row["user_input"]
+    row[field] = sentinel
+    write_csv(env["toxic_train"], columns, rows)
+    digest = sha256_file(env["toxic_train"])
+    downloads = json.loads(env["download_manifest"].read_text(encoding="utf-8"))
+    for entry in downloads:
+        if entry.get("local_dir", "").endswith("toxicchat0124"):
+            for source in entry["files"]:
+                if source["path"] == "data/0124/toxic-chat_annotation_train.csv":
+                    source["sha256"] = digest
+    model = json.loads(env["model_manifest"].read_text(encoding="utf-8"))
+    model["datasets"]["train"]["sha256"] = digest
+    _write_manifest(env["download_manifest"], downloads)
+    _write_manifest(env["model_manifest"], model)
+
+    with pytest.raises(SystemExit) as failure:
+        bpp.build_prompt_pools(
+            env["raw_root"], env["converted_root"], env["download_manifest"],
+            env["model_manifest"], tmp_path / "output", seed=42,
+        )
+    assert f"malformed {field} at train row" in str(failure.value)
+    assert sentinel not in str(failure.value)
+    captured = capsys.readouterr()
+    assert sentinel not in captured.out + captured.err
+
 
 def test_rejects_malformed_flags(tmp_path):
     (tmp_path / "case10").mkdir(parents=True, exist_ok=True)

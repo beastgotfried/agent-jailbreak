@@ -132,6 +132,10 @@ def convert_parquet(input_root: Path, output_root: Path, download_manifest: Path
     if not prefix_mapping:
         raise SystemExit("download manifest contains no parquet entries; refusing")
 
+    # Check declared paths before discovery, which does not follow directory symlinks.
+    for rel in prefix_mapping:
+        _require_resolved_within(input_root / rel, input_root, f"parquet input {rel}")
+
     # Discover parquet files under input_root.
     discovered: dict[str, Path] = {}
     for p in input_root.rglob("*.parquet"):

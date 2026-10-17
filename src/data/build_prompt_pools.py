@@ -505,11 +505,11 @@ def build_toxic_candidates(raw_root: Path, model_manifest, download_meta, prefix
         hum = r.get("human_annotation", "")
         # toxicity and jailbreaking must be "0" or "1"
         if not isinstance(tox, str) or not _is_valid_toxicity(tox):
-            raise SystemExit(f"malformed toxicity at train row {r['_row_index']}: {tox!r}")
+            raise SystemExit(f"malformed toxicity at train row {r['_row_index']}")
         if not isinstance(jail, str) or not _is_valid_toxicity(jail):
-            raise SystemExit(f"malformed jailbreaking at train row {r['_row_index']}: {jail!r}")
+            raise SystemExit(f"malformed jailbreaking at train row {r['_row_index']}")
         if not _is_valid_human(hum):
-            raise SystemExit(f"malformed human_annotation at train row {r['_row_index']}: {hum!r}")
+            raise SystemExit(f"malformed human_annotation at train row {r['_row_index']}")
 
     # Determine allowed reference groups via model manifest (any member qualifies)
     allowed_hashes: set[str] = set()
