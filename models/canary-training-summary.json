@@ -1,0 +1,40 @@
+{
+  "error_correlation": {
+    "both_correct": 477,
+    "both_wrong": 32,
+    "canary_misses_guardrail_flags": 4,
+    "canary_only_wrong": 10,
+    "error_indicator_pearson_phi": 0.7622478434108937,
+    "guardrail_misses_canary_flags": 2,
+    "guardrail_only_wrong": 8,
+    "prediction_disagreement": 18,
+    "prediction_disagreement_rate": 0.03415559772296015,
+    "records": 527,
+    "shared_unsafe_misses": 16,
+    "unsafe_records": 70
+  },
+  "evidence": {
+    "head": "ecedf57b57a64b909727c9bad85805dccaa49b6d48c98536d72132ebace57adc",
+    "records": 5
+  },
+  "human_validation": {
+    "average_precision": 0.7561476065767757,
+    "benign": 457,
+    "f1": 0.704225352112676,
+    "false_negative_rate": 0.2857142857142857,
+    "fn": 20,
+    "fp": 22,
+    "fpr": 0.04814004376367615,
+    "precision": 0.6944444444444444,
+    "recall": 0.7142857142857143,
+    "records": 527,
+    "tn": 435,
+    "tp": 50,
+    "unsafe": 70
+  },
+  "model_sha256": "617667b90a430ff08be9fabf9a014b5fd37a6c0c05937b2b374eea6a31a81c8d",
+  "partition_sha256": "cd5e3febd5e3025cf905214a1369344f5f22b9613fe35a2c577842eacf037c6d",
+  "run_directory": "/runtime/results/classifier-runs/canary-train-20261017T090644Z-6cfe5d16",
+  "run_id": "20261017T090644Z-6cfe5d16",
+  "threshold": 0.5656831460118261
+}

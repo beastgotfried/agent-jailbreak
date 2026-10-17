@@ -1,0 +1,119 @@
+{
+  "canary_sha256": "617667b90a430ff08be9fabf9a014b5fd37a6c0c05937b2b374eea6a31a81c8d",
+  "error_correlation": {
+    "full_validation_supplementary": {
+      "both_correct": 899,
+      "both_wrong": 36,
+      "canary_misses_guardrail_flags": 4,
+      "canary_only_wrong": 16,
+      "error_indicator_pearson_phi": 0.7397738005083415,
+      "guardrail_misses_canary_flags": 2,
+      "guardrail_only_wrong": 8,
+      "prediction_disagreement": 24,
+      "prediction_disagreement_rate": 0.02502606882168926,
+      "records": 959,
+      "shared_unsafe_misses": 16,
+      "unsafe_records": 70
+    },
+    "human_annotated": {
+      "both_correct": 477,
+      "both_wrong": 32,
+      "canary_misses_guardrail_flags": 4,
+      "canary_only_wrong": 10,
+      "error_indicator_pearson_phi": 0.7622478434108937,
+      "guardrail_misses_canary_flags": 2,
+      "guardrail_only_wrong": 8,
+      "prediction_disagreement": 18,
+      "prediction_disagreement_rate": 0.03415559772296015,
+      "records": 527,
+      "shared_unsafe_misses": 16,
+      "unsafe_records": 70
+    },
+    "interpretation": "Different feature families do not establish independent errors. Canary never gates.",
+    "scope": "Development validation held out from fitting, used for thresholds; prior research exposure."
+  },
+  "evidence": {
+    "head": "006de078fe0247ba4933285ba6dfcdd96325941ec1727a888d4b94b80ebe9f0c",
+    "records": 4
+  },
+  "guardrail_sha256": "16cc50b1e16df16f937cc89c64eea164ed59f70275ccad09cc9303af1e9f2fce",
+  "metrics": {
+    "canary": {
+      "full_validation_supplementary": {
+        "average_precision": 0.7171680431944771,
+        "benign": 889,
+        "f1": 0.6578947368421053,
+        "false_negative_rate": 0.2857142857142857,
+        "fn": 20,
+        "fp": 32,
+        "fpr": 0.0359955005624297,
+        "precision": 0.6097560975609756,
+        "recall": 0.7142857142857143,
+        "records": 959,
+        "tn": 857,
+        "tp": 50,
+        "unsafe": 70
+      },
+      "human_annotated": {
+        "average_precision": 0.7561476065767757,
+        "benign": 457,
+        "f1": 0.704225352112676,
+        "false_negative_rate": 0.2857142857142857,
+        "fn": 20,
+        "fp": 22,
+        "fpr": 0.04814004376367615,
+        "precision": 0.6944444444444444,
+        "recall": 0.7142857142857143,
+        "records": 527,
+        "tn": 435,
+        "tp": 50,
+        "unsafe": 70
+      }
+    },
+    "guardrail": {
+      "full_validation_supplementary": {
+        "average_precision": 0.7641587251825707,
+        "benign": 889,
+        "f1": 0.7027027027027027,
+        "false_negative_rate": 0.2571428571428571,
+        "fn": 18,
+        "fp": 26,
+        "fpr": 0.02924634420697413,
+        "precision": 0.6666666666666666,
+        "recall": 0.7428571428571429,
+        "records": 959,
+        "tn": 863,
+        "tp": 52,
+        "unsafe": 70
+      },
+      "human_annotated": {
+        "average_precision": 0.7881080893363139,
+        "benign": 457,
+        "f1": 0.7222222222222222,
+        "false_negative_rate": 0.2571428571428571,
+        "fn": 18,
+        "fp": 22,
+        "fpr": 0.04814004376367615,
+        "precision": 0.7027027027027027,
+        "recall": 0.7428571428571429,
+        "records": 527,
+        "tn": 435,
+        "tp": 52,
+        "unsafe": 70
+      }
+    }
+  },
+  "reference": {
+    "path": "/runtime/results/classifier-runs/pair-evaluate-20261017T090800Z-c516b2c3/benign-reference-scores.jsonl",
+    "records": 457,
+    "scope": "Human-benign validation; also threshold calibration, not independent null calibration.",
+    "sha256": "ae2f76aace62a35c5a81cef313c4ff4a45705eb04c8d7071663cce573f8926b9"
+  },
+  "reload_smoke_records": 100,
+  "results_directory": "/runtime/results/classifier-runs/pair-evaluate-20261017T090800Z-c516b2c3",
+  "scores_sha256": "5379f98b89636b2213a4ba8f2d697ff880da1031bae53975673e17b1cd574bea",
+  "thresholds": {
+    "canary": 0.5656831460118261,
+    "guardrail": 0.3590141404799981
+  }
+}

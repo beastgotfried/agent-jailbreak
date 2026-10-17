@@ -1,4 +1,201 @@
 {
+  "canary": {
+    "configuration": {
+      "model": {
+        "C": 3.0,
+        "analyzer": "word",
+        "class_weight": "balanced",
+        "lowercase": true,
+        "max_features": 100000,
+        "max_iter": 1000,
+        "min_df": 2,
+        "ngram_range": [
+          1,
+          2
+        ],
+        "norm": "l2",
+        "solver": "liblinear",
+        "sublinear_tf": true
+      },
+      "seed": 42,
+      "target": "toxicity OR jailbreaking",
+      "target_fpr": 0.05,
+      "validation_fraction": 0.2
+    },
+    "dataset": {
+      "license": "CC-BY-NC-4.0",
+      "official_training_rows": 5082,
+      "repo": "lmsys/toxic-chat",
+      "revision": "29df8e4dba60e1f4af4b4075c0705c5b313548a8",
+      "test_sha256": "3c2e49889626f7738dca0a29bface0ba0a0595b2ffdd17f0e02f19df7c3c4c9b",
+      "train_sha256": "702eb9b7cac96c3c35e28b9b95855a71f26f21afba8666f9d243f1fa469e81ed"
+    },
+    "environment": {
+      "architecture": "s390x",
+      "interpreter": "/opt/venv/bin/python",
+      "joblib": "1.6.0",
+      "numpy": "2.0.2",
+      "pandas": "3.0.6",
+      "python": "3.12.15",
+      "scipy": "1.13.1",
+      "sklearn": "1.9.0"
+    },
+    "error_correlation": {
+      "full_validation_supplementary": {
+        "both_correct": 899,
+        "both_wrong": 36,
+        "canary_misses_guardrail_flags": 4,
+        "canary_only_wrong": 16,
+        "error_indicator_pearson_phi": 0.7397738005083415,
+        "guardrail_misses_canary_flags": 2,
+        "guardrail_only_wrong": 8,
+        "prediction_disagreement": 24,
+        "prediction_disagreement_rate": 0.02502606882168926,
+        "records": 959,
+        "shared_unsafe_misses": 16,
+        "unsafe_records": 70
+      },
+      "human_annotated": {
+        "both_correct": 477,
+        "both_wrong": 32,
+        "canary_misses_guardrail_flags": 4,
+        "canary_only_wrong": 10,
+        "error_indicator_pearson_phi": 0.7622478434108937,
+        "guardrail_misses_canary_flags": 2,
+        "guardrail_only_wrong": 8,
+        "prediction_disagreement": 18,
+        "prediction_disagreement_rate": 0.03415559772296015,
+        "records": 527,
+        "shared_unsafe_misses": 16,
+        "unsafe_records": 70
+      },
+      "interpretation": "Different feature families do not establish independent errors. Canary never gates.",
+      "scope": "Development validation held out from fitting, used for thresholds; prior research exposure."
+    },
+    "evidence_label": "verified",
+    "export_verification": {
+      "copied_without_refit": true,
+      "validation_records": 959
+    },
+    "exported_utc": "2026-10-17T09:07:56.312467+00:00",
+    "feature_family": "word TF-IDF 1-2 n-grams",
+    "limitations": [
+      "Development threshold-calibration cohort; not independent test or production evidence.",
+      "Different feature families share the logistic classifier algorithm; common-mode failure remains.",
+      "Historical official-test exposure unresolved; this operation reads no test labels.",
+      "No alarm, KS, repair, or monitor performance is established by classifier evaluation."
+    ],
+    "model_selection": {
+      "candidate_count": 12,
+      "classifier_fits": 36,
+      "enabled": true,
+      "folds": 3,
+      "ranking": "pooled human recall at <=5% fold FPR, then mean AP, smaller C, no weighting",
+      "scope": "fitting partition only",
+      "search_artifact_sha256": "05bc79b99e6b324def9f46bc16d3ac521377deccf5d531ad96fd742b7a6cc50c",
+      "search_seconds": 1.1139336600026581,
+      "selected_cv_average_precision": 0.6731058329046649,
+      "selected_cv_recall": 0.631768953068592,
+      "selected_parameters": {
+        "C": 3.0,
+        "class_weight": "balanced"
+      }
+    },
+    "model_sha256": "617667b90a430ff08be9fabf9a014b5fd37a6c0c05937b2b374eea6a31a81c8d",
+    "name": "word-canary-v1",
+    "paired_guardrail_sha256": "16cc50b1e16df16f937cc89c64eea164ed59f70275ccad09cc9303af1e9f2fce",
+    "role": "reference signal only; never changes guardrail decisions",
+    "run_id": "20261017T090644Z-6cfe5d16",
+    "runtime": {
+      "feature_count": 16002,
+      "model_bytes": 752048,
+      "process_peak_rss_mib": 218.34765625,
+      "solver_iterations": [
+        6
+      ],
+      "training_seconds": 0.21851512799912598
+    },
+    "score_semantics": "Weighted logistic unsafe estimate; probability calibration unverified.",
+    "source": {
+      "canary_sha256": {
+        "src/safety_watch/canary/__init__.py": "eedb1adc70ec0a81ff44f5ef503a26f2439cde5fe940068cb1288d7a6a41cb62",
+        "src/safety_watch/canary/__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+        "src/safety_watch/canary/artifacts.py": "34f9628a822ceef572147c2216752e8315bc47b46428344c6bf2cc9742c3efdd",
+        "src/safety_watch/canary/cli.py": "ebc1a52e144e6103aa5f892dfbe0a547767e757de37cd26eabd6b16e7c69d436",
+        "src/safety_watch/canary/model.py": "3063d01107196aa03dc3cc57d91c61d35e9483d7eea141aa16894658d0bbb3f6",
+        "src/safety_watch/canary/pair.py": "3385e2ad871317fe6fce91220c9af49fcdd90e539424cda0a6e49c7d20afe94e",
+        "src/safety_watch/canary/training.py": "6ac871f609312ed3abd9e7477eed79cf4155eb2339af6f5a5f123bb8eca7351e"
+      },
+      "git_commit": "c0f15b7b05d387408f2dcd85acde51abca47ec9c",
+      "module_sha256": {
+        "src/safety_watch/classifier/__init__.py": "26a81cc077501e1f9d52dc469aa657f76d37e283420e5d3637e5dcbbb9204ab2",
+        "src/safety_watch/classifier/__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+        "src/safety_watch/classifier/artifacts.py": "ce878218b67672af2782d39cd4456a96a62fbe00f2b1fd715a5df9656305c614",
+        "src/safety_watch/classifier/cli.py": "53264ba4f6c035fc56c4888759234ad03b13503d9b6b913aa7020e782e95d42b",
+        "src/safety_watch/classifier/config.py": "5d1419ba6e7b6159c5bdf46c25db21e6d021c53d4bd150d0bd307d3ef71f3328",
+        "src/safety_watch/classifier/data.py": "43494cd733ab459a7cc62c956b16d7dc512eeac57413e57009c24480b47a47c9",
+        "src/safety_watch/classifier/evaluation.py": "1ed8bdbc5f888c85dbad9713a16f45124fde3bbdba119c3319c3d242eabbfb2f",
+        "src/safety_watch/classifier/evidence.py": "0e0953d1db0431567ecd38e2a4383736105aef296eeda498e1c1aa0986c9cb6e",
+        "src/safety_watch/classifier/io.py": "7d0278ae02c806096383437729e711e7d7c3184bac5706bfdac659ac5ea1115f",
+        "src/safety_watch/classifier/metrics.py": "1f213907c443a831e1985010c94a496f0622041dd1fdae14acd3395bc73942e4",
+        "src/safety_watch/classifier/model.py": "ec806536398763124ab392678d4bfda8487edf4da6bb345003fc093861dde60b",
+        "src/safety_watch/classifier/runtime.py": "f294ffb5271176ecf17815895d22edc9ad57bf4fe0b8ce57fd695e2deec23c9c",
+        "src/safety_watch/classifier/selection.py": "e14643b0d3978229dd563c81695c41c585e51a1cd19d0ffcdf05aeb0ae8c63e0",
+        "src/safety_watch/classifier/training.py": "a064021edc5cb1476627a666ce0603a0f041c9f686eff117d0cef4420f0fa3d2"
+      },
+      "protocol_sha256": "5b98d729a3ed1cf4c4bcbf7abf4f125febc013110f4c8bef67e45bd04ed80eb3"
+    },
+    "source_run_id": "20261017T090644Z-6cfe5d16",
+    "split_summary": {
+      "cross_boundary_excluded": 196,
+      "eligible": 4791,
+      "fit": 3832,
+      "partitions_sha256": "cd5e3febd5e3025cf905214a1369344f5f22b9613fe35a2c577842eacf037c6d",
+      "validation": 959,
+      "within_training_excluded": 95
+    },
+    "status": "frozen",
+    "threshold": {
+      "benign_human_refused": 22,
+      "benign_human_validation_records": 457,
+      "decision": "score >= threshold (diagnostic only)",
+      "observed_fpr": 0.04814004376367615,
+      "target_fpr": 0.05,
+      "threshold": 0.5656831460118261
+    },
+    "validation_metrics": {
+      "full_validation_supplementary": {
+        "average_precision": 0.7171680431944771,
+        "benign": 889,
+        "f1": 0.6578947368421053,
+        "false_negative_rate": 0.2857142857142857,
+        "fn": 20,
+        "fp": 32,
+        "fpr": 0.0359955005624297,
+        "precision": 0.6097560975609756,
+        "recall": 0.7142857142857143,
+        "records": 959,
+        "tn": 857,
+        "tp": 50,
+        "unsafe": 70
+      },
+      "human_annotated": {
+        "average_precision": 0.7561476065767757,
+        "benign": 457,
+        "f1": 0.704225352112676,
+        "false_negative_rate": 0.2857142857142857,
+        "fn": 20,
+        "fp": 22,
+        "fpr": 0.04814004376367615,
+        "precision": 0.6944444444444444,
+        "recall": 0.7142857142857143,
+        "records": 527,
+        "tn": 435,
+        "tp": 50,
+        "unsafe": 70
+      }
+    }
+  },
   "guardrail": {
     "configuration": {
       "deduplication": "exact text; exclude train/test overlaps; prefer human annotation then stable ID",

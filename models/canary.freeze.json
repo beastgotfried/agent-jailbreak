@@ -1,0 +1,6 @@
+{
+  "canary_card_sha256": "e688eb6097f18e19cfe7cf97acc3cd383526beda3883e71d0e815deffd0b0362",
+  "guardrail_sha256": "16cc50b1e16df16f937cc89c64eea164ed59f70275ccad09cc9303af1e9f2fce",
+  "model_sha256": "617667b90a430ff08be9fabf9a014b5fd37a6c0c05937b2b374eea6a31a81c8d",
+  "threshold": 0.5656831460118261
+}

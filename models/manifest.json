@@ -8,8 +8,8 @@
     },
     {
       "path": "models/model-cards.json",
-      "sha256": "9693b54e8afe50a845f06b0351c0bac8a47f201e9d6dd7b4490b481b2f3bdb32",
-      "bytes": 5351
+      "sha256": "c6ac4c73fec16b58692c305f67c7e60c1c56183b83615301de4c36697febd089",
+      "bytes": 13876
     },
     {
       "path": "models/guardrail.freeze.json",
@@ -55,6 +55,26 @@
       "path": "models/research/separate-calibration/run-summary.json",
       "sha256": "ed58806da9d39d9d780f7b698468c2c46c1d6a4cb224f61b2e85cf12240e7a85",
       "bytes": 5478
+    },
+    {
+      "path": "models/canary.joblib",
+      "sha256": "617667b90a430ff08be9fabf9a014b5fd37a6c0c05937b2b374eea6a31a81c8d",
+      "bytes": 752048
+    },
+    {
+      "path": "models/canary.freeze.json",
+      "sha256": "f39ace6e538e9ac3d4e66d98324ce8801f3af6b6ed4a76bf71bf2c187ddd3f4c",
+      "bytes": 306
+    },
+    {
+      "path": "models/canary-training-summary.json",
+      "sha256": "48ee562b445dd84ef1847cb824ee3e87b7839473d36d2c0458f680259548d4a0",
+      "bytes": 1274
+    },
+    {
+      "path": "models/pair-report.json",
+      "sha256": "96980f00d57c8009a87842c10904827965e131144f37ed2c9b94db3f93c0847e",
+      "bytes": 3942
     }
   ],
   "notebooks": [
@@ -80,5 +100,12 @@
     }
   ],
   "scope": "Existing native s390x artifacts and aggregate recorded outputs. No retraining or new test evaluation. Historical source commit/notebook digests in original cards are preserved.",
-  "source_head_before_publication": "1fa75c2b88993c8537788933e3ecbe97558225e2"
+  "source_head_before_publication": "1fa75c2b88993c8537788933e3ecbe97558225e2",
+  "canary_verification": {
+    "native_integration_tests": 18,
+    "test_seconds": 38.61,
+    "source_run_id": "20261017T090644Z-6cfe5d16",
+    "original_guardrail_card_and_weights_preserved": true,
+    "official_test_labels_read": false
+  }
 }

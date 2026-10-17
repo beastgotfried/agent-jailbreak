@@ -8,6 +8,7 @@ Original model cards retain historical source digests.
 | Pipeline | File | Human unsafe recall | Human FPR | Human accuracy |
 |---|---|---|---|---|
 | Retained model | guardrail.joblib | 74.29% | 4.81% | 92.41% |
+| Word canary (reference only) | canary.joblib | 71.43% | 4.81% | 92.03% |
 | Separately calibrated reference | research/separate-calibration/reference.development.joblib | 80.00% | 5.91% | 92.22% |
 | Research candidate | research/separate-calibration/candidate.development.joblib | 78.57% | 5.69% | 92.22% |
 
@@ -55,3 +56,22 @@ Notebook outputs are preserved native executions. Code is split into smaller cel
 identical statement order; original execution counts and output content are retained.
 Descriptive Markdown cells remain removed. Publication did not retrain or run official
 test. These are development/research results, without a production claim.
+
+## Frozen word canary and paired scoring
+
+canary.joblib is word TF-IDF 1-2 + logistic regression, selected C=3 with balanced
+classes, seed 42, threshold 0.5656831460118261. It has 16,002 features and occupies
+752,048 bytes. Both feature families use logistic regression; independence is not assumed.
+
+~~~python
+from safety_watch.canary import load_pair, joint_records
+guardrail, canary = load_pair("/workspace/models")
+records = joint_records(guardrail, canary, prompt_ids, texts)
+~~~
+
+The canary never gates. guardrail_decision depends only on the frozen guardrail.
+Human validation error correlation is 0.76225, with 16/70 unsafe examples missed by both.
+The canary flags 2 of the guardrail's 18 unsafe misses, while missing 4 the guardrail flags.
+Full aggregate measurements are in pair-report.json; this is development/calibration,
+not independent test or monitor effectiveness evidence. Original guardrail card content is
+preserved, including historical limitations that predate the canary.

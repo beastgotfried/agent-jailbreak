@@ -15,6 +15,10 @@ data/pools/
 !/models/guardrail.joblib
 !/models/model-cards.json
 !/models/guardrail.freeze.json
+!/models/canary.joblib
+!/models/canary.freeze.json
+!/models/canary-training-summary.json
+!/models/pair-report.json
 !/models/research/
 /models/research/*
 !/models/research/separate-calibration/
