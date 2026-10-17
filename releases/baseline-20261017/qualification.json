@@ -1,0 +1,63 @@
+{
+  "architecture": "s390x",
+  "fresh_container": true,
+  "native_tests_passed": 292,
+  "network": "disabled_by_container_launch",
+  "optional_converter_tests_skipped": 4,
+  "packaged_source_commit": "c5fad060420c8cb1c34f84eb4fd951b193a969c6",
+  "private_archive_checksums": {
+    "safety-watch-baseline-20261017.tar.gz": "6f109f4fabc525faf54758aeebfa986d53cd6a54a4ac944410837520506ae54f",
+    "safety-watch-runtime-s390x-20261017.tar.gz": "7f073cb373857fc942f4d17396699682eb0707d1f0d7dcbd800456ce58c48cda"
+  },
+  "reproduction": {
+    "all_request_scores_decisions_and_response_actions_identical": true,
+    "architecture": "s390x",
+    "benchmark_metrics_identical": true,
+    "byte_identical_algorithm_files": 156,
+    "data_reproduced_byte_identical": true,
+    "decision_policy_unchanged": true,
+    "learned_state_reproduced_exact": true,
+    "learned_state_sha256": "1571b87e6d8abd56a3e99882b75f1b8b878db3b284d0d007bfa203b59811fa2a",
+    "model_selection_repeated": false,
+    "paired_episodes": 60,
+    "paired_requests": 30720,
+    "release_source_commit": "c5fad060420c8cb1c34f84eb4fd951b193a969c6",
+    "scope": "Native reproducibility, not an additional independent effectiveness trial.",
+    "serialization_scope": "Exclude only the process-local TfidfVectorizer._stop_words_id cache from learned-state comparison. File-bound model and policy identities can differ after a refit.",
+    "serialized_model_bytes_identical": false,
+    "stages": [
+      {
+        "exit_code": 0,
+        "log_sha256": "d1a094603cd975d90895ee781c8ac1899ee0a3ddd53ede8401187570a69bdc46",
+        "peak_child_rss_kib": 57688,
+        "seconds": 1.989040679000027,
+        "stage": "01-data"
+      },
+      {
+        "exit_code": 0,
+        "log_sha256": "fa4f0713c75f9981873558f794488ec9c399ca6c46cdddcbe02ca9170d788c2e",
+        "peak_child_rss_kib": 955944,
+        "seconds": 40.19319176999852,
+        "stage": "02-fit"
+      },
+      {
+        "exit_code": 0,
+        "log_sha256": "22d5f837797659c83a4ebc261e3ca64f3a85b64117aa05356d44ced42e5dad42",
+        "peak_child_rss_kib": 955944,
+        "seconds": 189.87495309800033,
+        "stage": "03-release-replay"
+      },
+      {
+        "exit_code": 0,
+        "log_sha256": "42242bceca7c7ba7fea165c6261b5c8e9960144b11cbf19bd8ee068c775a5b73",
+        "peak_child_rss_kib": 955944,
+        "seconds": 2.227125420999073,
+        "stage": "04-audit"
+      }
+    ],
+    "status": "passed",
+    "training_source_commit": "d86d384e2ee7d0f07f2f2fc5bf2b6dec64e13cac"
+  },
+  "scope": "The qualified private kit preserves the full historical source. This branch simplifies its public documentation.",
+  "status": "passed"
+}

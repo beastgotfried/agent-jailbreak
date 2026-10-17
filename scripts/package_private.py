@@ -76,7 +76,12 @@ def assemble(args):
     (root / "wheel").mkdir(mode=0o700)
     shutil.copyfile(args.wheel, root / "wheel" / args.wheel.name)
     shutil.copyfile(args.source_archive, root / "release-source.tar")
-    shutil.copyfile(code / "docs/RELEASE.md", root / "README.md")
+    guide = (code / "README.md").read_text()
+    guide += ("\n## Native reproduction\n\nUse the pinned s390x runtime image and the private bundle.\n"
+              "Run from this extracted bundle directory in the qualified native environment:\n\n"
+              "```bash\npython code/scripts/reproduce_selected.py --bundle . "
+              "--output ../reproduction-01 --release-source-commit " + args.source_commit + "\n```\n")
+    (root / "README.md").write_text(guide, encoding="utf-8")
     dump(root / "package.json", {"release_id": spec["release_id"], "source_commit": args.source_commit,
         "selected_study": "studies/" + spec["selected_study_id"],
         "archived_challenger": "studies/" + spec["archived_challenger_study_id"],

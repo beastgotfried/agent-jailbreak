@@ -1,0 +1,105 @@
+{
+  "external_sources": [
+    {
+      "license": "CC-BY-NC-4.0",
+      "revision": "29df8e4dba60e1f4af4b4075c0705c5b313548a8",
+      "role": "Original source pools; ToxicChat also supplies original classifier data and current external regression.",
+      "source": "lmsys/toxic-chat",
+      "url": "https://huggingface.co/datasets/lmsys/toxic-chat"
+    },
+    {
+      "license": "not_verified",
+      "revision": "001df8e431969089812df6694dfa607fe7be79e8",
+      "role": "Original source pools; not selected-model training data.",
+      "source": "Norrrrrrr/WAInjectBench",
+      "url": "https://huggingface.co/datasets/Norrrrrrr/WAInjectBench"
+    },
+    {
+      "license": "MIT",
+      "revision": "886acc352a31533ffbcf4ef22c744658688086fc",
+      "role": "Original source pools; not selected-model training data.",
+      "source": "JailbreakBench/JBB-Behaviors",
+      "url": "https://huggingface.co/datasets/JailbreakBench/JBB-Behaviors"
+    },
+    {
+      "license": "not_listed",
+      "revision": "119a73e012e44035957c25a483f7f721bb348839",
+      "role": "Original source pools; not selected-model training data.",
+      "source": "walledai/JailbreakBench",
+      "url": "https://huggingface.co/datasets/walledai/JailbreakBench"
+    },
+    {
+      "license": "not_listed",
+      "revision": "9f4b3397bda985e1ac6dadb655e9ca3a17974144",
+      "role": "Original source pools; not selected-model training data.",
+      "source": "AlignmentResearch/StrongREJECT",
+      "url": "https://huggingface.co/datasets/AlignmentResearch/StrongREJECT"
+    },
+    {
+      "license": "MIT",
+      "revision": "main@2026-10-16",
+      "role": "Original source pools; not selected-model training data.",
+      "source": "centerforaisafety/HarmBench (GitHub)",
+      "url": "https://github.com/centerforaisafety/HarmBench"
+    },
+    {
+      "license": "CC-BY-4.0",
+      "revision": "d7bb5bd738c1fcbc36edd83d5e7d1b71a3e2d84d",
+      "role": "Original recovery verification/evaluation; current exposed external regression.",
+      "source": "XSTest",
+      "url": "https://github.com/paul-rottger/xstest"
+    },
+    {
+      "license": "CC-BY-SA-3.0",
+      "revision": "5f9bfba300181fb35854d64c8bf1180ea75105f7",
+      "role": "Instruction-only unlabelled traffic-profile study.",
+      "source": "Dolly 15k",
+      "url": "https://github.com/databrickslabs/dolly"
+    },
+    {
+      "license": "Apache-2.0",
+      "revision": "fdf72ae0827c1cda404aff25b6603abec9e3399b",
+      "role": "Downloaded and schema-inspected only. Proposed profile evaluation remains paused.",
+      "source": "OpenAssistant OASST1",
+      "url": "https://huggingface.co/datasets/OpenAssistant/oasst1"
+    }
+  ],
+  "not_used": [
+    "WildGuardMix",
+    "SafePickle",
+    "LongPIBench",
+    "WildChat-1M",
+    "LMSYS-Chat-1M",
+    "Gated walledai/HarmBench",
+    "Gated walledai/StrongREJECT"
+  ],
+  "pretrained_models": [
+    {
+      "id": "google/bert_uncased_L-2_H-128_A-2",
+      "license": "Apache-2.0",
+      "revision": "30b0a37ccaaa32f332884b96992754e246e48c5f",
+      "role": "Archived neural comparison."
+    },
+    {
+      "id": "sentence-transformers/all-MiniLM-L6-v2",
+      "license": "Apache-2.0",
+      "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+      "role": "Native compatibility and cost screen only; no study fit."
+    }
+  ],
+  "reference_only": [
+    "WhyLabs pattern groups; not part of the selected classifier or runtime."
+  ],
+  "rights_scope": "Public availability does not imply unrestricted reuse. Dataset and model licenses are separate. Unverified dataset rights remain unverified.",
+  "schema_version": 1,
+  "selected_training_data": {
+    "catalog_sha256": "852370c8b0edca168aeaaf1be845813429595d1bb49550cfdd887b874f1d53eb",
+    "kind": "synthetic",
+    "public_raw_data": false,
+    "reviewed_intent_groups": 91,
+    "rows": 100000,
+    "test": 20000,
+    "train": 70000,
+    "validation": 10000
+  }
+}
