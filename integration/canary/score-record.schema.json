@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Frozen guardrail-canary score record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "prompt_id",
+    "guardrail_score",
+    "canary_score",
+    "timestamp",
+    "split",
+    "guardrail_decision",
+    "guardrail_threshold",
+    "canary_threshold",
+    "guardrail_sha256",
+    "canary_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "prompt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "guardrail_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "canary_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "split": {
+      "type": "string",
+      "minLength": 1
+    },
+    "guardrail_decision": {
+      "enum": [
+        "allow",
+        "refuse"
+      ]
+    },
+    "guardrail_threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1.0000000000000002
+    },
+    "canary_threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1.0000000000000002
+    },
+    "guardrail_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "canary_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

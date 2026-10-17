@@ -16,7 +16,7 @@ The verified source artifact was copied without refitting to the VM runtime
 models/guardrail.joblib, with model-cards.json and guardrail.freeze.json.
 Its digest is 16cc50b1e16df16f937cc89c64eea164ed59f70275ccad09cc9303af1e9f2fce;
 saved threshold is 0.3590141404799981. Weights and threshold are frozen for reproducibility,
-not production-approved. Model files remain outside Git.
+not production-approved. Reviewed fitted pipeline copies are versioned under models/; private data/logs remain on the VM.
 
 ## Paths and environment
 
@@ -53,8 +53,8 @@ sudo docker run --rm --pull never --network none --cpus 2 --memory 4g \
 
 Each execution creates its own result directory and evidence file. The executed notebook
 path is replaced on rerun; individual run artifacts remain separate.
-Open results through vm-workspace in VS Code. Do not commit that link, data, models,
-credentials, executed notebooks, or harmful text. The source mount is read-only at execution.
+Open results through vm-workspace in VS Code. Do not commit that link, raw data, credentials, private record logs, or harmful text.
+Reviewed pipeline copies and executed outputs are versioned separately. The source mount is read-only at execution.
 
 ## Data and evaluation protocol
 
@@ -76,8 +76,7 @@ credentials, executed notebooks, or harmful text. The source mount is read-only 
 
 Development model, card, split audit, metrics, plots, validation-scores.jsonl, and summary:
 results/guardrail/<run-id>/. Evidence: logs/classifier/<run-id>.jsonl.
-No raw prompts or vocabulary features rendered/logged. Learned vocabulary stays in private
-runtime model artifacts.
+No raw prompts or vocabulary features rendered/logged. Learned vocabulary is included in reviewed fitted pipeline copies under models/.
 
 FREEZE_MODEL=False and RUN_FINAL_TEST=False are defaults. After review, freeze copies the
 exact pipeline to models/guardrail.joblib and records the threshold in models/model-cards.json.
@@ -94,7 +93,8 @@ Hash chains are tamper-evident relative to their preserved head, not external si
 
 Data/training/threshold/metrics/persistence/evidence functions have been extracted into the
 shared classifier package with CLI scripts. The notebook imports those modules.
-Canary, watcher, repair, prompt pools, and dashboard remain separate work.
+Word canary and paired scoring are complete; see ../integration/canary/README.md.
+Watcher, repair, prompt-pool integration and dashboard remain separate work.
 
 ## Original baseline development result
 

@@ -32,3 +32,11 @@
 19. Submit. Keep one hour of buffer. (All)
 
 Critical path: 1, 5, 7, 11, 13, 15, 17.
+
+## Verified model-lead checkpoint (2026-10-17)
+
+Item 1: guardrail and word canary are trained, frozen, documented and native-reload verified.
+Item 4: model score JSONL contract is supplied; shared stream/log/alarm/repair agreement
+remains open. Item 5: saved-pair 100-prompt smoke is verified; KS/alarm smoke remains
+monitor/systems integration work. Existing VM prompt pools need review against current
+partitions. See [the handoff](../integration/canary/README.md).

@@ -41,3 +41,10 @@ A watcher. A cheap canary model scores the same traffic as the guardrail, in par
 The 80% result is unsafe recall for the research reference (5.91% human FPR).
 The retained artifact and both research pipelines are included; hashes are in
 [models/manifest.json](models/manifest.json).
+
+## Canary integration
+
+Start with [the classifier + canary handoff](integration/canary/README.md) for completed
+work, model paths, paired scoring commands, JSONL schema, correlation and remaining team
+integration tasks. The [canary notebook](notebooks/06_word_canary.ipynb) contains 22 small
+code cells with native execution outputs.

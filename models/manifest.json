@@ -97,6 +97,15 @@
       "output_items": 14,
       "outputs_restored_without_reexecution": true,
       "layout": "Split into smaller code cells; original execution counts and output content preserved; not re-executed."
+    },
+    {
+      "path": "notebooks/06_word_canary.ipynb",
+      "execution_archive": "word-canary.executed.ipynb",
+      "archive_sha256": "46108896b1a955be165d41b6d9c2a9756f508fcd2ecec3864c7d03771a88ea65",
+      "sha256": "46108896b1a955be165d41b6d9c2a9756f508fcd2ecec3864c7d03771a88ea65",
+      "code_cells": 22,
+      "output_items": 14,
+      "execution_scope": "Saved-pair native verification, cached training summaries and aggregate plot. Training/export disabled."
     }
   ],
   "scope": "Existing native s390x artifacts and aggregate recorded outputs. No retraining or new test evaluation. Historical source commit/notebook digests in original cards are preserved.",

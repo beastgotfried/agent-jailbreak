@@ -175,3 +175,10 @@ include existing native execution outputs and plots alongside smaller code cells
 identical statement order;
 descriptive Markdown remains removed. Original archive hashes and provenance are recorded
 in models/manifest.json.
+
+## Word canary and paired scoring
+
+The word 1-2 n-gram canary is frozen in models/canary.joblib.
+Use scripts/run_classifier.sh canary {train,export,score,evaluate}; the original top-level
+score remains guardrail-only. Full handoff, schema, measurements, private reference paths
+and remaining tasks: [integration/canary](../integration/canary/README.md).

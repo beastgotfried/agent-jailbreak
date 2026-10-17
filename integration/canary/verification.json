@@ -1,0 +1,26 @@
+{
+  "evidence_label": "verified",
+  "scope": "Native s390x development/calibration and saved-artifact integration",
+  "native_integration_tests": {
+    "passed": 18,
+    "seconds": 38.61
+  },
+  "host_runner_cli_smoke": {
+    "all_scores_match_repository_copies": true,
+    "batch_size": 17,
+    "directory": "/runtime/results/classifier-runs/canary-cli-smoke-20261017T091025Z-6fa4b882",
+    "guardrail_only_decisions": true,
+    "no_prompt_text_in_outputs": true,
+    "output_sha256": "682aaa224d36a031c808c0308740ffee5239927be11d213013caf358a2213bb0",
+    "records": 100
+  },
+  "guardrail_unchanged": true,
+  "paired_validation_records": 959,
+  "word_canary_notebook_cells": 22,
+  "official_test_labels_read_in_this_work": false,
+  "limits": [
+    "Threshold calibration cohort is not independent final-test evidence.",
+    "Historical project-wide test exposure unresolved.",
+    "Error correlation is high; no monitor efficacy claim."
+  ]
+}
