@@ -1,22 +1,15 @@
-import type { CSSProperties } from "react";
-import { ActionPanel } from "./components/action-panel";
-import { ComparisonPanel } from "./components/comparison-panel";
-import { EvidencePanel } from "./components/evidence-panel";
-import { Icon } from "./components/icon";
+import { GeneralizationPanel } from "./components/generalization-panel";
 import { MetricCard } from "./components/metric-card";
-import { SignalPanel } from "./components/signal-panel";
-import { simulatedSnapshot } from "./data/simulated-snapshot";
+import { PairedOutcomePanel } from "./components/paired-outcome-panel";
+import { ProvenancePanel } from "./components/provenance-panel";
+import { RuntimeOutcomePanel } from "./components/runtime-outcome-panel";
+import { releaseBaseline } from "./data/release-baseline";
 import { WorkspaceHeader } from "../workspace/workspace-header";
 import styles from "./dashboard.module.css";
 
 export function DashboardScreen() {
-  const snapshot = simulatedSnapshot;
-  const ksRatio = snapshot.ksStatistic && snapshot.ksThreshold
-    ? snapshot.ksStatistic / snapshot.ksThreshold
-    : 0;
-  const evidenceRatio = snapshot.martingaleValue && snapshot.martingaleThreshold
-    ? snapshot.martingaleValue / snapshot.martingaleThreshold
-    : 0;
+  const report = releaseBaseline;
+  const harmfulAllowReduction = (report.baseline.harmfulAllowRate - report.supervised.harmfulAllowRate) * 100;
 
   return (
     <div className={styles.appShell} id="overview">
@@ -25,59 +18,38 @@ export function DashboardScreen() {
         <main className={styles.content}>
           <section className={styles.pageIntro}>
             <div>
-              <div className={styles.overline}>GUARDRAIL INTEGRITY <span>·</span> OVERVIEW</div>
-              <h1>Safety overview</h1>
+              <div className={styles.overline}>INTEGRITY WATCH <span>·</span> RELEASE EVIDENCE</div>
+              <h1>Safety monitor baseline</h1>
+              <p>Paired replay summary · {report.studyId}</p>
             </div>
-            <div className={styles.toolbar}>
-              <span className={styles.dateControl}><Icon name="clock" /> Last 15 minutes <span>⌄</span></span>
-              <span className={styles.filterControl}><Icon name="overview" /> Filter</span>
-              <span className={styles.previewChip}><i /> Simulated preview</span>
+            <div className={styles.reportMeta}>
+              <span className={styles.reportBadge}><i /> Read-only snapshot</span>
+              <a className={styles.reportLink} href="https://github.com/beastgotfried/agent-jailbreak/tree/release/safety-watch-baseline-20261017" target="_blank" rel="noreferrer">View release ↗</a>
             </div>
           </section>
 
-          {snapshot.dataMode === "simulated" && (
-            <aside className={styles.simulationNotice} aria-label="Simulated data notice">
-              <strong>PREVIEW DATA</strong>
-              <span>Illustrative replay values; no live guardrail feed is connected.</span>
-            </aside>
-          )}
-
-          <section className={styles.metricGrid} aria-label="Current run metrics">
-            <MetricCard tone="dark" label="Scored requests" value={snapshot.scoredRequests.toLocaleString()} hint="Requests in this replay" icon="runs" />
-            <MetricCard tone="plain" label="KS statistic" value={snapshot.ksStatistic?.toFixed(3)} hint={`Threshold ${snapshot.ksThreshold?.toFixed(2)} · crossed`} icon="pulse" />
-            <MetricCard tone="plain" label="Martingale evidence" value={snapshot.martingaleValue?.toFixed(1)} hint={`Alarm threshold ${snapshot.martingaleThreshold?.toFixed(0)}`} icon="overview" />
+          <section className={styles.metricGrid} aria-label="Release summary">
+            <MetricCard tone="dark" label="Harmful allow rate" value={`${(report.supervised.harmfulAllowRate * 100).toFixed(1)}%`} hint={`${harmfulAllowReduction.toFixed(1)} point decrease vs guardrail only`} icon="pulse" />
+            <MetricCard tone="plain" label="Episodes restored" value={`${report.runtime.restoredEpisodes} / ${report.pairedEpisodes}`} hint={`${report.runtime.heldEpisodes} contained · hold is not recovery`} icon="runs" />
+            <MetricCard tone="plain" label="External ROC-AUC" value={report.externalRegression.guardrailRocAuc.toFixed(3)} hint="ToxicChat · exposed regression" icon="overview" />
           </section>
 
           <div className={styles.primaryGrid}>
-            <SignalPanel points={snapshot.signal} />
-            <section className={`${styles.panel} ${styles.statusPanel}`} aria-labelledby="status-heading">
-              <div className={styles.panelHeading}>
-                <div><span className={styles.eyebrow}>DETECTION STATUS</span><h2 id="status-heading">Drift detected</h2><p>Review the signal before changing the guardrail.</p></div>
-                <span className={styles.alertTag}><i /> Review</span>
-              </div>
-              <div className={styles.thresholdRing} style={{ "--ring-progress": `${Math.min(ksRatio, 1) * 100}%` } as CSSProperties}>
-                <div><strong>{ksRatio.toFixed(2)}×</strong><span>KS threshold</span></div>
-              </div>
-              <div className={styles.statusStats}>
-                <div><span>KS statistic</span><strong>{snapshot.ksStatistic?.toFixed(3)} <small>/ {snapshot.ksThreshold?.toFixed(2)}</small></strong></div>
-                <div><span>Martingale evidence</span><strong>{snapshot.martingaleValue?.toFixed(1)} <small>/ {snapshot.martingaleThreshold?.toFixed(0)}</small></strong></div>
-              </div>
-              <div className={styles.statusCallout}>
-                <span className={styles.calloutIcon}><Icon name="clock" /></span>
-                <div><span className={styles.eyebrow}>RECOMMENDED ACTION</span><strong>Recalibrate</strong><p>{evidenceRatio.toFixed(2)}× evidence threshold · operator approval required</p></div>
-              </div>
-            </section>
+            <PairedOutcomePanel baseline={report.baseline} supervised={report.supervised} />
+            <RuntimeOutcomePanel runtime={report.runtime} episodes={report.pairedEpisodes} />
           </div>
 
-          <div className={styles.secondaryGrid}>
-            <ActionPanel snapshot={snapshot} />
-            <ComparisonPanel comparison={snapshot.comparison} />
-          </div>
-          <div className={styles.evidenceRow}><EvidencePanel events={snapshot.events} /></div>
+          <details className={styles.evidenceDetails}>
+            <summary><span><b>Release validation & provenance</b><small>External regression metrics, qualification record, and source hashes</small></span><i aria-hidden="true">+</i></summary>
+            <div className={styles.evidenceGrid}>
+              <GeneralizationPanel regression={report.externalRegression} />
+              <ProvenancePanel report={report} />
+            </div>
+          </details>
 
           <footer className={styles.footerNote}>
-            <span><Icon name="shield" />Monitoring detects change, not correctness.</span>
-            <span>Prompt text is intentionally excluded from this view.</span>
+            <span>30,720 requests · 60 paired episodes · 5 reused seeds</span>
+            <span>No live service or action connector is configured.</span>
           </footer>
         </main>
       </div>

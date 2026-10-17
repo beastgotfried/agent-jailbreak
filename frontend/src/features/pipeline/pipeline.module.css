@@ -71,3 +71,5 @@
 .zoomControl span { display: grid; min-width: 27px; height: 25px; place-items: center; border-radius: 7px; background: #343735; color: #e5e8e4; font-size: 12px; }
 .zoomControl span:nth-child(2) { min-width: 48px; background: transparent; font-size: 8px; }
 @media (max-width: 760px) { .page { padding: 0 10px 12px; } .workspace { min-height: calc(100vh - 75px); padding: 20px 14px 14px; } .canvasTopline { align-items: flex-start; flex-direction: column; gap: 12px; } }
+.pipelineNote { margin-top: 14px; padding: 11px 13px; border: 1px solid #292929; border-radius: 9px; background: #101010; color: #9b9b9b; font-size: 9px; line-height: 1.6; }
+.pipelineNote strong { color: #d5d5d5; font-weight: 600; }

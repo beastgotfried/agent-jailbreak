@@ -1,7 +1,7 @@
 import styles from "../dashboard.module.css";
 import { Icon, type IconName } from "./icon";
 
-type MetricCardProps = { label: string; hint: string; icon: IconName; value?: string; tone?: "lime" | "orange" | "yellow" | "dark" | "plain" };
+type MetricCardProps = { label: string; hint: string; icon: IconName; value?: string; tone?: "dark" | "plain" };
 
 export function MetricCard({ label, hint, icon, value, tone = "dark" }: MetricCardProps) {
   return (

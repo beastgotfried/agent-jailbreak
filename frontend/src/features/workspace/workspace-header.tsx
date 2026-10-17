@@ -14,8 +14,8 @@ export function WorkspaceHeader({ activePage }: { activePage: "dashboard" | "pip
         <Link className={activePage === "pipeline" ? styles.active : ""} href="/pipeline" aria-current={activePage === "pipeline" ? "page" : undefined}>Pipeline</Link>
       </nav>
       <div className={styles.meta}>
-        <span className={styles.platform}><i />LINUXONE TARGET</span>
-        <span className={styles.mode}><i />SIMULATED PREVIEW</span>
+        <span className={styles.platform}><i />s390x qualification</span>
+        <span className={styles.mode}><i />read-only report</span>
       </div>
     </header>
   );
