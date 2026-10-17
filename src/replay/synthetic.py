@@ -232,7 +232,8 @@ def external_scores(backend, toxic_test, xstest):
     return report
 
 
-def run(data, models, output, *, source_commit, toxic_test=None, xstest=None):
+def run(data, models, output, *, source_commit, toxic_test=None, xstest=None,
+        backend_factory=None, extra_report_fields=None):
     native_only()
     if toxic_test is None or xstest is None:
         raise ValueError("required_external_regression_inputs_missing")
@@ -252,7 +253,8 @@ def run(data, models, output, *, source_commit, toxic_test=None, xstest=None):
     cards = json.loads((models / "model-cards.json").read_text())
     p = cards["policy"]
     policy = BinaryPolicy(p["threshold"], p["model_pair_id"], tuple(p["calibration_ids"]))
-    factory = lambda: SyntheticBackend(models, cards_hash)
+    loader = SyntheticBackend if backend_factory is None else backend_factory
+    factory = lambda: loader(models, cards_hash)
     test, validation = load_rows(data / "test.jsonl"), load_rows(data / "validation.jsonl")
     fit, verification = select_probes(validation, "probe_fit", 32), select_probes(validation, "probe_verification", 64)
     endpoint = endpoint_rows(test)
@@ -318,6 +320,10 @@ def run(data, models, output, *, source_commit, toxic_test=None, xstest=None):
                    "Existing finite probes can miss input-specific and semantic errors.",
                    "Offline approvals and an agent stub are not a deployed autonomous service.",
                    "No raw requests or personal data belong in public reports."]}
+    if extra_report_fields:
+        if set(extra_report_fields) & set(report):
+            raise ValueError("reserved_benchmark_report_field")
+        report.update(extra_report_fields)
     write_json(output / "report.json", report)
     write_json(output / "timing.json", {"architecture": platform.machine(),
         "backend_score_wall_seconds": dict(timings),
