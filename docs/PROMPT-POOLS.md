@@ -19,6 +19,9 @@ Evidence on the Mac (preparation/prompt-pools-20261017):
 * `parquet-details.json` — label and content-shape statistics (no raw prompts).
 * `source-download-manifest.json` — LIST of repo/revision/local_dir/files[{path,sha256}], plus BLOCKED gated entries.
 * `model-split-manifest.json` — frozen 4734 groups (3076 fit / 947 validation / 711 reference), seed 42.
+* `toxicchat-eligibility.json` — **347 eligible human-benign source rows / 346 canonical reference groups**, 9339 global ToxicChat blocked groups, **0 allowed test overlap** (QA expectation, not hardcoded fixture count).
+* `source-overlap-audit.json` — StrongREJECT: 20 `keywords` + 54 `violence` prompts are normalized subsets of 313 `data` prompts; 313 unique total (QA expectation).
+* `jbb-mirror-audit.json` — 200 JailbreakBench mirror `prompt` strings exactly equal official JBB `Goal` within same `benign`/`harmful` subset; 0 mirror-unique normalized prompts (QA expectation, not semantic novelty proof).
 
 > Actual CSV/Parquet text is not committed. Real counts are observed on the VM
 > after the accepted code runs natively. Fixture tests use harmless synthetic strings.
@@ -80,11 +83,11 @@ python3 -m src.data.build_prompt_pools \
 
 | Dataset | Files | Text field | Label / task | Routing | Caveat |
 |---|---|---|---|---|---|
-| **ToxicChat0124** `toxicchat0124/data/0124/*.csv` | train 5 082, test 5 083 | `user_input` | `toxicity`/`jailbreaking` → unsafe, `human_annotation` flag; task `toxicity_or_jailbreak` | Only **reference** groups with `toxicity=0,jailbreaking=0, human=True` (any member of the group qualifies) are allowed as benign candidates. `fit`/`validation`/`test`/`nonhuman-only`/`unsafe` reference prompts form a **global blocked hash set** used to exclude overlap via any other source. | Real user prompts; test never a pool source; provenance keeps `conv_id` and literal flags. |
-| **WAInjectBench** `wainjectbench-text/text/benign/*.jsonl` (4) + `text/malicious/*.jsonl` (8) | 2 707 benign + 991 malicious before exclusions | `text` | `id`, file/category, directory label; task `prompt_injection` | benign dir → benign pool, malicious dir → attack pool | Benchmark-constructed/curated, fresh 2026, not guaranteed production traffic; routing ≠ universal toxicity. License null → rights-review flagged. |
+| **ToxicChat0124** `toxicchat0124/data/0124/*.csv` | train 5 082, test 5 083 | `user_input` | `toxicity`/`jailbreaking` → unsafe, `human_annotation` flag; task `toxicity_or_jailbreak` | Only **reference** groups with `toxicity=0,jailbreaking=0, human=True` (any member of the group qualifies) are allowed as benign candidates. `fit`/`validation`/`test`/`nonhuman-only`/`unsafe` reference prompts form a **global blocked hash set** (9339 groups; 346 canonical allowed reference groups from 347 source rows, 0 test overlap per `toxicchat-eligibility.json`) used to exclude overlap via any other source. | Real user prompts (ToxicChat card **CC-BY-NC-4.0**); test never a pool source; provenance keeps `conv_id` and literal flags. |
+| **WAInjectBench** `wainjectbench-text/text/benign/*.jsonl` (4) + `text/malicious/*.jsonl` (8) | 2 707 benign + 991 malicious before exclusions | `text` | `id`, file/category, directory label; task `prompt_injection` | benign dir → benign pool, malicious dir → attack pool | Benchmark-constructed/curated; no freshness or production-traffic claim; routing ≠ universal toxicity. License null → rights-review flagged. |
 | **JBB-Behaviors** `jbb-behaviors/data/benign-behaviors.csv` / `harmful-behaviors.csv` (100 each) | `Goal` (never `Target`), `Index`, `Category`/`Behavior`/`Source` | task `harmful_request`, origin `curated_behavior_goal` | benign file → benign, harmful → attack | `judge-comparison.csv` excluded entirely (judge outputs). MIT, revision pinned. |
-| **JailbreakBench (walledai)** `jbb-attacks/data/train-00000-of-00001.parquet` → converted | 200 rows `prompt, target, behavior, category, source, subset` (100 benign / 100 harmful) | `prompt` only (never `target`) | task `harmful_request`, origin `behavior_goal_mirror` | subset routing; deduped globally vs JBB-Behaviors | NOT proven GCG strings; license null stays unlisted (upstream MIT note is not a rights grant). |
-| **StrongREJECT** `strongreject/{data,keywords,violence}/{train,validation}` (7 parquet → jsonl, 3 train files are 0-row) | `clf_label, proxy_clf_label, instructions, content:list[str], answer_prompt, gen_target, proxy_gen_target` | `clf_label` 0 benign / 1 harmful supplies task label; `proxy_clf_label` preserved separately | `content[0]` used **only** when `instructions==""` and `content` is single nonempty string; else explicit exclusion (no concatenation). Default/keywords/violence configs may overlap; deduped globally. | All inspected rows have `clf_label=1, proxy=0` but benign handling is retained if `clf=0`. License null → rights-review. |
+| **JailbreakBench (walledai)** `jbb-attacks/data/train-00000-of-00001.parquet` → converted | 200 rows `prompt, target, behavior, category, source, subset` (100 benign / 100 harmful) | `prompt` only (never `target`) | task `harmful_request`, origin `behavior_goal_mirror` | 200 mirror prompts exactly equal official JBB `Goal` within same subset; 0 mirror-unique normalized prompts (`jbb-mirror-audit.json`); deduped globally vs JBB-Behaviors | NOT proven GCG strings; license null stays unlisted (upstream MIT note is not a rights grant). |
+| **StrongREJECT** `strongreject/{data,keywords,violence}/{train,validation}` (6 Parquet files → JSONL; 3 train files have 0 rows) | `clf_label, proxy_clf_label, instructions, content:list[str], answer_prompt, gen_target, proxy_gen_target` | `clf_label` 0 benign / 1 harmful supplies task label; `proxy_clf_label` preserved separately | `content[0]` used **only** when `instructions==""` and `content` is single nonempty string; else explicit exclusion (no concatenation). `keywords` (20) and `violence` (54) prompts are normalized subsets of `data` (313); 313 unique total (`source-overlap-audit.json`). Deduped globally. | All inspected rows have `clf_label=1, proxy=0` but benign handling is retained if `clf=0`. License null → rights-review. |
 | **HarmBench** `harmbench-behaviors/harmbench_behaviors_text_all.csv` (400) | `Behavior`, `FunctionalCategory`, `SemanticCategory`, `Tags`, `ContextString`, `BehaviorID` | task `harmful_request` | Only `FunctionalCategory=standard` (200) with exact `Behavior` text are eligible → attack pool. `contextual` (100, requires context assembly) and `copyright` (100, different policy task) are explicitly excluded with reason, ID, and category (no raw text). | MIT; revision `main@2026-10-16` is snapshot (`revision_strength: snapshot_hash_only`); retain bytes SHA. Not a claim of successful jailbreaks. |
 
 *Literal CSV handling:* stdlib `csv` with `keep_default_na=False` equivalent; values such as `NA`, `0` are kept as strings.
@@ -103,6 +106,7 @@ original Parquet `path+SHA+row` and converted `path+SHA`.
 * **Conflicting benign/attack groups** (same normalized hash seen as both kinds
   across sources) exclude the whole group with reason `conflicting_benign_attack`; never relabeled.
 * Pool `text_sha256` is SHA-256 of the selected exact text.
+* **Semantic limitation:** Exact normalized disjointness does not prove semantic or attack-family independence; no semantic deduplication model is applied. JBB novelty disclaimer does not cover cross-purpose independence.
 
 ### Partitions (replay purposes, not classifier splits)
 
@@ -148,7 +152,7 @@ All under `output-dir` (must be new/empty; never overwrites):
   Caveats explicitly state: routing ≠ universal safety truth; label/task namespaces;
   `judge-comparison` excluded; `target`/`Target` never used; StrongREJECT proxy
   does not override; only HarmBench standard eligible; test never pooled; partitions
-  are replay purposes.
+  are replay purposes; exact normalized disjointness does not prove semantic or attack-family independence.
 
 Repeated equivalent runs give identical pool bytes and partition assignments
 (same seed, same input hashes).

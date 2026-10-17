@@ -12,9 +12,21 @@ import argparse
 import csv
 import hashlib
 import json
+import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
+
+_HEX_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+
+def _is_hex_sha256(s: str) -> bool:
+    return isinstance(s, str) and bool(_HEX_SHA256_RE.match(s.strip())) and len(s.strip()) == 64
+
+def _require_resolved_within(path: Path, root: Path, context: str) -> None:
+    try:
+        path.resolve().relative_to(root.resolve())
+    except ValueError:
+        raise SystemExit(f"{context} escapes root: {path} not within {root}")
 
 # ---------------------------------------------------------------------------
 # Helpers: normalize, hashes, safety, literal CSV
@@ -147,8 +159,15 @@ def validate_raw_hashes(raw_root: Path, download_data, prefix_mapping):
                 # Parquet raw validation is optional; if file exists under raw_root, validate
                 # But we usually validate via conversion manifest; don't require.
                 maybe = raw_root / prefix / p
+                # Resolved containment before any read/hash, covers file and parent symlinks
+                _require_resolved_within(maybe, raw_root, f"raw parquet {prefix}/{p}")
                 if maybe.is_file():
-                    actual = sha256_file(maybe)
+                    # re-check containment after confirming file exists (symlink may point outside)
+                    _require_resolved_within(maybe, raw_root, f"raw parquet {prefix}/{p}")
+                    try:
+                        actual = sha256_file(maybe)
+                    except Exception as e:
+                        raise SystemExit(f"unreadable raw parquet {prefix}/{p}: {e}") from e
                     if actual != s:
                         raise SystemExit(f"hash mismatch raw parquet {prefix}/{p}: expected {s}, got {actual}")
                     validated[f"{prefix}/{p}"] = s
@@ -156,8 +175,12 @@ def validate_raw_hashes(raw_root: Path, download_data, prefix_mapping):
             # Non-parquet: must exist under raw_root
             disk = raw_root / prefix / p
             full_rel = f"{prefix}/{p}"
+            # Containment before existence/hash check, even if target has expected bytes
+            _require_resolved_within(disk, raw_root, f"raw file {full_rel}")
             if not disk.is_file():
                 raise SystemExit(f"missing required raw file: {full_rel} expected at {disk}")
+            # Re-check containment for symlink target
+            _require_resolved_within(disk, raw_root, f"raw file {full_rel}")
             # Validate not unsafe and readable
             try:
                 actual = sha256_file(disk)
@@ -214,16 +237,16 @@ def validate_converted_hashes(converted_root: Path, download_data, prefix_mappin
             raise SystemExit(f"converted source not in download manifest: {src_rel}")
         if expected_src != src_sha:
             raise SystemExit(f"conversion source hash mismatch for {src_rel}: manifest {expected_src} vs conversion {src_sha}")
-        # Validate output file exists and hash matches
+        # Validate output file exists and hash matches, with resolved containment before any read
         out_path = converted_root / out_rel
+        _require_resolved_within(out_path, converted_root, f"converted output {out_rel}")
         if not out_path.is_file():
             raise SystemExit(f"missing converted file: {out_rel}")
-        # Verify output path is inside converted_root
+        _require_resolved_within(out_path, converted_root, f"converted output {out_rel}")
         try:
-            out_path.resolve().relative_to(converted_root.resolve())
-        except ValueError:
-            raise SystemExit(f"converted output escapes root: {out_rel}")
-        actual_out = sha256_file(out_path)
+            actual_out = sha256_file(out_path)
+        except Exception as e:
+            raise SystemExit(f"unreadable converted output {out_rel}: {e}") from e
         if actual_out != out_sha:
             raise SystemExit(f"hash mismatch converted output {out_rel}: expected {out_sha}, got {actual_out}")
         validated[out_rel] = actual_out
@@ -323,22 +346,37 @@ def build_toxic_candidates(raw_root: Path, model_manifest, download_meta, prefix
     test_rel = f"{toxic_prefix}/data/0124/toxic-chat_annotation_test.csv"
     train_path = raw_root / train_rel
     test_path = raw_root / test_rel
+    # Resolved containment before any read/hash, covers escaping file and parent symlinks
+    _require_resolved_within(train_path, raw_root, f"toxicchat train {train_rel}")
+    _require_resolved_within(test_path, raw_root, f"toxicchat test {test_rel}")
     if not train_path.is_file() or not test_path.is_file():
         raise SystemExit(f"missing toxicchat train/test CSV under {raw_root}")
-    # Validate against model manifest dataset hashes
-    expected_train_sha = model_manifest.get("datasets", {}).get("train", {}).get("sha256")
-    expected_test_sha = model_manifest.get("datasets", {}).get("test", {}).get("sha256")
-    # Also datasets may be under path keys? Use prefix mapping to get expected? But model manifest is authoritative.
-    if expected_train_sha:
-        actual_train = sha256_file(train_path)
-        if actual_train != expected_train_sha:
-            raise SystemExit(f"toxicchat train hash mismatch vs model manifest: expected {expected_train_sha}, got {actual_train}")
-    if expected_test_sha:
-        actual_test = sha256_file(test_path)
-        if actual_test != expected_test_sha:
-            raise SystemExit(f"toxicchat test hash mismatch vs model manifest: expected {expected_test_sha}, got {actual_test}")
+    # Re-check containment after existence (symlink target)
+    _require_resolved_within(train_path, raw_root, f"toxicchat train {train_rel}")
+    _require_resolved_within(test_path, raw_root, f"toxicchat test {test_rel}")
+    # Validate against model manifest dataset hashes unconditionally
+    if not isinstance(model_manifest, dict):
+        raise SystemExit("model manifest must be JSON object")
+    if model_manifest.get("schema_version") != 1:
+        raise SystemExit("model manifest schema_version must be 1")
+    datasets = model_manifest.get("datasets")
+    if not isinstance(datasets, dict):
+        raise SystemExit("model manifest datasets must be dict")
+    for key, path in (("train", train_path), ("test", test_path)):
+        entry = datasets.get(key)
+        if not isinstance(entry, dict):
+            raise SystemExit(f"model manifest missing datasets.{key}")
+        sha = entry.get("sha256")
+        if not isinstance(sha, str) or not sha.strip():
+            raise SystemExit(f"model manifest datasets.{key}.sha256 must be nonempty 64-hex")
+        sha_stripped = sha.strip()
+        if not _is_hex_sha256(sha_stripped):
+            raise SystemExit(f"model manifest datasets.{key}.sha256 must be 64-hex: {sha}")
+        actual = sha256_file(path)
+        if actual != sha_stripped:
+            raise SystemExit(f"toxicchat {key} hash mismatch vs model manifest: expected {sha_stripped}, got {actual}")
 
-    # Load CSVs literal
+    # Load CSVs literal (after containment and hash validation)
     train_fields, train_rows = read_csv_literal(train_path)
     test_fields, test_rows = read_csv_literal(test_path)
     # Validate required columns
@@ -347,15 +385,26 @@ def build_toxic_candidates(raw_root: Path, model_manifest, download_meta, prefix
         if col not in train_fields or col not in test_fields:
             raise SystemExit(f"toxicchat missing required column {col}")
 
-    # Build mapping conv_id -> row for train
+    # Build mapping conv_id -> row for train, reject duplicate conv_id
     train_by_conv: dict[str, dict] = {}
+    seen_conv_ids: set[str] = set()
     for r in train_rows:
         cid = r.get("conv_id", "")
-        if not cid.strip():
+        if not isinstance(cid, str) or not cid.strip():
             raise SystemExit(f"toxicchat train conv_id empty at row {r['_row_index']}")
-        # If duplicate conv_id across rows, keep first? But spec says duplicate groups may have same normalized text with different conv_ids, not same conv_id dup.
-        # We'll store; if duplicate conv_id appears, keep list? For now keep last.
+        if cid in seen_conv_ids:
+            raise SystemExit(f"duplicate conv_id in train CSV: {cid}")
+        seen_conv_ids.add(cid)
         train_by_conv[cid] = r
+    # Also check test duplicate conv_id
+    seen_test: set[str] = set()
+    for r in test_rows:
+        cid = r.get("conv_id", "")
+        if not isinstance(cid, str) or not cid.strip():
+            raise SystemExit(f"toxicchat test conv_id empty at row {r['_row_index']}")
+        if cid in seen_test:
+            raise SystemExit(f"duplicate conv_id in test CSV: {cid}")
+        seen_test.add(cid)
 
     # Compute normalized hashes for all train and test rows for blocked set
     def row_norm_hash(row):
@@ -369,11 +418,100 @@ def build_toxic_candidates(raw_root: Path, model_manifest, download_meta, prefix
     test_hashes = set(row_norm_hash(r) for r in test_rows)
     all_hashes = train_hashes | test_hashes
 
-    # Determine allowed reference groups via model manifest
-    rows_meta = model_manifest.get("rows", [])
-    if not isinstance(rows_meta, list):
-        raise SystemExit("model manifest rows must be list")
-    # Build allowed set
+    # Validate model manifest rows before eligibility selection
+    rows_meta = model_manifest.get("rows")
+    if not isinstance(rows_meta, list) or not rows_meta:
+        raise SystemExit("model manifest rows must be nonempty list")
+    # Check split counts and total
+    split = model_manifest.get("split")
+    if not isinstance(split, dict):
+        raise SystemExit("model manifest split must be dict")
+    counts = split.get("counts")
+    if not isinstance(counts, dict):
+        raise SystemExit("model manifest split.counts must be dict")
+    rows_after = split.get("rows_after_dedupe")
+    if not isinstance(rows_after, int):
+        raise SystemExit("model manifest split.rows_after_dedupe must be int")
+    if rows_after != len(rows_meta):
+        raise SystemExit(f"model manifest rows_after_dedupe mismatch: expected {len(rows_meta)} got {rows_after}")
+    for role in ("fit", "validation", "reference"):
+        if role not in counts or not isinstance(counts[role], int):
+            raise SystemExit(f"model manifest split.counts.{role} must be int")
+    total_counts = sum(counts[r] for r in ("fit", "validation", "reference"))
+    if total_counts != len(rows_meta):
+        raise SystemExit(f"model manifest split counts total mismatch: {total_counts} vs {len(rows_meta)}")
+    # Validate each row entry and collect for conflict checks
+    allowed_roles = {"fit", "validation", "reference"}
+    seen_prompt_sha: set[str] = set()
+    seen_source_ids: set[str] = set()
+    prompt_to_role: dict[str, str] = {}
+    source_to_role: dict[str, str] = {}
+    # Also need to track group_by_hash for later but validate first
+    for entry in rows_meta:
+        if not isinstance(entry, dict):
+            raise SystemExit("model manifest rows entry must be dict")
+        role = entry.get("role")
+        ph = entry.get("prompt_sha256")
+        source_ids = entry.get("source_conv_ids")
+        if not isinstance(role, str) or role not in allowed_roles:
+            raise SystemExit(f"model manifest unknown role: {role}")
+        if not isinstance(ph, str) or not _is_hex_sha256(ph):
+            raise SystemExit(f"model manifest prompt_sha256 must be 64-hex: {ph}")
+        if ph in seen_prompt_sha:
+            raise SystemExit(f"duplicate canonical prompt_sha256: {ph}")
+        seen_prompt_sha.add(ph)
+        if ph in prompt_to_role and prompt_to_role[ph] != role:
+            raise SystemExit(f"group {ph} assigned conflicting roles: {prompt_to_role[ph]} vs {role}")
+        prompt_to_role[ph] = role
+        if not isinstance(source_ids, list) or not source_ids:
+            raise SystemExit(f"model manifest source_conv_ids must be nonempty list for {ph}")
+        for sid in source_ids:
+            if not isinstance(sid, str) or not sid.strip():
+                raise SystemExit(f"model manifest source_conv_id must be nonempty string for {ph}")
+            if sid in seen_source_ids:
+                raise SystemExit(f"duplicate source_conv_id across groups: {sid}")
+            seen_source_ids.add(sid)
+            if sid in source_to_role and source_to_role[sid] != role:
+                raise SystemExit(f"source {sid} assigned conflicting roles: {source_to_role[sid]} vs {role}")
+            source_to_role[sid] = role
+            if sid not in train_by_conv:
+                raise SystemExit(f"model manifest source_conv_id not in train CSV: {sid}")
+            # Validate normalized hash matches declared group hash
+            row = train_by_conv[sid]
+            txt = row.get("user_input", "")
+            if not isinstance(txt, str):
+                txt = str(txt)
+            norm_hash = sha256_text(normalize_prompt(txt))
+            if norm_hash != ph:
+                raise SystemExit(f"source text hash mismatch for {sid}: computed {norm_hash} vs declared {ph}")
+        # Validate that role counts will be checked after loop
+    # Check per-role counts match actual
+    for role in ("fit", "validation", "reference"):
+        actual = sum(1 for e in rows_meta if e.get("role") == role)
+        if actual != counts[role]:
+            raise SystemExit(f"role count mismatch for {role}: expected {counts[role]} got {actual}")
+    # Strict flag validation helper
+    def _is_valid_toxicity(v: str) -> bool:
+        return v.strip() in ("0", "1")
+    def _is_valid_human(v) -> bool:
+        # Must be string "True" or "False" case-insensitive, after strip
+        if not isinstance(v, str):
+            v = str(v)
+        return v.strip().lower() in ("true", "false")
+    # Validate all train rows flags strictly if they are part of manifest? We validate all train rows for malformed to avoid junk numeric becoming humanTrue
+    for r in train_rows:
+        tox = r.get("toxicity", "")
+        jail = r.get("jailbreaking", "")
+        hum = r.get("human_annotation", "")
+        # toxicity and jailbreaking must be "0" or "1"
+        if not isinstance(tox, str) or not _is_valid_toxicity(tox):
+            raise SystemExit(f"malformed toxicity at train row {r['_row_index']}: {tox!r}")
+        if not isinstance(jail, str) or not _is_valid_toxicity(jail):
+            raise SystemExit(f"malformed jailbreaking at train row {r['_row_index']}: {jail!r}")
+        if not _is_valid_human(hum):
+            raise SystemExit(f"malformed human_annotation at train row {r['_row_index']}: {hum!r}")
+
+    # Determine allowed reference groups via model manifest (any member qualifies)
     allowed_hashes: set[str] = set()
     # Keep mapping from prompt_sha to group for provenance
     group_by_hash: dict[str, dict] = {}
@@ -399,31 +537,21 @@ def build_toxic_candidates(raw_root: Path, model_manifest, download_meta, prefix
             jail = row.get("jailbreaking", "").strip()
             hum_raw = row.get("human_annotation", "")
             hum_str = str(hum_raw).strip().lower()
-            # Determine human true: accept "true" or "1"
-            is_human = False
-            if hum_str == "true":
-                is_human = True
-            elif hum_str == "false":
-                is_human = False
-            else:
-                # try numeric
-                try:
-                    # handle "1", "0"
-                    if hum_str in ("1", "1.0"):
-                        is_human = True
-                    elif hum_str in ("0", "0.0"):
-                        is_human = False
-                    else:
-                        # parse int
-                        iv = int(float(hum_str)) if hum_str else 0
-                        is_human = bool(iv)
-                except:
-                    is_human = False
+            # Strict: tox and jail already validated as "0"/"1", hum as true/false
+            is_human = hum_str == "true"
             if tox == "0" and jail == "0" and is_human:
                 qualifies = True
                 break
         if qualifies:
             allowed_hashes.add(ph)
+
+    # Allowed reference hashes must not overlap official test or fit/validation groups
+    fit_validation_hashes = {e.get("prompt_sha256") for e in rows_meta if e.get("role") in ("fit", "validation")}
+    for h in allowed_hashes:
+        if h in test_hashes:
+            raise SystemExit(f"allowed reference hash overlaps test: {h}")
+        if h in fit_validation_hashes:
+            raise SystemExit(f"allowed reference hash overlaps fit/validation: {h}")
 
     blocked_set = all_hashes - allowed_hashes
 
@@ -446,22 +574,7 @@ def build_toxic_candidates(raw_root: Path, model_manifest, download_meta, prefix
             jail = row.get("jailbreaking", "").strip()
             hum_raw = row.get("human_annotation", "")
             hum_str = str(hum_raw).strip().lower()
-            is_human = hum_str == "true" or hum_str == "1" or hum_str == "1.0"
-            # More precise: reuse same logic as above
-            if hum_str == "true":
-                is_human = True
-            elif hum_str == "false":
-                is_human = False
-            else:
-                try:
-                    if hum_str in ("1", "1.0"):
-                        is_human = True
-                    elif hum_str in ("0", "0.0"):
-                        is_human = False
-                    else:
-                        is_human = bool(int(float(hum_str))) if hum_str else False
-                except:
-                    is_human = False
+            is_human = hum_str == "true"
             if tox == "0" and jail == "0" and is_human:
                 qualifying_rows.append(row)
         # If none qualifying (should not happen because we checked), skip
@@ -475,11 +588,6 @@ def build_toxic_candidates(raw_root: Path, model_manifest, download_meta, prefix
                 txt = str(txt)
             norm = normalize_prompt(txt)
             norm_hash = sha256_text(norm)
-            # sanity: norm_hash should equal ph
-            if norm_hash != ph:
-                # The group's prompt_sha is derived from normalized text; if our computed differs, treat as mismatch but allow?
-                # For determinism we keep computed.
-                pass
             source_text_sha = sha256_text(txt)
             # Provenance entry – use dataset metadata from download manifest
             candidates.append({
@@ -518,6 +626,7 @@ def build_toxic_candidates(raw_root: Path, model_manifest, download_meta, prefix
     return candidates, blocked_set, allowed_hashes
 
 def build_wainject_candidates(raw_root: Path, download_meta, prefix_mapping):
+    raw_root = raw_root.resolve()
     prefix = None
     for rel in prefix_mapping:
         if rel.startswith("wainjectbench"):
@@ -525,84 +634,108 @@ def build_wainject_candidates(raw_root: Path, download_meta, prefix_mapping):
             break
     if prefix is None:
         raise SystemExit("wainjectbench dataset not found")
-    # Expected files: text/benign/*.jsonl and text/malicious/*.jsonl
-    # Find files under raw_root/prefix/text
     base = raw_root / prefix
+    _require_resolved_within(base, raw_root, f"wainject base {prefix}")
     if not base.is_dir():
         raise SystemExit(f"missing wainjectbench dir {base}")
+    _require_resolved_within(base, raw_root, f"wainject base {prefix}")
     benign_dir = base / "text" / "benign"
     malicious_dir = base / "text" / "malicious"
-    # We expect 4 benign + 8 malicious before exclusions per spec, but we will generically discover
+    # Validate against manifest: only validated manifest-listed JSONL under text/benign or text/malicious
+    # Determine expected files from manifest for this prefix
+    expected: dict[str, str] = {}
+    for rel, sha in prefix_mapping.items():
+        if not rel.startswith(prefix + "/"):
+            continue
+        if (rel.startswith(prefix + "/text/benign/") or rel.startswith(prefix + "/text/malicious/")) and rel.endswith(".jsonl"):
+            if not isinstance(sha, str) or not sha.strip() or not _is_hex_sha256(sha.strip()):
+                raise SystemExit(f"manifest missing valid hash for {rel}")
+            expected[rel] = sha.strip()
+    if not expected:
+        raise SystemExit("no wainject manifest jsonl entries under text/benign or text/malicious")
     candidates = []
     exclusions = []
-    # Validate against manifest: we already validated raw hashes; now we iterate
-    # Determine expected files from manifest for this prefix
-    expected_files = [k for k in prefix_mapping if k.startswith(prefix + "/")]
-    # expected should be 12 + maybe README etc but we validated; now discover actual jsonl
+    # Discover actual jsonl files and validate containment
+    discovered: dict[str, Path] = {}
     for sub, kind in [(benign_dir, "benign"), (malicious_dir, "attack")]:
+        # Containment for sub
+        _require_resolved_within(sub, raw_root, f"wainject subdir {sub}")
         if not sub.is_dir():
-            # If missing but expected, we already errored in validate_raw_hashes for missing files?
-            # For wainject, the 12 files should exist; if one dir missing, error
             raise SystemExit(f"missing wainjectbench subdir {sub}")
+        _require_resolved_within(sub, raw_root, f"wainject subdir {sub}")
         for path in sorted(sub.glob("*.jsonl")):
+            _require_resolved_within(path, raw_root, f"wainject file {path}")
             rel = path.relative_to(raw_root).as_posix()
-            # Validate row parsing
-            rows = read_jsonl_literal(path)
-            for row in rows:
-                # Each row should have id:int, text:str
-                if "id" not in row or "text" not in row:
-                    raise SystemExit(f"wainjectbench malformed row missing id/text at {rel} row {row['_row_index']}")
-                rid = row["id"]
-                txt = row["text"]
-                if not isinstance(rid, int):
-                    raise SystemExit(f"wainjectbench id must be int at {rel} row {row['_row_index']}")
-                if not isinstance(txt, str):
-                    raise SystemExit(f"wainjectbench text must be str at {rel} row {row['_row_index']}")
-                if not txt.strip():
-                    # Empty text? Should we exclude? But spec says preserve; maybe allow empty? But we will exclude with reason?
-                    # For now treat empty as candidate but may be excluded later; we keep.
-                    pass
-                norm = normalize_prompt(txt)
-                norm_hash = sha256_text(norm)
-                source_text_sha = sha256_text(txt)
-                # Provenance
-                # Find manifest entry for this file to get sha
-                file_rel = f"{prefix}/{Path(rel).relative_to(prefix).as_posix()}"
-                # Actually rel already includes prefix, so full_rel is rel
-                sha = prefix_mapping.get(rel, "")
-                # Determine license etc from meta
-                meta = download_meta.get(prefix, {})
-                # Use file category from filename
-                category = path.stem  # e.g., comment_issue
-                # Determine split: benign vs malicious directory
-                # For provenance we store original_relative_path as rel
-                candidates.append({
-                    "normalized_hash": norm_hash,
-                    "normalized_text": norm,
-                    "text": txt,
+            if not is_safe_relative(rel):
+                raise SystemExit(f"unsafe wainject path: {rel}")
+            # Re-check containment for symlink target
+            _require_resolved_within(path, raw_root, f"wainject file {rel}")
+            discovered[rel] = path
+    # Validate missing expected files
+    for rel in expected:
+        if rel not in discovered:
+            raise SystemExit(f"missing expected wainject file: {rel}")
+    # Reject unexpected discovered JSONL files
+    for rel in discovered:
+        if rel not in expected:
+            raise SystemExit(f"unexpected wainject file not in manifest: {rel}")
+    # Ingest only validated manifest paths
+    for rel, path in sorted(discovered.items()):
+        expected_sha = expected[rel]
+        # Resolved containment already checked; verify hash before reading
+        _require_resolved_within(path, raw_root, f"wainject file {rel}")
+        try:
+            actual_sha = sha256_file(path)
+        except Exception as e:
+            raise SystemExit(f"unreadable wainject file {rel}: {e}") from e
+        if actual_sha != expected_sha:
+            raise SystemExit(f"hash mismatch for {rel}: expected {expected_sha}, got {actual_sha}")
+        # Also ensure prefix_mapping hash matches expected (redundant)
+        rows = read_jsonl_literal(path)
+        for row in rows:
+            if "id" not in row or "text" not in row:
+                raise SystemExit(f"wainjectbench malformed row missing id/text at {rel} row {row['_row_index']}")
+            rid = row["id"]
+            txt = row["text"]
+            if not isinstance(rid, int):
+                raise SystemExit(f"wainjectbench id must be int at {rel} row {row['_row_index']}")
+            if not isinstance(txt, str):
+                raise SystemExit(f"wainjectbench text must be str at {rel} row {row['_row_index']}")
+            if not txt.strip():
+                raise SystemExit(f"wainjectbench text must be nonempty at {rel} row {row['_row_index']}")
+            norm = normalize_prompt(txt)
+            norm_hash = sha256_text(norm)
+            source_text_sha = sha256_text(txt)
+            meta = download_meta.get(prefix, {})
+            category = path.stem
+            kind = "benign" if path.parent.name == "benign" else "attack"
+            candidates.append({
+                "normalized_hash": norm_hash,
+                "normalized_text": norm,
+                "text": txt,
+                "source_text_sha256": source_text_sha,
+                "pool_kind": kind,
+                "source_tasks": ["prompt_injection"],
+                "provenance": {
+                    "repo": meta.get("repo", "Norrrrrrr/WAInjectBench"),
+                    "revision": meta.get("revision", ""),
+                    "revision_strength": meta.get("revision_strength", "immutable"),
+                    "original_relative_path": rel,
+                    "original_sha256": expected_sha,
+                    "row_index": row["_row_index"],
+                    "source_id": str(rid),
+                    "original_split": "benign" if kind == "benign" else "malicious",
+                    "configuration": category,
+                    "source_task": "prompt_injection",
+                    "original_labels": {"directory_label": "benign" if kind == "benign" else "malicious", "file": category},
+                    "text_field": "text",
                     "source_text_sha256": source_text_sha,
-                    "pool_kind": kind,
-                    "source_tasks": ["prompt_injection"],
-                    "provenance": {
-                        "repo": meta.get("repo", "Norrrrrrr/WAInjectBench"),
-                        "revision": meta.get("revision", ""),
-                        "revision_strength": meta.get("revision_strength", "immutable"),
-                        "original_relative_path": rel,
-                        "original_sha256": sha,
-                        "row_index": row["_row_index"],
-                        "source_id": str(rid),
-                        "original_split": "benign" if kind == "benign" else "malicious",
-                        "configuration": category,
-                        "source_task": "prompt_injection",
-                        "original_labels": {"directory_label": "benign" if kind == "benign" else "malicious", "file": category},
-                        "text_field": "text",
-                        "source_text_sha256": source_text_sha,
-                        "origin": "benchmark_constructed_or_curated",
-                        "license": meta.get("license"),
-                        "rights_review_required": meta.get("rights_review_required", True),
-                        "file_category": category,
-                    }
-                })
+                    "origin": "benchmark_constructed_or_curated",
+                    "license": meta.get("license"),
+                    "rights_review_required": meta.get("rights_review_required", True),
+                    "file_category": category,
+                }
+            })
     return candidates, exclusions
 
 def build_jbb_behaviors_candidates(raw_root: Path, download_meta, prefix_mapping):
@@ -618,8 +751,12 @@ def build_jbb_behaviors_candidates(raw_root: Path, download_meta, prefix_mapping
     # judge file is intentionally ignored
     benign_path = raw_root / benign_rel
     harmful_path = raw_root / harmful_rel
+    _require_resolved_within(benign_path, raw_root, f"jbb-behaviors {benign_rel}")
+    _require_resolved_within(harmful_path, raw_root, f"jbb-behaviors {harmful_rel}")
     if not benign_path.is_file() or not harmful_path.is_file():
         raise SystemExit(f"missing jbb-behaviors csv under {raw_root}")
+    _require_resolved_within(benign_path, raw_root, f"jbb-behaviors {benign_rel}")
+    _require_resolved_within(harmful_path, raw_root, f"jbb-behaviors {harmful_rel}")
     candidates = []
     # Helper to process each file
     for rel, path, kind in [(benign_rel, benign_path, "benign"), (harmful_rel, harmful_path, "attack")]:
@@ -695,8 +832,10 @@ def build_jbb_attacks_candidates(converted_root: Path, download_meta, prefix_map
             continue
         out_rel = entry["output_relative_path"]
         out_path = converted_root / out_rel
+        _require_resolved_within(out_path, converted_root, f"jbb-attacks {out_rel}")
         # Validate out_path exists already validated
         rows = read_jsonl_literal(out_path)
+        _require_resolved_within(out_path, converted_root, f"jbb-attacks {out_rel}")
         # Each row has prompt,target,behavior,category,source,subset
         # Validate fields
         meta = download_meta.get(prefix, {})
@@ -768,7 +907,9 @@ def build_strongreject_candidates(converted_root: Path, download_meta, prefix_ma
             continue
         out_rel = entry["output_relative_path"]
         out_path = converted_root / out_rel
+        _require_resolved_within(out_path, converted_root, f"strongreject {out_rel}")
         rows = read_jsonl_literal(out_path)
+        _require_resolved_within(out_path, converted_root, f"strongreject {out_rel}")
         meta = download_meta.get(prefix, {})
         src_sha = entry["source_sha256"]
         out_sha = entry["output_sha256"]
@@ -886,8 +1027,10 @@ def build_harmbench_candidates(raw_root: Path, download_meta, prefix_mapping):
     if csv_rel is None:
         raise SystemExit("harmbench csv not found")
     csv_path = raw_root / csv_rel
+    _require_resolved_within(csv_path, raw_root, f"harmbench {csv_rel}")
     if not csv_path.is_file():
         raise SystemExit(f"missing harmbench csv {csv_path}")
+    _require_resolved_within(csv_path, raw_root, f"harmbench {csv_rel}")
     fields, rows = read_csv_literal(csv_path)
     required = ["Behavior", "FunctionalCategory", "SemanticCategory", "Tags", "ContextString", "BehaviorID"]
     for col in required:
@@ -1354,7 +1497,9 @@ def build_prompt_pools(raw_root: Path, converted_root: Path, download_manifest: 
         "dedup": {
             "total_before": total_candidates,
             "canonical_after": len(canonical_groups),
-            "removed_duplicates_or_conflicts": dedup_removed + blocked_exclusions + conflict_exclusions,
+            "removed_duplicates_or_conflicts": dedup_removed,
+            "removed_blocked_groups": blocked_exclusions,
+            "removed_conflict_groups": conflict_exclusions,
             "blocked_set_size": blocked_hash_count,
         },
         "outputs": output_infos,
@@ -1367,6 +1512,7 @@ def build_prompt_pools(raw_root: Path, converted_root: Path, download_manifest: 
             "ToxicChat test never a pool source; blocked set prevents leakage via other sources",
             "Partitions are replay purposes, not new classifier train/test splits; no adaptation guarantee",
             "No cross-purpose normalized duplicates; partitions deterministic seeded SHA ordering within (pool_kind, source_tasks) strata",
+            "Exact normalized disjointness does not prove semantic or attack-family independence; no semantic deduplication model is applied",
         ],
         "schema": {
             "pool_record": ["schema_version","prompt_id","normalized_text_sha256","text","text_sha256","pool_kind","partition","source_tasks","sources"],

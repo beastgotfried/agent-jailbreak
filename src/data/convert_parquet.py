@@ -67,6 +67,12 @@ def _is_safe_relative(relative: Path) -> bool:
         return False
     return True
 
+def _require_resolved_within(path: Path, root: Path, context: str) -> None:
+    try:
+        path.resolve().relative_to(root.resolve())
+    except ValueError:
+        raise SystemExit(f"{context} escapes root: {path} not within {root}")
+
 
 def convert_parquet(input_root: Path, output_root: Path, download_manifest: Path) -> None:
     # Lazy import: pyarrow required only here.
@@ -129,18 +135,30 @@ def convert_parquet(input_root: Path, output_root: Path, download_manifest: Path
     # Discover parquet files under input_root.
     discovered: dict[str, Path] = {}
     for p in input_root.rglob("*.parquet"):
-        rel = p.relative_to(input_root).as_posix()
+        # Resolved containment before any read, covers file and parent symlinks
+        _require_resolved_within(p, input_root, f"parquet file {p}")
+        try:
+            rel = p.relative_to(input_root).as_posix()
+        except ValueError:
+            raise SystemExit(f"parquet file escapes root: {p}")
         if not _is_safe_relative(Path(rel)):
             raise SystemExit(f"unsafe relative path: {rel}")
+        _require_resolved_within(p, input_root, f"parquet file {rel}")
         discovered[rel] = p
 
     # Now validate discovered files.
     # Check for unexpected files.
     for rel, path in discovered.items():
+        _require_resolved_within(path, input_root, f"parquet file {rel}")
         if rel not in prefix_mapping:
             raise SystemExit(f"unexpected parquet file not in manifest: {rel}")
         expected = prefix_mapping[rel]
-        actual = sha256_file(path)
+        # Resolved containment again before hash, even if target has expected bytes
+        _require_resolved_within(path, input_root, f"parquet file {rel}")
+        try:
+            actual = sha256_file(path)
+        except Exception as e:
+            raise SystemExit(f"unreadable parquet file {rel}: {e}") from e
         if actual != expected:
             raise SystemExit(f"hash mismatch for {rel}: expected {expected}, got {actual}")
 
@@ -157,11 +175,13 @@ def convert_parquet(input_root: Path, output_root: Path, download_manifest: Path
 
     for rel in sorted_rels:
         src_path = discovered[rel]
+        _require_resolved_within(src_path, input_root, f"parquet source {rel}")
         # Preserve tree, replace suffix.
         out_rel = Path(rel).with_suffix(".jsonl").as_posix()
         out_path = output_root / out_rel
         if not _is_safe_relative(Path(out_rel)):
             raise SystemExit(f"unsafe output relative path: {out_rel}")
+        _require_resolved_within(out_path, output_root, f"converted output {out_rel}")
 
         # Ensure parent dirs.
         out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -185,7 +205,11 @@ def convert_parquet(input_root: Path, output_root: Path, download_manifest: Path
             # For empty tables, pylist is [] and we write empty file.
 
         # Compute output hash and verify file written.
-        out_sha = sha256_file(out_path)
+        _require_resolved_within(out_path, output_root, f"converted output {out_rel}")
+        try:
+            out_sha = sha256_file(out_path)
+        except Exception as e:
+            raise SystemExit(f"unreadable converted output {out_rel}: {e}") from e
         # Re-read to ensure count matches.
         # Could also verify rows by counting lines.
         line_count = 0
