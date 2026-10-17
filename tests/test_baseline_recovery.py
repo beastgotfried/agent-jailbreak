@@ -543,26 +543,155 @@ def test_whole_runtime_batch_validation():
 
 def test_record_defensive_copy():
     manager, plan, _ = proposal(lambda s: s * 0.25)
-    # Mutate public record copy should not affect internal
-    original_status = plan.record["status"]
+    # Mutate public record top-level should not affect internal
     plan.record["status"] = "tampered"
     plan.record["applied"] = True
-    # Internal still verified
     receipt = manager.apply(plan)
     assert receipt["status"] == "applied"
     assert receipt["applied"] is True
-    # Public record still shows tampered but apply used internal
     assert plan.record["status"] == "tampered"
+    # Nested mutation must not affect internal evidence
+    manager2, plan2, _ = proposal(lambda s: s * 0.25)
+    # Deep copy check: clearing attempts in public copy must not erase internal
+    plan2.record["attempts"].clear()
+    plan2.record["attempts"].append({"tampered": True})
+    if plan2.record["attempts"] and "verification" in plan2.record["attempts"][0]:
+        plan2.record["attempts"][0]["verification"] = {"tampered": True}
+    receipt2 = manager2.apply(plan2)
+    assert receipt2["applied"]
+    assert receipt2["attempts"][0]["verification"]["pair_verified"] is True
+    assert len(receipt2["attempts"][0]["verification"]) > 1
 
 
-def test_deterministic_handle():
+def test_manager_bound_single_use_handle():
+    # Same manager, same generation/verification IDs, two trusted restarts A and B -> distinct handles, apply first activates A not B
+    manager = RecoveryManager(StubBackend(lambda s: s ** 2), POLICY)
+    fit, _ = batch("fit", lambda s: s ** 2)
+    verification, texts = batch("verification", lambda s: s ** 2)
+    class BackendA(StubBackend):
+        def score(self, prompts):
+            return [{"guardrail_score": healthy(t), "canary_score": healthy(t)} for t in prompts]
+    class BackendB(StubBackend):
+        def score(self, prompts):
+            return [{"guardrail_score": min(1.0, healthy(t)+0.01), "canary_score": healthy(t)} for t in prompts]
+    plan_a = manager.propose(fit, verification, verification_prompts=texts, restart_factory=lambda: BackendA(), approved=True, actor="unit-test")
+    assert plan_a.handle is not None
+    plan_b = manager.propose(fit, verification, verification_prompts=texts, restart_factory=lambda: BackendB(), approved=True, actor="unit-test")
+    assert plan_b.handle is not None
+    assert plan_a.handle != plan_b.handle
+    # Apply first plan should activate A, not B
+    receipt_a = manager.apply(plan_a)
+    assert receipt_a["applied"]
+    # After successful apply, generation increments, so second plan is stale
+    with pytest.raises(RecoveryError, match="stale_recovery_plan"):
+        manager.apply(plan_b)
+    # Re-proposing after failed apply must not resurrect consumed handle
+    manager2 = RecoveryManager(StubBackend(lambda s: 0.1), POLICY)
+    fit2, _ = batch("fit", lambda s: 0.1)
+    ver2, txt2 = batch("verification", lambda s: 0.1)
+    bad = manager2.propose(fit2, ver2, verification_prompts=txt2, restart_factory=lambda: StubBackend(lambda s: 0.1), approved=True, actor="unit-test")
+    assert bad.record["status"] == "recovery_rejected"
+    first_handle = bad.handle
+    receipt_bad = manager2.apply(bad)
+    assert not receipt_bad["applied"]
+    # Re-propose same content -> new handle, not resurrection
+    bad2 = manager2.propose(fit2, ver2, verification_prompts=txt2, restart_factory=lambda: StubBackend(lambda s: 0.1), approved=True, actor="unit-test")
+    assert bad2.handle != first_handle
+    with pytest.raises(RecoveryError, match="stale_recovery_plan"):
+        manager2.apply(bad)  # consumed already
+
+
+def test_cross_manager_handle_isolation():
     m1 = RecoveryManager(StubBackend(lambda s: s * 0.25), POLICY)
     m2 = RecoveryManager(StubBackend(lambda s: s * 0.25), POLICY)
     fit, _ = batch("fit", lambda s: s * 0.25)
     verification, texts = batch("verification", lambda s: s * 0.25)
     p1 = m1.propose(fit, verification, verification_prompts=texts, restart_factory=StubBackend, approved=True, actor="unit-test")
     p2 = m2.propose(fit, verification, verification_prompts=texts, restart_factory=StubBackend, approved=True, actor="unit-test")
-    assert p1.handle == p2.handle
-    assert p1.handle is not None
-    # No random IDs
-    assert "private" not in p1.handle.lower()
+    # Handles must be manager-bound, not identical content-derived
+    assert p1.handle != p2.handle
+    assert p1.handle is not None and p2.handle is not None
+    # Each manager only accepts its own handle
+    assert m1.apply(p1)["applied"]
+    with pytest.raises(RecoveryError, match="stale_recovery_plan"):
+        m1.apply(p2)
+    assert m2.apply(p2)["applied"]
+    with pytest.raises(RecoveryError, match="stale_recovery_plan"):
+        m2.apply(p1)
+
+
+def test_canary_flag_retained_threshold():
+    # Direct CorrectedBackend retention test
+    class ThresholdBackend(StubBackend):
+        guardrail_threshold = 0.5
+        canary_threshold = 0.5
+        def score(self, prompts):
+            return [{"guardrail_score": healthy(t), "canary_score": 0.75, "guardrail_unsafe": healthy(t) >= 0.5, "canary_unsafe": 0.75 >= 0.5} for t in prompts]
+    wrapped = ThresholdBackend()
+    from src.response.recovery import CorrectedBackend, AffineCorrection
+    corr = AffineCorrection(1, 0, BINDING, POLICY.policy_id, tuple(identity(["a", i]) for i in range(40)), 0)
+    cb = CorrectedBackend(wrapped, corr)
+    # Mutate live backend threshold before scoring
+    wrapped.canary_threshold = 0.9
+    wrapped.guardrail_threshold = 0.9
+    rows = cb.score(["neutral verification harmful example 0"])
+    # Retained thresholds are 0.5, so 0.75 >=0.5 True, even though live is 0.9
+    assert rows[0]["canary_unsafe"] is True
+    # Guardrail score is healthy for harmful ~0.75, with threshold 0.5 True, live 0.9 False -> retained wins
+    assert rows[0]["guardrail_unsafe"] is True
+    # Missing threshold binding must be required when flag present
+    class NoThresholdBackend(StubBackend):
+        def score(self, prompts):
+            return [{"guardrail_score": healthy(t), "canary_score": 0.75, "canary_unsafe": True} for t in prompts]
+    corr2 = AffineCorrection(1, 0, BINDING, POLICY.policy_id, tuple(identity(["b", i]) for i in range(40)), 0)
+    cb2 = CorrectedBackend(NoThresholdBackend(), corr2)
+    with pytest.raises(RecoveryError, match="missing_canary_threshold_binding"):
+        cb2.score(["neutral verification safe example 0"])
+    # Integrated propose/apply retention: backend with thresholds 0.5, affine fault, mutate before apply
+    class ProposeBackend(StubBackend):
+        guardrail_threshold = 0.5
+        canary_threshold = 0.5
+        def __init__(self, transform):
+            super().__init__(transform)
+            self._transform = transform
+        def score(self, prompts):
+            return [{"guardrail_score": self._transform(healthy(t)), "canary_score": healthy(t), "guardrail_unsafe": self._transform(healthy(t)) >= 0.5, "canary_unsafe": healthy(t) >= 0.5} for t in prompts]
+    transform = lambda s: s * 0.25
+    fit, _ = batch("fit", transform)
+    verification, texts = batch("verification", transform)
+    wrapped2 = ProposeBackend(transform)
+    manager = RecoveryManager(wrapped2, POLICY)
+    plan = manager.propose(fit, verification, verification_prompts=texts, restart_factory=StubBackend, approved=True, actor="unit-test")
+    assert plan.record["status"] == "verified"
+    wrapped2.canary_threshold = 0.9
+    wrapped2.guardrail_threshold = 0.9
+    receipt = manager.apply(plan)
+    assert receipt["applied"]
+    assert manager.backend.canary_threshold == 0.5
+    assert manager.backend.guardrail_threshold == 0.5
+
+
+def test_backend_error_redaction_without_private_word():
+    # Backend raises RecoveryError containing raw prompt text without word 'private'
+    fit, _ = batch("fit", lambda s: s ** 2)
+    verification, texts = batch("verification", lambda s: s ** 2)
+    raw_prompt = texts[0]
+    class LeakyBackend(StubBackend):
+        def score(self, prompts):
+            raise RecoveryError("failed: " + prompts[0])
+    manager = RecoveryManager(StubBackend(lambda s: s ** 2), POLICY)
+    plan = manager.propose(fit, verification, verification_prompts=texts, restart_factory=lambda: LeakyBackend(), approved=True, actor="unit-test")
+    assert raw_prompt not in str(plan.record)
+    assert plan.record["status"] == "recovery_rejected"
+    # Also test factory raising with prompt
+    def leaky_factory():
+        raise RecoveryError("factory failed: " + raw_prompt)
+    plan2 = manager.propose(fit, verification, verification_prompts=texts, restart_factory=leaky_factory, approved=True, actor="unit-test")
+    assert raw_prompt not in str(plan2.record)
+    # Allowed internal code should still be visible
+    def bad_binding():
+        b = StubBackend()
+        b.model_pair_id = "b"*64
+        return b
+    plan3 = manager.propose(fit, verification, verification_prompts=texts, restart_factory=bad_binding, approved=True, actor="unit-test")
+    assert "restart_model_binding_mismatch" in str(plan3.record["attempts"])

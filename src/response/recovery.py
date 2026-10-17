@@ -6,9 +6,11 @@ agreement, not universal safety or correctness outside the probes.
 """
 from __future__ import annotations
 
+import copy
 from dataclasses import dataclass
 import math
 import re
+import secrets
 import threading
 from typing import Callable, Protocol
 
@@ -170,6 +172,44 @@ def _validate_score_batch(prompts, values):
                 raise RecoveryError("invalid_runtime_flag")
 
 
+# Fixed codes that are safe to expose; all other backend/factory exceptions are redacted
+_ALLOWED_REJECT_CODES = {
+    "restart_model_binding_mismatch",
+    "recovery_model_binding_mismatch",
+    "invalid_recovery_probe",
+    "incomplete_canary_probe",
+    "invalid_canary_probe",
+    "invalid_recovery_output_batch",
+    "missing_canary_verification",
+    "invalid_canary_verification",
+    "runtime_score_length_mismatch",
+    "invalid_runtime_score_batch",
+    "invalid_runtime_flag",
+    "missing_binary_threshold_binding",
+    "missing_canary_threshold_binding",
+    "correction_outside_valid_range",
+    "unsupported_score_transformation",
+    "non_affine_score_change",
+    "insufficient_probe_score_range",
+    "policy_probe_overlap",
+    "recovery_fit_verification_overlap",
+    "verification_text_identity_mismatch",
+    "invalid_probe_batch",
+    "duplicate_probe_identity",
+    "insufficient_probe_classes",
+    "invalid_probe_label_or_role",
+    "candidate_scoring_failed",
+    "restart_unavailable_or_invalid",
+}
+
+
+def _safe_reject_code(exc: Exception, default: str) -> str:
+    msg = str(exc) if isinstance(exc, RecoveryError) else ""
+    if msg in _ALLOWED_REJECT_CODES:
+        return msg
+    return default
+
+
 class CorrectedBackend:
     def __init__(self, backend, correction):
         if backend.model_pair_id != correction.model_pair_id:
@@ -192,15 +232,11 @@ class CorrectedBackend:
                 if not valid_score(self.guardrail_threshold):
                     raise RecoveryError("missing_binary_threshold_binding")
                 value["guardrail_unsafe"] = score >= self.guardrail_threshold
-            # keep canary_unsafe consistent with unchanged canary_score
+            # keep canary_unsafe consistent with retained canary_threshold
             if "canary_unsafe" in row:
-                thresh = getattr(self.backend, "canary_threshold", None)
-                if valid_score(thresh):
-                    value["canary_unsafe"] = row["canary_score"] >= thresh
-                else:
-                    # if no threshold, keep original if bool, else validate
-                    if type(row["canary_unsafe"]) is not bool:
-                        raise RecoveryError("invalid_runtime_flag")
+                if not valid_score(self.canary_threshold):
+                    raise RecoveryError("missing_canary_threshold_binding")
+                value["canary_unsafe"] = row["canary_score"] >= self.canary_threshold
             corrected.append(value)
         return corrected
 
@@ -227,14 +263,13 @@ class RecoveryManager:
         self._previous_backend = None
         self._lock = threading.RLock()
         self._store = {}
+        # Private manager-bound issuance identity: separate from deterministic evidence digest
+        self._manager_secret = secrets.token_hex(16)
+        self._issuance_counter = 0
 
     @property
     def backend(self):
         return self._backend
-
-    @backend.setter
-    def backend(self, value):
-        self._backend = value
 
     @property
     def policy(self):
@@ -248,6 +283,13 @@ class RecoveryManager:
     def previous_backend(self):
         return self._previous_backend
 
+    def _next_handle(self, evidence_digest: str) -> str:
+        # Manager-bound, single-use issuance: deterministic evidence + private counter/secret
+        with self._lock:
+            counter = self._issuance_counter
+            self._issuance_counter += 1
+        return identity({"manager_secret": self._manager_secret, "issuance": counter, "evidence_digest": evidence_digest})
+
     def propose(self, fit, verification, *, verification_prompts, restart_factory: Callable[[], Backend],
                 approved=False, actor="", allow_restart=True):
         with self._lock:
@@ -257,14 +299,14 @@ class RecoveryManager:
             "policy_weights_changed": False, "policy_thresholds_changed": False}
 
         def make_plan(backend=None, record_dict=record, handle=None):
-            # defensive copy for public record
-            return RecoveryPlan(generation, self.policy.policy_id, current_backend.model_pair_id, backend, dict(record_dict), handle)
+            # deep copy for public record isolation
+            return RecoveryPlan(generation, self.policy.policy_id, current_backend.model_pair_id, backend, copy.deepcopy(record_dict), handle)
 
         if type(approved) is not bool or type(allow_restart) is not bool:
             raise RecoveryError("invalid_recovery_authority")
         if not approved:
-            # store handle for approval_required as well to allow apply to return same status
-            handle = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "status": "approval_required"})
+            evidence = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "status": "approval_required"})
+            handle = self._next_handle(evidence)
             with self._lock:
                 self._store[handle] = {
                     "generation": generation,
@@ -273,8 +315,9 @@ class RecoveryManager:
                     "candidate": None,
                     "verification_prompts": tuple(verification_prompts),
                     "verification_probes": tuple(verification) if isinstance(verification, (list, tuple)) else (),
-                    "record": dict(record),
+                    "record": copy.deepcopy(record),
                     "consumed": False,
+                    "evidence_digest": evidence,
                 }
             return make_plan(backend=None, record_dict=record, handle=handle)
         if not isinstance(actor, str) or re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", actor) is None:
@@ -315,7 +358,8 @@ class RecoveryManager:
             changed = True
         if fresh_values is not None and not changed:
             record["status"] = "no_probe_degradation"
-            handle = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "status": "no_probe_degradation", "verification_ids": tuple(sorted(row.prompt_id for row in verification))})
+            evidence = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "status": "no_probe_degradation", "verification_ids": tuple(sorted(row.prompt_id for row in verification))})
+            handle = self._next_handle(evidence)
             with self._lock:
                 self._store[handle] = {
                     "generation": generation,
@@ -324,8 +368,9 @@ class RecoveryManager:
                     "candidate": None,
                     "verification_prompts": tuple(verification_prompts),
                     "verification_probes": tuple(verification),
-                    "record": dict(record),
+                    "record": copy.deepcopy(record),
                     "consumed": False,
+                    "evidence_digest": evidence,
                 }
             return make_plan(backend=None, record_dict=record, handle=handle)
         # Try paired affine correction - actually execute candidate on verification_prompts
@@ -344,7 +389,8 @@ class RecoveryManager:
             record["attempts"].append(attempt)
             if check["accepted"]:
                 record.update(status="verified", method="paired_affine_correction")
-                handle = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "method": "paired_affine_correction", "correction_id": correction.correction_id, "verification_ids": tuple(sorted(row.prompt_id for row in verification))})
+                evidence = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "method": "paired_affine_correction", "correction_id": correction.correction_id, "verification_ids": tuple(sorted(row.prompt_id for row in verification))})
+                handle = self._next_handle(evidence)
                 with self._lock:
                     self._store[handle] = {
                         "generation": generation,
@@ -353,15 +399,13 @@ class RecoveryManager:
                         "candidate": candidate,
                         "verification_prompts": tuple(verification_prompts),
                         "verification_probes": tuple(verification),
-                        "record": dict(record),
+                        "record": copy.deepcopy(record),
                         "consumed": False,
+                        "evidence_digest": evidence,
                     }
                 return make_plan(backend=candidate, record_dict=record, handle=handle)
         except RecoveryError as exc:
-            # Avoid exposing private text in rejected string
-            msg = str(exc)
-            if "private" in msg.lower():
-                msg = "restart_unavailable_or_invalid"
+            msg = _safe_reject_code(exc, "candidate_scoring_failed")
             record["attempts"].append({"method": "paired_affine_correction", "rejected": msg})
         except Exception:
             record["attempts"].append({"method": "paired_affine_correction", "rejected": "candidate_scoring_failed"})
@@ -379,7 +423,8 @@ class RecoveryManager:
                 record["attempts"].append({"method": "trusted_scorer_restart", "verification": check})
                 if check["accepted"]:
                     record.update(status="verified", method="trusted_scorer_restart")
-                    handle = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "method": "trusted_scorer_restart", "verification_ids": tuple(sorted(row.prompt_id for row in verification))})
+                    evidence = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "method": "trusted_scorer_restart", "verification_ids": tuple(sorted(row.prompt_id for row in verification))})
+                    handle = self._next_handle(evidence)
                     with self._lock:
                         self._store[handle] = {
                             "generation": generation,
@@ -388,26 +433,21 @@ class RecoveryManager:
                             "candidate": replacement,
                             "verification_prompts": tuple(verification_prompts),
                             "verification_probes": tuple(verification),
-                            "record": dict(record),
+                            "record": copy.deepcopy(record),
                             "consumed": False,
+                            "evidence_digest": evidence,
                         }
                     return make_plan(backend=replacement, record_dict=record, handle=handle)
             except RecoveryError as exc:
-                msg = str(exc)
-                # redact private text
-                if "private" in msg.lower():
-                    msg = "restart_unavailable_or_invalid"
-                if msg == "restart_model_binding_mismatch":
-                    record["attempts"].append({"method": "trusted_scorer_restart", "rejected": msg})
-                else:
-                    # for other RecoveryErrors, treat redacted
-                    record["attempts"].append({"method": "trusted_scorer_restart", "rejected": msg if "private" not in msg.lower() else "restart_unavailable_or_invalid"})
+                msg = _safe_reject_code(exc, "restart_unavailable_or_invalid")
+                record["attempts"].append({"method": "trusted_scorer_restart", "rejected": msg})
             except (OSError, KeyError, TypeError, ValueError):
                 record["attempts"].append({"method": "trusted_scorer_restart", "rejected": "restart_unavailable_or_invalid"})
             except Exception:
                 record["attempts"].append({"method": "trusted_scorer_restart", "rejected": "restart_unavailable_or_invalid"})
         record["status"] = "recovery_rejected"
-        handle = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "status": "recovery_rejected", "verification_ids": tuple(sorted(row.prompt_id for row in verification)), "attempts": len(record["attempts"])})
+        evidence = identity({"generation": generation, "policy_id": self.policy.policy_id, "model_pair_id": current_backend.model_pair_id, "status": "recovery_rejected", "verification_ids": tuple(sorted(row.prompt_id for row in verification)), "attempts": len(record["attempts"])})
+        handle = self._next_handle(evidence)
         with self._lock:
             self._store[handle] = {
                 "generation": generation,
@@ -416,8 +456,9 @@ class RecoveryManager:
                 "candidate": None,
                 "verification_prompts": tuple(verification_prompts),
                 "verification_probes": tuple(verification),
-                "record": dict(record),
+                "record": copy.deepcopy(record),
                 "consumed": False,
+                "evidence_digest": evidence,
             }
         return make_plan(backend=None, record_dict=record, handle=handle)
 
@@ -441,13 +482,13 @@ class RecoveryManager:
             raise RecoveryError("stale_recovery_plan")
         if entry.get("consumed"):
             raise RecoveryError("stale_recovery_plan")
-        # Use internal record, not caller-supplied plan.record
-        internal = dict(entry["record"])
+        # Use internal record, not caller-supplied plan.record (deep copy isolation)
+        internal = copy.deepcopy(entry["record"])
         candidate = entry["candidate"]
         # If not verified or no candidate, return without activation
         if candidate is None or internal.get("status") != "verified":
             entry["consumed"] = True
-            return {**internal, "generation": self._generation}
+            return {**copy.deepcopy(internal), "generation": self._generation}
         # Reverify actual candidate on internally retained verification requests
         verification = entry["verification_probes"]
         prompts = entry["verification_prompts"]
@@ -460,12 +501,12 @@ class RecoveryManager:
             if not check["accepted"]:
                 entry["consumed"] = True
                 # Preserve explicit unresolved status without activation
-                failure = dict(internal)
+                failure = copy.deepcopy(internal)
                 failure.update(status="recovery_rejected", applied=False, reverification=check, warning="previous_backend_may_remain_degraded")
                 return {**failure, "generation": self._generation}
         except Exception:
             entry["consumed"] = True
-            failure = dict(internal)
+            failure = copy.deepcopy(internal)
             failure.update(status="recovery_rejected", applied=False, warning="previous_backend_may_remain_degraded", reverification_error="candidate_scoring_failed")
             return {**failure, "generation": self._generation}
         # Validate model binding mismatch for candidate
@@ -474,7 +515,9 @@ class RecoveryManager:
         self._previous_backend, self._backend = self._backend, candidate
         self._generation += 1
         entry["consumed"] = True
-        return {**internal, "status": "applied", "applied": True, "generation": self._generation}
+        result = copy.deepcopy(internal)
+        result.update(status="applied", applied=True, generation=self._generation)
+        return result
 
     def rollback(self, *, approved=False):
         with self._lock:
