@@ -6,15 +6,25 @@ Safety Monitor Integrity Watch is a watcher for deployed AI safety filters. A gu
 
 A change signal does not establish harm. Independent labels and review must establish degradation before an approved response.
 
-Current work includes frozen baseline classifiers, verified prompt pools, a native score monitor, gated conformal response code, and deterministic paired replay.
+Current work includes frozen baseline classifiers, verified prompt pools, separate traffic and runtime checks, verified recovery, approved containment, and deterministic paired replay.
+
+The latest separate synthetic study runs natively from `d86d384e2ee7d0f07f2f2fc5bf2b6dec64e13cac`. It creates 100,000 rows: 70,000 train, 10,000 validation, and 20,000 test. The 91 reviewed intent groups do not cross splits. Context variants are not independent intents.
+
+The complete-stream benchmark score is 75.64% for guardrail alone and 81.69% with runtime monitoring and recovery. Harmful allowances fall from 29.91% to 3.76%. Holds receive no automatic-correctness credit. Safe refusals increase. Read `README.md` for full denominators and costs.
+
+The synthetic guardrail has 88.67% healthy test accuracy but 22.63% safe false refusals. External accuracy is 64.00% on XSTest and 53.52% on human ToxicChat. External safe false refusals exceed 44%. Do not call this a production-ready classifier or hide its external regression.
+
+The first model approach passes the frozen validation criterion. No second model or post-test threshold change occurs. Preserve this result. The native suite has 270 passes and four optional skips. An independent audit checks 100,000 rows and 30,720 paired events. The 182 byte-identical repeat files establish repeatability, not independent trials.
 
 The ORIGINAL native benchmark detects 5/5 simulated score faults and 3/5 attack-mixture changes. Its five stationary controls produce no alarms. All eight quantile candidates fail the review-rate gate. Read `docs/BENCHMARK-RESULTS.md` for that preserved result.
 
-The new `src/response/recovery.py` implements probe-fitted affine correction and verified trusted-scorer restart. It restores baseline outputs in 35/40 constructed fault episodes on XSTest. A persistent fault rejects all five responses. The baseline still requires 84% review. Read the current `README.md` before interpreting these results.
+The earlier `src/response/recovery.py` study implements probe-fitted affine correction and verified trusted-scorer restart. It restores baseline outputs in 35/40 constructed fault episodes on XSTest. A persistent fault rejects all five responses. The baseline still requires 84% review. Read the current `README.md` before interpreting these results.
 
-The unchanged monitor alarms in all five NEW safe controls. Twenty-one recoveries follow pre-shift alarms and delayed probes, not correct fault detection. The controller applies no response in the ten no-fault episodes. Do not combine these results with the original control counts.
+In that earlier study, the unchanged passive monitor alarms in all five new safe controls. Twenty-one recoveries follow pre-shift alarms and delayed probes, not correct fault detection. The controller applies no response in the ten no-fault episodes. Do not combine these results with the original control counts.
 
-The dashboard, production approval service, real-agent integration, and approved safe fallback remain unbuilt. Continuous multi-drift operation is not qualified.
+The repaired runtime controller confirms 55/55 injected incidents and restores service in 45/50 fault episodes in the latest synthetic benchmark. It holds requests in five persistent-fault episodes. No false runtime confirmation occurs in ten no-fault episodes. These counts do not describe passive traffic warnings.
+
+The dashboard, production approval service, real-agent integration, and approved safe fallback remain unbuilt. Production continuous operation remains unqualified. The consumed-issuance memory-retention residual remains unfixable within the earlier two-pass repair budget.
 
 Do not describe proposed enterprise requirements as delivered features. Do not claim that the market has no existing monitoring products.
 
@@ -28,13 +38,13 @@ Do not describe proposed enterprise requirements as delivered features. Do not c
 
 Original core processing and inference run natively on LinuxONE. The preparation phase uses a documented Mac-only Parquet format conversion because the native image lacks PyArrow. Pool assembly runs on LinuxONE.
 
-The user explicitly authorizes local CPU work for the new synthetic study while the server restarts. Mark these results with the actual architecture and local scope. This exception lasts until the user changes it. Do not call local results LinuxONE results. Do not use x86 emulation.
+The user temporarily authorizes local work while the server restarts. Two local fixture gates pass; no study model fit or inference runs locally. The user then confirms server access. Data generation, fit, inference, benchmarks, and audit return to native LinuxONE. Do not call local fixture results LinuxONE evidence. Do not use x86 emulation.
 
 Every runtime dependency needs an actual native s390x check. CPU execution is the default. GPU, Telum, Spyre, Secure Execution, hardware attestation, and IBM certification claims need separate evidence.
 
 ## Models and data
 
-The guardrail uses char TF-IDF 3–5 grams plus logistic regression. The canary uses word TF-IDF 1–2 grams plus logistic regression. They share one algorithm family and training source. Their measured error correlation is approximately 0.81; independence and useful shift sensitivity remain unverified.
+The original guardrail uses char TF-IDF 3–5 grams plus logistic regression. Its original canary uses word TF-IDF 1–2 grams plus logistic regression. They share one algorithm family and training source. Their measured error correlation is approximately 0.81; independence and useful shift sensitivity remain unverified.
 
 Scores are not calibrated probabilities or validated harm severity. Read `docs/MODELS.md` before model work.
 

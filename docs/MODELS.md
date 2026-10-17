@@ -1,8 +1,75 @@
 # MODELS — frozen classifier training and scoring
 
-Code: `src/models/train_classifiers.py` and `src/models/score.py`.
-These are CPU scikit-learn baseline tools, not a trained-model result. No official
-training or evaluation is established by the local fixture tests.
+Original code: `src/models/train_classifiers.py` and `src/models/score.py`.
+These CPU scikit-learn tools produce the preserved original classifiers.
+Local fixture tests alone do not establish classifier effectiveness.
+
+## Separate synthetic study, October 17
+
+New code: `src/data/synthetic.py`, `src/models/synthetic.py`, and `src/replay/synthetic.py`.
+Executed source: `d86d384e2ee7d0f07f2f2fc5bf2b6dec64e13cac`.
+
+The separate dataset has 70,000 train, 10,000 validation, and 20,000 test rows.
+Each split has equal class counts. Split assignment precedes row expansion.
+The catalogue has 100 template families and 91 reviewed intent groups.
+Equivalent intents stay in train. No intent group crosses splits.
+These compositional rows contain 1,000 target-intent combinations, not 100,000 independent intents.
+
+The guardrail combines word TF-IDF 1–2 grams and char_wb TF-IDF 3–5 grams.
+Logistic regression uses C=4, balanced classes, seed 42, and a 500-iteration limit.
+The canary uses char TF-IDF 3–5 grams and logistic regression with C=1.
+Both vectorizers and classifiers fit only train text. Metadata and labels never enter the feature input.
+
+Validation contains four case-disjoint roles:
+
+- Threshold selection: 5,000 rows
+- Reserved fallback calibration: 3,000 rows
+- Fit-probe pool: 1,000 rows
+- Verification-probe pool: 1,000 rows
+
+All frames and both labels of one case stay in the same role.
+The response uses 64 fit probes and 128 verification probes selected by fixed hashes.
+The runtime panel selects eight fit probes by score position.
+No test request serves as a recovery probe.
+
+The threshold maximizes validation balanced accuracy under an empirical 5% safe-FPR cap.
+That cap does not guarantee a 5% test FPR.
+The binary policy allows or refuses; it does not claim conformal coverage.
+Both benchmark arms use the same policy and model.
+
+One fallback is permitted before test evaluation: LinearSVC C=1 with a separate sigmoid calibration role.
+It runs only if the first candidate fails convergence or has validation balanced accuracy below 90%.
+The first candidate reaches 95.74%, so the fallback does not run.
+The selected threshold is `0.20832091569900513`.
+The canary threshold is `0.2771334648132324`.
+
+Healthy synthetic guardrail results: accuracy 88.67%, recall 99.96%, F1 0.8982, and safe FPR 22.63%.
+External accuracy is 64.00% on XSTest and 53.52% on human ToxicChat.
+External safe FPR exceeds 44% on both sources.
+These exposed external checks do not select a new model or threshold.
+The new model does not replace the original model automatically.
+
+Native data generation, fit, replay, and audit complete in the private run `synthetic-100k-20261017-01`.
+Local work during the server outage covers neutral fixture tests only.
+The model artifact, catalogue, generated rows, and raw external data remain private.
+`model-cards.json` and `pre-evaluation-freeze.json` bind the model, thresholds, source, and data hashes.
+The loader checks the model SHA and exact scikit-learn version before trusted `joblib.load`.
+Hashes detect changes; they do not establish artifact authenticity.
+
+Use a new output directory for each invocation:
+
+```bash
+python -m src.data.synthetic --catalog "$CATALOG" --output "$RUN/data" --source-commit "$COMMIT"
+python -m src.models.synthetic --data "$RUN/data" --output "$RUN/models" --source-commit "$COMMIT"
+python -m src.replay.synthetic --data "$RUN/data" --models "$RUN/models" --output "$RUN/benchmark" \
+  --source-commit "$COMMIT" --toxic-test "$TOXICCHAT_TEST" --xstest "$XSTEST"
+```
+
+Set these paths to the approved private inputs before execution.
+The complete runner also executes the full tests, exact repeat, independent numeric audit, and artifact freeze.
+Read `README.md` for the paired scores, service costs, and limitations.
+
+## Original classifier protocol (preserved)
 
 ## Environment and inputs
 
@@ -140,14 +207,13 @@ Hashes detect accidental corruption, not authenticity; an attacker who can
 replace artifacts and metadata can replace both. This is not a safe loader for
 untrusted model files.
 
-## Native execution (planned; operator performs deployment and real training)
+## Original native execution reference
 
-The reviewed exact commit must first be exported by the operator into host
-`/home/linux1/safety-watch/runs/classifiers-20261017-01/source`, mounted inside
-the existing container as `/home/ibm-user/shared/runs/classifiers-20261017-01/source`.
-This staging location is planned, **not already deployed**. The host Git clone
-is outside the shared mount. After staging, the operator runs the fixture gate
-inside the native container before any real training:
+The original run completes in host `~/safety-watch/runs/classifiers-20261017-01/source`.
+The container sees `/home/ibm-user/shared/runs/classifiers-20261017-01/source`.
+The host Git clone remains outside the shared mount.
+The commands below record the original invocation, not a new deployment plan.
+Use a new private output directory for any repeat. Do not overwrite the frozen run.
 
 ```bash
 cd /home/ibm-user/shared/runs/classifiers-20261017-01/source

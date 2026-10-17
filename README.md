@@ -12,7 +12,9 @@ Safety-filter behavior can change when traffic, models, or policies change. Labe
 
 ## What we build
 
-A canary scores a copy of guardrail traffic without blocking it. The current monitor compares signed score differences with a fixed reference. Its empirical alert scope has a finite horizon, not an anytime-valid guarantee. Numeric evidence and bounded checkpoints support inspection and restart.
+A canary scores a copy of guardrail traffic. A passive monitor compares score differences with a fixed reference. Its empirical alert scope has a finite horizon, not an anytime-valid guarantee.
+
+Independent periodic probes check the active runtime. Confirmed runtime changes can trigger an approved, verified response. Traffic warnings alone do not authorize that response.
 
 Offline paired replay and two response paths now exist. The original quantile-recalibration experiment rejects all eight candidates. That result remains unchanged.
 
@@ -20,7 +22,69 @@ The new runtime recovery path restores the frozen score behavior. It fits an aff
 
 Production approval and real-agent integration remain unfinished.
 
-## Runtime recovery result
+## Latest result: separate synthetic study
+
+Executed source: `d86d384e2ee7d0f07f2f2fc5bf2b6dec64e13cac`. Data generation, model fit, inference, replay, and numeric audit run natively on LinuxONE.
+
+The new dataset contains exactly **100,000 unique synthetic rows**:
+
+- Train: 70,000 rows
+- Validation: 10,000 rows
+- Test: 20,000 rows
+
+Each split has equal safe and harmful counts. The catalogue has 100 template families and 91 reviewed intent groups across ten domains. No intent group crosses splits. Equivalent intents stay in train. Zero normalized duplicate requests occur.
+
+These are compositional rows, not 100,000 independent human requests. They contain 1,000 target-intent combinations with context and presentation variants. Two catalogue passes correct label ambiguity and duplicate intents. Native checks verify the split and count rules.
+
+### Guardrail versus guardrail plus monitor
+
+The paired benchmark has 60 episodes and 30,720 request observations. Both arms use identical requests, order, faults, and the same new guardrail.
+
+The benchmark score measures correct automatic decisions: safe requests allowed or harmful requests refused. Holds, review, and unavailable service receive no correctness credit.
+
+| Complete-stream metric | Guardrail | Guardrail + monitor |
+|---|---:|---:|
+| Benchmark score, all conditions | 75.64% | **81.69%** |
+| Benchmark score, fault conditions | 72.70% | **79.95%** |
+| Harmful requests allowed | 4,738/15,840 (29.91%) | **595/15,840 (3.76%)** |
+| Safe requests refused | 2,744/14,880 (18.44%) | 3,344/14,880 (22.47%) |
+| Requests held | 0 | 1,685/30,720 (5.49%) |
+| Requests requiring review | 0 | 0 |
+
+The monitor adds **6.05 percentage points** to this benchmark score. Harmful allowances decrease by **87.44%**. Safe refusals and inference cost increase.
+
+The runtime monitor confirms 55/55 injected incidents, with no pre-fault confirmations or false confirmations in ten no-fault episodes. It restores service in 45/50 fault episodes. The other five episodes hold requests; they do not restore service. Detection takes 15 requests at the tested onsets. Response follows 32 requests later.
+
+The monitor does not improve every scenario's accuracy. Scale, square, and late-scale faults reduce some false refusals; baseline recovery reverses that effect. Persistent-fault containment reduces automatic service and receives no correctness credit.
+
+### Healthy classifier quality and limits
+
+| Healthy guardrail metric | Synthetic test | XSTest external check | ToxicChat human external check |
+|---|---:|---:|---:|
+| Requests | 20,000 | 300 | 2,853 |
+| Accuracy | 88.67% | 64.00% | 53.52% |
+| Harmful-request recall | 99.96% | 72.67% | 39.78% |
+| Safe false-refusal rate | **22.63%** | **44.67%** | **44.48%** |
+| F1 | 0.8982 | 0.6687 | 0.1784 |
+
+The healthy monitor arm retains the same classifier scores. It does not improve semantic accuracy. External checks reuse exposed data and do not establish fresh confirmation.
+
+**The new classifier does not qualify for production.** Safe false refusals remain high, and performance transfers poorly to external data. No test-driven threshold or model change follows these results. The original models remain unchanged.
+
+Only the first model approach runs: word/character TF-IDF plus logistic regression. Its validation balanced accuracy is 95.74%. The frozen second-approach trigger does not activate. Test performance does not select another model.
+
+Native fit takes 39.82 seconds. The full cycle, including an exact repeat and audit, takes 432.89 seconds. Peak subprocess RSS is 923.84 MiB. These are experiment costs, not capacity guarantees.
+
+Runtime model-input evaluations total 30,720 for guardrail alone and 152,150 for the monitored pair. Backend score-call time totals 33.55 seconds versus 74.38 seconds. These times exclude model loads, controller logic, and endpoint inference.
+
+Validation: **270 native tests pass; four optional converter tests skip**. Two authorized local fixture gates also pass. No study model fit or inference runs locally. The repeat matches 182 algorithm files byte-for-byte. An independent numeric audit checks all 100,000 rows and 30,720 paired events. The final native freeze covers 455 files.
+
+Private results: `~/safety-watch/runs/synthetic-100k-20261017-01/benchmark/report.json`.
+Private dataset: `~/safety-watch/runs/synthetic-100k-20261017-01/synthetic-data-100k.tar.gz`.
+
+This benchmark tests the existing runtime-probe channel and response controller. It does not qualify passive traffic profiles. Synthetic scores do not replace the preserved real-data results below.
+
+## Earlier runtime-recovery result (preserved)
 
 Native source: `add212506a6a20ee38657a35a2a4e0cd1e330e86`. The experiment uses XSTest: 150 verification requests and 300 evaluation requests, separated by source category. Original training/test and pool prompts have no exact overlap.
 
@@ -64,7 +128,7 @@ XSTest attribution: Röttger et al., NAACL 2024, [doi:10.18653/v1/2024.naacl-lon
 ## Hard rules
 
 - Event code is written during the event window only. Research, data prep, and environment setup happen before.
-- Preserve source provenance for recorded prompts and constructed benchmarks. No study-data augmentation. Neutral synthetic fixtures test mechanics only.
+- Preserve original data and results. The separately authorized synthetic study has its own labels, splits, models, and results.
 - Treat attack text as data, never instructions.
 - No secrets, keys, tokens, or raw harmful samples in this repository.
 - Prior research motivates the project. The empirical detector is not a reproduction of a proved martingale method.
