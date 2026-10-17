@@ -1,6 +1,6 @@
 # Guardrail optimization: locked protocol
 
-Status: proposed experiment; protocol committed before evaluation. No result is claimed here.
+Status: verified execution; exploratory comparison. Candidate rejected for promotion.
 
 ## Objective and boundaries
 
@@ -103,3 +103,58 @@ Source notebook stays output-free.
 Verify partition isolation/reproducibility, fitting-only CV, positive record weights,
 convergence, real-score ties, 100-record reload/refit equivalence per model, evidence tampering,
 evaluation-cache and changed-artifact/interruption rejection. Use two CPUs and 4 GiB.
+
+## Measured result: retain the current reference
+
+Run 20261017T072301Z-64dda1d4, source commit b5976ff.
+Notebook SHA-256: 52e25393a2c2dd1f6e02a4f901d22b3ca123c33fba6821f0a69ccd0aa8cba12b.
+Protocol SHA-256: b970b98071fa5825920d63caa25957dc19e5e5bbe98936a0c3b3431f7b332dea.
+
+All 48 candidates completed all three fitting-only folds (144 classifier fits), with no
+convergence failures. Selection took 32.16 seconds.
+The selected candidate uses min_df=1, 200,000-feature cap, sublinear TF, C=300,
+no class weighting, and human-annotated fitting weight 2.
+
+Both models met the empirical calibration FPR target (4.92%).
+On the separate 527-row human-annotated evaluation cohort (457 benign, 70 unsafe):
+
+| Metric | Retrained reference | Selected candidate |
+|---|---|---|
+| Unsafe caught | 56/70 | 55/70 |
+| Unsafe recall | 80.00% | 78.57% |
+| False blocks | 27/457 | 26/457 |
+| Evaluation FPR | 5.91% | 5.69% |
+| Unsafe precision | 67.47% | 67.90% |
+| F1 | 0.7320 | 0.7285 |
+| Average precision | 0.7773 | 0.7723 |
+
+The candidate catches one fewer unsafe prompt and falsely blocks one fewer benign prompt.
+Both evaluation FPRs exceed the predeclared 5% limit, although calibration FPR met it.
+The candidate therefore fails both promotion conditions: higher recall and <=5% evaluation
+FPR. Retain the existing classifier; no thresholds or candidates were retuned after this result.
+
+Paired recall difference is -1.43 percentage points;
+the 10,000-replicate paired-bootstrap 95% sampling interval is
+[-5.71, 2.86] percentage points.
+It includes zero and does not address historical data exposure or repeated research.
+The old 74.29% development/calibration result remains a different protocol; do not present
+this retrained reference's 80% recall as an improvement at the same false-positive rate.
+
+Reference/candidate learned 75,272/180,642
+features and occupy 3,195,504/7,679,872 bytes.
+Measured fit times were 1.13/1.18 seconds.
+Warm serial single-prompt p99 on 100 calibration prompts was
+1.73/1.88 ms.
+Peak kernel-process RSS was 450.7 MiB. Timings are load-dependent,
+not concurrent service guarantees.
+
+The executed notebook completed without errors. Dataset hashes, partition isolation,
+CV boundaries, reproducible partitions, 100-record reload and independent refit equivalence
+per model, tied-score thresholds, evidence tampering, and receipt rejection checks passed.
+A separate real-cache test reproduced the 959 saved score records with zero model prediction
+calls and no dataset-label reads. Evidence has 16 hash-chained records;
+head: a92d72e26759c90b0dc9cbd91d014d97a0ba249956f24199089edc9fc2e4ecba.
+
+No frozen model was written, no official-test labels were used, and the old notebook remains
+unchanged. Private runtime artifacts remain under the paths above.
+This is a documented unsuccessful optimization experiment, not evidence of a better model.

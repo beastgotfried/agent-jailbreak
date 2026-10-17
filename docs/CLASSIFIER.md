@@ -143,4 +143,11 @@ disabled. No new dependencies, prompt augmentation, or external attack training 
 
 ## Separate-calibration optimization
 
-See [the locked optimization protocol](GUARDRAIL-OPTIMIZATION.md) and notebooks/05_guardrail_optimization.ipynb for the next paired experiment. Its retrained reference uses a different fitting/calibration protocol.
+See [the locked optimization protocol](GUARDRAIL-OPTIMIZATION.md) and notebooks/05_guardrail_optimization.ipynb for the paired experiment. Its retrained reference uses a different fitting/calibration protocol.
+
+
+The separate-calibration experiment completed and rejected its selected candidate for
+promotion: 78.57% recall at 5.69% evaluation FPR versus the retrained reference's
+80.00% recall at 5.91% FPR. Both exceeded the evaluation FPR budget. The existing notebook
+and its original 74.29% development/calibration result remain unchanged; these protocols
+must not be compared as if their thresholds and fitting sets were identical.
