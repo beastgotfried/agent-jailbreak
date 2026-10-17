@@ -1,0 +1,34 @@
+{
+  "intervals": {
+    "candidate": {
+      "fpr_ci95": [
+        0.03911769313968402,
+        0.08205512617130842
+      ],
+      "recall_ci95": [
+        0.676088137365211,
+        0.8656129698289221
+      ]
+    },
+    "reference": {
+      "fpr_ci95": [
+        0.040918401265112876,
+        0.08459430535792406
+      ],
+      "recall_ci95": [
+        0.6918335550374695,
+        0.8769526075163705
+      ]
+    }
+  },
+  "paired": {
+    "bootstrap_replicates": 10000,
+    "paired_bootstrap_ci95": [
+      -0.05714285714285714,
+      0.02857142857142857
+    ],
+    "recall_delta": -0.014285714285714285,
+    "scope": "exploratory sampling interval; not correction for historical selection",
+    "unsafe_records": 70
+  }
+}

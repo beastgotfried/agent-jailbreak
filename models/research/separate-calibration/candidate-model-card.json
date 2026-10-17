@@ -1,0 +1,92 @@
+{
+  "config": {
+    "C": 300.0,
+    "analyzer": "char",
+    "class_weight": null,
+    "human_weight": 2.0,
+    "lowercase": true,
+    "max_features": 200000,
+    "max_iter": 1000,
+    "min_df": 1,
+    "ngram_range": [
+      3,
+      5
+    ],
+    "norm": "l2",
+    "solver": "liblinear",
+    "sublinear_tf": true
+  },
+  "dataset": {
+    "license": "CC-BY-NC-4.0",
+    "official_training_rows": 5082,
+    "repo": "lmsys/toxic-chat",
+    "revision": "29df8e4dba60e1f4af4b4075c0705c5b313548a8",
+    "test_sha256": "3c2e49889626f7738dca0a29bface0ba0a0595b2ffdd17f0e02f19df7c3c4c9b",
+    "train_sha256": "702eb9b7cac96c3c35e28b9b95855a71f26f21afba8666f9d243f1fa469e81ed"
+  },
+  "environment": {
+    "architecture": "s390x",
+    "interpreter": "/opt/venv/bin/python3",
+    "joblib": "1.6.0",
+    "matplotlib": "3.11.2",
+    "numpy": "2.0.2",
+    "pandas": "3.0.6",
+    "python": "3.12.15",
+    "scipy": "1.13.1",
+    "sklearn": "1.9.0"
+  },
+  "evaluation": {
+    "full_evaluation_supplementary": {
+      "average_precision": 0.7396024136730629,
+      "benign": 889,
+      "f1": 0.6586826347305389,
+      "false_negative_rate": 0.21428571428571427,
+      "fn": 15,
+      "fp": 42,
+      "fpr": 0.047244094488188976,
+      "precision": 0.5670103092783505,
+      "recall": 0.7857142857142857,
+      "records": 959,
+      "tn": 847,
+      "tp": 55,
+      "unsafe": 70
+    },
+    "human_annotated": {
+      "average_precision": 0.7723275033803069,
+      "benign": 457,
+      "f1": 0.7284768211920529,
+      "false_negative_rate": 0.21428571428571427,
+      "fn": 15,
+      "fp": 26,
+      "fpr": 0.05689277899343545,
+      "precision": 0.6790123456790124,
+      "recall": 0.7857142857142857,
+      "records": 527,
+      "tn": 431,
+      "tp": 55,
+      "unsafe": 70
+    }
+  },
+  "evidence_label": "verified",
+  "limitations": [
+    "Prior research exposure; not fresh external evaluation.",
+    "Exact-text deduplication does not establish near-duplicate isolation.",
+    "Historical official-test-use reports conflict; no untouched-test claim.",
+    "No canary, monitoring, repair, or production validation."
+  ],
+  "model_sha256": "993c7166d1297e4437b532b3631d5f6d5f895781d1e16e94a6bd28b31a001d40",
+  "notebook_sha256": "52e25393a2c2dd1f6e02a4f901d22b3ca123c33fba6821f0a69ccd0aa8cba12b",
+  "partitions_sha256": "766000538ea463c7ea9fc8e647e4b681e62aad7c08416d4a820b8e5d25f9907d",
+  "protocol_sha256": "b970b98071fa5825920d63caa25957dc19e5e5bbe98936a0c3b3431f7b332dea",
+  "score_semantics": "unsafe score from weighted logistic regression; probability calibration unverified",
+  "source_commit": "b5976ffef7042c95084b976d60a55f0424ddc9cb",
+  "status": "development",
+  "threshold": 0.053717770650449824,
+  "training": {
+    "calibration_fpr": 0.04918032786885246,
+    "features": 180642,
+    "fit_seconds": 1.1794586879987037,
+    "model_bytes": 7679872
+  },
+  "verification_scope": "exploratory VM experiment"
+}

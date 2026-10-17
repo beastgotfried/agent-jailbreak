@@ -5,6 +5,19 @@ Status: development baseline; guardrail only. No final test metrics have been co
 Edit notebooks/01_initial_guardrail.ipynb in the VM repository using VS Code SSH FS.
 Execute with the command below. SSH FS is a file editor, not a remote Python interpreter.
 
+
+## Shared implementation and saved model
+
+The initial notebook is now a thin walkthrough of src/safety_watch/classifier.
+Training, scoring, export, evaluation, and integrity checks share one implementation.
+See [folder structure and script commands](CLASSIFIER-MODULES.md).
+
+The verified source artifact was copied without refitting to the VM runtime
+models/guardrail.joblib, with model-cards.json and guardrail.freeze.json.
+Its digest is 16cc50b1e16df16f937cc89c64eea164ed59f70275ccad09cc9303af1e9f2fce;
+saved threshold is 0.3590141404799981. Weights and threshold are frozen for reproducibility,
+not production-approved. Model files remain outside Git.
+
 ## Paths and environment
 
 - VM repository: /home/linux1/agent-jailbreak.
@@ -77,10 +90,10 @@ Checks cover partition isolation/reproducibility, real-score ties, independent r
 fitting, 100-record reload equivalence, convergence, and metadata tampering detection.
 Hash chains are tamper-evident relative to their preserved head, not external signatures.
 
-## Next phase
+## Shared modules
 
-Review VM validation results, then extract data/training/threshold/metrics/persistence/evidence
-functions into modules and CLI commands. Update the notebook to import them.
+Data/training/threshold/metrics/persistence/evidence functions have been extracted into the
+shared classifier package with CLI scripts. The notebook imports those modules.
 Canary, watcher, repair, prompt pools, and dashboard remain separate work.
 
 ## Original baseline development result
@@ -103,7 +116,7 @@ The human-annotated validation subset contains 527 records (457 benign, 70 unsaf
 
 The first measured fit took about 1.25 seconds; timing varies by load.
 These are development/calibration results, not independent final-test or production metrics.
-The frozen model and final test evaluation remain disabled.
+The verified model has since been saved; official-test evaluation remains disabled.
 
 ## Improvement protocol
 
@@ -138,8 +151,8 @@ The pipeline remains about 3.6 MB with 85,327 learned features.
 Balanced class weighting does not establish probability calibration.
 The unchanged partition digest is cd5e3febd5e3025cf905214a1369344f5f22b9613fe35a2c577842eacf037c6d.
 
-These are development/calibration results. Official test scoring and model freezing remain
-disabled. No new dependencies, prompt augmentation, or external attack training data were used.
+These are development/calibration results. Official-test scoring remains disabled; the verified
+artifact has since been saved without refitting. No new dependencies, prompt augmentation, or external attack training data were used.
 
 ## Separate-calibration optimization
 

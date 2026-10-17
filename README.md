@@ -30,3 +30,14 @@ A watcher. A cheap canary model scores the same traffic as the guardrail, in par
 - Real data only. No synthetic augmentation. Attack text is data, never executed.
 - No secrets, keys, tokens, or raw harmful samples in this repository.
 - The method comes from published research. We cite it. We do not claim the algorithm.
+
+## Classifier files
+
+- [Saved weights, thresholds and measured metrics](models/README.md)
+- [Classifier modules and CLI instructions](docs/CLASSIFIER-MODULES.md)
+- [Initial classifier with recorded outputs](notebooks/01_initial_guardrail.ipynb)
+- [Separate-calibration comparison with recorded outputs](notebooks/05_guardrail_optimization.ipynb)
+
+The 80% result is unsafe recall for the research reference (5.91% human FPR).
+The retained artifact and both research pipelines are included; hashes are in
+[models/manifest.json](models/manifest.json).

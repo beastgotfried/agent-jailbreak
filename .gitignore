@@ -6,10 +6,27 @@
 *.token
 .secrets/
 
-# Data and models (live on the VM)
+# Private data/runtime state; reviewed model exports below are versioned
 data/raw/
 data/pools/
-models/
+/models/*
+!/models/README.md
+!/models/manifest.json
+!/models/guardrail.joblib
+!/models/model-cards.json
+!/models/guardrail.freeze.json
+!/models/research/
+/models/research/*
+!/models/research/separate-calibration/
+/models/research/separate-calibration/*
+!/models/research/separate-calibration/candidate-model-card.json
+!/models/research/separate-calibration/candidate.development.joblib
+!/models/research/separate-calibration/evaluation-scorecard.json
+!/models/research/separate-calibration/latency.json
+!/models/research/separate-calibration/paired-comparison.json
+!/models/research/separate-calibration/reference-model-card.json
+!/models/research/separate-calibration/reference.development.joblib
+!/models/research/separate-calibration/run-summary.json
 results/
 logs/
 cache/

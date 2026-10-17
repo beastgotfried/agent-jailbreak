@@ -98,7 +98,7 @@ Executed notebook: results/notebook-executions/guardrail-optimization.executed.i
 Artifacts contain provenance, protocol, candidate ranking, partitions, model files, locked
 thresholds, scorecard, paired comparison, latency, cards, and evidence. Raw prompts are never
 rendered or logged. Model vocabularies and record-level artifacts remain private on the VM.
-Source notebook stays output-free.
+The tracked notebook now includes preserved execution outputs; code is unchanged.
 
 Verify partition isolation/reproducibility, fitting-only CV, positive record weights,
 convergence, real-score ties, 100-record reload/refit equivalence per model, evidence tampering,
@@ -158,3 +158,11 @@ head: a92d72e26759c90b0dc9cbd91d014d97a0ba249956f24199089edc9fc2e4ecba.
 No frozen model was written, no official-test labels were used, and the old notebook remains
 unchanged. Private runtime artifacts remain under the paths above.
 This is a documented unsuccessful optimization experiment, not evidence of a better model.
+
+## Published artifacts
+
+Original reference and candidate development pipelines, cards, aggregate scorecard and
+comparison are versioned under models/research/separate-calibration/. Copies do not promote
+either model or change the runtime bundle. models/manifest.json records file hashes and
+notebook output provenance. Model vocabulary is included in fitted pipelines; source prompt
+rows and record-level logs remain private.

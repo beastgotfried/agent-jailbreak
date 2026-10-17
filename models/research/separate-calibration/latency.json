@@ -1,0 +1,16 @@
+{
+  "candidate": {
+    "p50_ms": 0.4747359998873435,
+    "p95_ms": 1.2309141937294041,
+    "p99_ms": 1.875836606341182,
+    "records": 100,
+    "scope": "warm serial single-prompt calls on calibration records"
+  },
+  "reference": {
+    "p50_ms": 0.4852325073443353,
+    "p95_ms": 1.2756549003825055,
+    "p99_ms": 1.7253392733982778,
+    "records": 100,
+    "scope": "warm serial single-prompt calls on calibration records"
+  }
+}

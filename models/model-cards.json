@@ -1,0 +1,159 @@
+{
+  "guardrail": {
+    "configuration": {
+      "deduplication": "exact text; exclude train/test overlaps; prefer human annotation then stable ID",
+      "model": {
+        "C": 100.0,
+        "analyzer": "char",
+        "class_weight": "balanced",
+        "lowercase": true,
+        "max_features": 100000,
+        "max_iter": 1000,
+        "min_df": 2,
+        "ngram_range": [
+          3,
+          5
+        ],
+        "norm": "l2",
+        "solver": "liblinear",
+        "sublinear_tf": true
+      },
+      "model_selection": {
+        "candidate_count": 12,
+        "classifier_fits": 36,
+        "enabled": true,
+        "folds": 3,
+        "ranking": "pooled human recall at <=5% fold FPR, then mean AP, smaller C, no weighting",
+        "scope": "fitting partition only",
+        "search_artifact_sha256": "8702f97fecf22ffb73f007fc03bb6ec001bac5450e9dfb81a715223176ee29a9",
+        "search_seconds": 7.473948774000746,
+        "selected_cv_average_precision": 0.7420703559159537,
+        "selected_cv_recall": 0.6787003610108303,
+        "selected_parameters": {
+          "C": 100.0,
+          "class_weight": "balanced"
+        }
+      },
+      "seed": 42,
+      "target": "toxicity OR jailbreaking",
+      "target_fpr": 0.05,
+      "validation_fraction": 0.2
+    },
+    "dataset": {
+      "license": "CC-BY-NC-4.0",
+      "official_training_rows": 5082,
+      "repo": "lmsys/toxic-chat",
+      "revision": "29df8e4dba60e1f4af4b4075c0705c5b313548a8",
+      "test_sha256": "3c2e49889626f7738dca0a29bface0ba0a0595b2ffdd17f0e02f19df7c3c4c9b",
+      "train_sha256": "702eb9b7cac96c3c35e28b9b95855a71f26f21afba8666f9d243f1fa469e81ed"
+    },
+    "environment": {
+      "architecture": "s390x",
+      "interpreter": "/opt/venv/bin/python3",
+      "joblib": "1.6.0",
+      "matplotlib": "3.11.2",
+      "numpy": "2.0.2",
+      "pandas": "3.0.6",
+      "python": "3.12.15",
+      "scipy": "1.13.1",
+      "sklearn": "1.9.0"
+    },
+    "evidence_label": "verified",
+    "export_verification": {
+      "records": 959,
+      "source_model_copied_without_refit": true,
+      "validation_metrics_reproduced": true
+    },
+    "exported_utc": "2026-10-17T08:16:58.652921+00:00",
+    "limitations": [
+      "Public-data development baseline; no production claim.",
+      "Lexical features can miss contextual, multilingual, or novel attacks.",
+      "No canary or error-correlation measurement yet.",
+      "Validation FPR does not guarantee future FPR.",
+      "Final test evaluation has not been performed."
+    ],
+    "model_selection": {
+      "candidate_count": 12,
+      "classifier_fits": 36,
+      "enabled": true,
+      "folds": 3,
+      "ranking": "pooled human recall at <=5% fold FPR, then mean AP, smaller C, no weighting",
+      "scope": "fitting partition only",
+      "search_artifact_sha256": "8702f97fecf22ffb73f007fc03bb6ec001bac5450e9dfb81a715223176ee29a9",
+      "search_seconds": 7.473948774000746,
+      "selected_cv_average_precision": 0.7420703559159537,
+      "selected_cv_recall": 0.6787003610108303,
+      "selected_parameters": {
+        "C": 100.0,
+        "class_weight": "balanced"
+      }
+    },
+    "model_sha256": "16cc50b1e16df16f937cc89c64eea164ed59f70275ccad09cc9303af1e9f2fce",
+    "name": "initial-guardrail",
+    "notebook_sha256": "e73d1960bd25f830dfab1e7afaf0ace4b1546280a53616c6c28d399a7494d004",
+    "run_id": "20261017T061152Z-a17252db",
+    "runtime": {
+      "feature_count": 85327,
+      "model_bytes": 3622800,
+      "process_peak_rss_mib": 300.29296875,
+      "solver_iterations": [
+        8
+      ],
+      "training_seconds": 1.4116889780125348,
+      "validation_records": 959,
+      "validation_scoring_seconds": 0.2314427200035425
+    },
+    "score_semantics": "estimated binary unsafe probability; not validated harm severity",
+    "source_run_id": "20261017T061152Z-a17252db",
+    "split_summary": {
+      "cross_boundary_excluded": 196,
+      "eligible": 4791,
+      "fit": 3832,
+      "partitions_sha256": "cd5e3febd5e3025cf905214a1369344f5f22b9613fe35a2c577842eacf037c6d",
+      "validation": 959,
+      "within_training_excluded": 95
+    },
+    "status": "frozen",
+    "threshold": {
+      "benign_human_refused": 22,
+      "benign_human_validation_records": 457,
+      "decision": "score >= threshold",
+      "observed_fpr": 0.04814004376367615,
+      "target_fpr": 0.05,
+      "threshold": 0.3590141404799981
+    },
+    "validation_metrics": {
+      "full_validation_supplementary": {
+        "average_precision": 0.7641587251825707,
+        "benign": 889,
+        "f1": 0.7027027027027027,
+        "false_negative_rate": 0.2571428571428571,
+        "fn": 18,
+        "fp": 26,
+        "fpr": 0.02924634420697413,
+        "precision": 0.6666666666666666,
+        "recall": 0.7428571428571429,
+        "records": 959,
+        "tn": 863,
+        "tp": 52,
+        "unsafe": 70
+      },
+      "human_annotated": {
+        "average_precision": 0.7881080893363139,
+        "benign": 457,
+        "f1": 0.7222222222222222,
+        "false_negative_rate": 0.2571428571428571,
+        "fn": 18,
+        "fp": 22,
+        "fpr": 0.04814004376367615,
+        "precision": 0.7027027027027027,
+        "recall": 0.7428571428571429,
+        "records": 527,
+        "tn": 435,
+        "tp": 52,
+        "unsafe": 70
+      }
+    },
+    "verification_scope": "development validation on native s390x VM"
+  }
+}

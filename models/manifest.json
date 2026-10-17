@@ -1,0 +1,84 @@
+{
+  "format_version": 1,
+  "artifacts": [
+    {
+      "path": "models/guardrail.joblib",
+      "sha256": "16cc50b1e16df16f937cc89c64eea164ed59f70275ccad09cc9303af1e9f2fce",
+      "bytes": 3622800
+    },
+    {
+      "path": "models/model-cards.json",
+      "sha256": "9693b54e8afe50a845f06b0351c0bac8a47f201e9d6dd7b4490b481b2f3bdb32",
+      "bytes": 5351
+    },
+    {
+      "path": "models/guardrail.freeze.json",
+      "sha256": "d75eb48791e3719ed6726029548ed99d512352d1fbd66f21c037344f09c6159c",
+      "bytes": 219
+    },
+    {
+      "path": "models/research/separate-calibration/reference.development.joblib",
+      "sha256": "ff0169decf8e9e3bd6659900ad24b53ae19c2f699517c1dfd2b4de83af508541",
+      "bytes": 3195504
+    },
+    {
+      "path": "models/research/separate-calibration/candidate.development.joblib",
+      "sha256": "993c7166d1297e4437b532b3631d5f6d5f895781d1e16e94a6bd28b31a001d40",
+      "bytes": 7679872
+    },
+    {
+      "path": "models/research/separate-calibration/reference-model-card.json",
+      "sha256": "c3c972222faad0c4916dc6e64b7141330798375d3fe95d88b02e98a32ac63ca3",
+      "bytes": 2843
+    },
+    {
+      "path": "models/research/separate-calibration/candidate-model-card.json",
+      "sha256": "597033844d9f2895fe637208f25e31b767894eeee38f8ed9d1567a436871ca9d",
+      "bytes": 2901
+    },
+    {
+      "path": "models/research/separate-calibration/evaluation-scorecard.json",
+      "sha256": "d9368ae1765b08032424c328ab8bfc41a961884236b6008bd35d75c2ab716a1c",
+      "bytes": 1601
+    },
+    {
+      "path": "models/research/separate-calibration/paired-comparison.json",
+      "sha256": "56ea0ed1c67aa99d584c26976aeb1538cc89e7684c43f7ea08ef2481d82e7661",
+      "bytes": 721
+    },
+    {
+      "path": "models/research/separate-calibration/latency.json",
+      "sha256": "b37a163d8d3238c1c70854f6a8391779de3ab4f39bf8fc9530770862517a33a7",
+      "bytes": 430
+    },
+    {
+      "path": "models/research/separate-calibration/run-summary.json",
+      "sha256": "ed58806da9d39d9d780f7b698468c2c46c1d6a4cb224f61b2e85cf12240e7a85",
+      "bytes": 5478
+    }
+  ],
+  "notebooks": [
+    {
+      "path": "notebooks/01_initial_guardrail.ipynb",
+      "execution_archive": "initial-guardrail-development.executed.ipynb",
+      "archive_sha256": "67c7ab999fe39b161f63a626141e31124b9df53035fdf45a3f446f4accc98b4b",
+      "sha256": "4f3c32204b22a8b943c6981d641db9d476e4b9c30231fd53e425601b7d14b634",
+      "code_cells": 20,
+      "output_items": 11,
+      "outputs_restored_without_reexecution": true,
+      "layout": "Split into smaller code cells; original execution counts and output content preserved; not re-executed."
+    },
+    {
+      "path": "notebooks/05_guardrail_optimization.ipynb",
+      "execution_archive": "guardrail-optimization.executed.ipynb",
+      "archive_sha256": "e34a27bcf2d9e759be5d911902191f61765cac52faa8f1f5123183eaeb5ddec9",
+      "sha256": "4469e26e8ded0e3d772009338f8efd32a5cda90ade66d811e16a82edb470b037",
+      "code_cells": 82,
+      "output_items": 14,
+      "outputs_restored_without_reexecution": true,
+      "layout": "Split into smaller code cells; original execution counts and output content preserved; not re-executed."
+    }
+  ],
+  "scope": "Existing native s390x artifacts and aggregate recorded outputs. No retraining or new test evaluation. Historical source commit/notebook digests in original cards are preserved.",
+  "source_head_before_publication": "1fa75c2b88993c8537788933e3ecbe97558225e2"
+}

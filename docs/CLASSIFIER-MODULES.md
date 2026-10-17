@@ -140,5 +140,38 @@ before deserializing the pipeline.
 
 Development/export/evaluation/scoring operations write metadata-only hash chains under
 logs/classifier-modular and result directories under results/classifier-runs.
-No raw prompts or vocabulary fragments are logged. Model vocabulary and record-level
-runtime artifacts remain private and ignored by Git.
+No raw prompts or vocabulary fragments are logged. Record-level runtime artifacts remain
+private. Reviewed fitted pipelines, including learned vocabularies, are now versioned under
+models/ as requested; see models/README.md and manifest.json.
+
+
+## Verified saved bundle
+
+Saved on the VM without refitting the reference artifact:
+source run 20261017T061152Z-a17252db; model digest
+16cc50b1e16df16f937cc89c64eea164ed59f70275ccad09cc9303af1e9f2fce.
+Threshold: 0.3590141404799981. Human-annotated development/calibration validation:
+74.29% recall, 70.27% precision, 4.81% FPR, F1 0.7222, AP 0.7881.
+This retains the existing reference; the separate-calibration models were not promoted. Original development files are
+published under models/research/separate-calibration for reproducibility.
+
+All nine native integration tests passed. They verified all 959 modular validation scores,
+the original partition digest and threshold, exact source-artifact export, idempotent export,
+different-model refusal, model/card tamper detection before pickle loading, streaming scoring,
+the explicit final-test gate, and evidence integrity.
+
+The refactored notebook executed successfully against the shared modules and reproduced
+the original 959-row partition, threshold, scorecard, and numeric scores.
+An additional CLI smoke test scored 100 real validation records in batches of 17, matched
+the original scores/decisions to 1e-12, and echoed no raw prompt text. The validation CLI
+also reproduced the original human/full-validation metrics. The persistent saved bundle
+passed digest/card/threshold checks, and official-test receipts remain absent for this work.
+
+## Repository copies and visible notebook outputs
+
+Reviewed weights, cards, hashes and aggregate research results are tracked under models/.
+See models/README.md for the retained and 80%-recall reference paths. Both tracked notebooks
+include existing native execution outputs and plots alongside smaller code cells with
+identical statement order;
+descriptive Markdown remains removed. Original archive hashes and provenance are recorded
+in models/manifest.json.
