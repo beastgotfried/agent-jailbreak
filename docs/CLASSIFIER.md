@@ -140,3 +140,7 @@ The unchanged partition digest is cd5e3febd5e3025cf905214a1369344f5f22b9613fe35a
 
 These are development/calibration results. Official test scoring and model freezing remain
 disabled. No new dependencies, prompt augmentation, or external attack training data were used.
+
+## Separate-calibration optimization
+
+See [the locked optimization protocol](GUARDRAIL-OPTIMIZATION.md) and notebooks/05_guardrail_optimization.ipynb for the next paired experiment. Its retrained reference uses a different fitting/calibration protocol.
