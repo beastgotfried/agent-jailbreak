@@ -1,37 +1,40 @@
-# Agent: Monitor Lead
-
-You advise and execute for the team member who owns detection and repair.
+# Monitor lead context
 
 ## Mission
 
-The watcher: sliding-window KS on guardrail-canary score disagreement, a scan-martingale alarm threshold, and the conformal recalibration repair. Research basis: arXiv 2606.11949 (Cheap Canaries). Cite it. Do not claim the algorithm.
+Implement and qualify a score-only monitor under `docs/MONITOR.md`. It reports a change signal, not verified safety degradation.
 
-## Owns
+## Ownership
 
-- The disagreement signal and its calibration on benign traffic.
-- The KS window and martingale alarm, with fixed, documented parameters.
-- The conformal repair with dimension projection (sweep 8/16/32/64; pick smallest that restores coverage).
-- Threshold calibration on the negative control. Report empirical false-alarm rate.
+- Paired-score input validation and model/configuration identity checks.
+- Signed score-gap signal and fixed-reference KS statistic.
+- Empirical finite-episode threshold calibration on reserved calibration data.
+- Bounded state, checkpoint restore, and numeric alarm evidence.
+- Native LinuxONE compatibility and falsification controls.
 
-## Rules
+## Current method
 
-- Build against dummy score streams first. Swap in real scores at integration.
-- Detection proves change, not correctness. Never claim the monitor proves harm.
-- Distinguish data faults, harmless drift, and degradation. Only degradation reaches repair.
-- The monitor never reads prompt text. Scores only.
-- Common-mode failure is a declared limitation. Keep it in every write-up.
-- No LLM anywhere in the decision path.
+The monitor uses no KS p-value, martingale, or e-process. It compares each scheduled window with a fixed reference. Its threshold comes from whole-episode maxima in constructed null replays.
 
-## Interface contracts you consume
+Those replays share calibration observations. They do not establish a formal deployment false-alarm rate. The default episode ends after 512 accepted pairs.
 
-- Score stream: `prompt_id, guardrail_score, canary_score, timestamp` from the model lead.
-- Baseline window: frozen benign reference from the model lead's validation slice.
+Read the full score and CLI contracts in `docs/MONITOR.md`. Preserve exact purpose separation. Evaluation data must not select parameters or thresholds.
 
-## Interface contracts you produce
+## Required controls
 
-- Alarm record: `alarm_id, step, statistic, threshold, window, evidence_ref`.
-- Repair record: `before_metrics, after_metrics, approved_by, projection_dim, rollback_ref`.
+- Stationary score relationships.
+- Planted numerical relationship changes.
+- Harmless relationship changes that also alarm.
+- Common-mode changes that remain invisible.
+- Missing, duplicate, mismatched, or invalid telemetry.
+- Checkpoint and uninterrupted-run parity.
 
-## Done when
+Neutral numeric fixtures test mechanics only. Report observed real-data results separately. Do not promise zero false alarms or a fixed detection delay.
 
-On a seeded test stream: the negative control produces zero alarms, an injected shift alarms within the documented latency, and the repair restores holdout coverage with refusal rate within the agreed margin.
+## Authority and limits
+
+The monitor has no repair authority. Labels and independent review must establish degradation before any approved response.
+
+Conformal calibration does not train model weights or guarantee restored recall. No dimension projection is part of this scalar-score monitor.
+
+The baseline models share substantial errors. A useful canary and end-to-end safety improvement remain unverified.

@@ -1,34 +1,62 @@
-# PLAN — serial to-do list
+# Work plan and current status
 
-## Before the event
+## 1. Baseline classifiers — complete
 
-1. Train and freeze guardrail + canary on the VM. (Model lead, 2-4 h)
-2. Build prompt pools as JSONL: benign + attacks. (Model + Systems, 1 h)
-3. Convert the two parquets to CSV on a laptop, upload. (Systems, 30 min)
-4. Write the one-page interface contract: stream, log, score formats. (All, 30 min)
-5. Smoke test: 100 prompts, guardrail scores, KS computes, alarm fires. (Systems, 1 h)
+Both frozen classifiers run in the native LinuxONE container. Their measured error correlation is approximately 0.81. These are baseline assets, not a qualified production guardrail/canary pair.
 
-## Event, hours 0-8
+Read `docs/MODELS.md` before model changes. Do not tune against the published official classifier test result.
 
-6. Agree interfaces aloud. No code before this. (All, 30 min)
-7. Build the monitor: disagreement, KS window, martingale alarm. (Monitor lead, 4 h)
-8. Finish replay harness + agent stub. (Systems lead, 4 h)
-9. Build dashboard reading the logs. (Platform lead, 4 h)
+## 2. Prompt pools — complete
 
-## Event, hours 8-16
+The verified native build contains 3,143 benign-routing and 1,209 attack-routing normalized prompt groups. Every retained source link and exact text variant passes the private audit.
 
-10. Build conformal repair, projection sweep. (Monitor + Model, 3 h)
-11. First end-to-end run: harness -> monitor -> dashboard. (All, 1 h)
-12. Run A: guardrail alone, silent failure recorded. (Systems, 1 h)
-13. Run B: guardrail + watcher, alarm + repair recorded. (Systems, 1 h)
-14. Negative control: benign only, watcher quiet. (Systems, 30 min)
-15. Scorecard printed from logs. (Systems, 1 h)
+Reference, calibration, and evaluation purposes remain separate. Read `docs/PROMPT-POOLS.md` for exact counts, source limits, and file paths.
 
-## Event, hours 16-24
+## 3. Score disagreement monitor — native qualification pending
 
-16. Freeze results. Cut anything broken. (Platform lead owns the cut line, 30 min)
-17. Record the 3-minute video. LinuxONE visible. (Platform lead, 2 h)
-18. Finish the pitch. (Platform lead, 1 h)
-19. Submit. Keep one hour of buffer. (All)
+The source and local tests implement signed score gaps, empirical finite-episode KS thresholds, strict paired telemetry, numeric change evidence, and checkpoint restore.
 
-Critical path: 1, 5, 7, 11, 13, 15, 17.
+Next checks:
+
+- Run the full fixture suite inside LinuxONE.
+- Score only the reserved benign reference and calibration inputs with frozen models.
+- Freeze the empirical monitor configuration before evaluation.
+- Verify native functional execution and restart parity.
+- Confirm that original classifier artifacts remain unchanged.
+
+Read `docs/MONITOR.md`. A working detector does not establish safety effectiveness.
+
+## 4. Replay harness and complete interface contract — planned
+
+Specify stream construction, order, seed, cohort, event identity, failure scenario, and run-log format. The paired-score input contract already exists in `docs/MONITOR.md`.
+
+Do not call constructed replay order a production trace. Do not execute dataset instructions.
+
+## 5. Canary and detector qualification — planned
+
+Use reserved development data before final evaluation. Measure useful complementary errors and relationship changes without assuming independence or stronger canary recall.
+
+Controls include these cases:
+
+- Stationary negative control.
+- Harmless traffic change.
+- Harmful change with independent labels.
+- Common-mode and score-preserving failures.
+- Broken or mismatched telemetry.
+- Long-duration false alarms and episode-budget limits.
+
+Do not promise zero alarms, a fixed detection delay, or detection of every failure.
+
+## 6. Paired product benchmark — planned
+
+Compare identical frozen streams and failure scenarios with and without the watcher. Report observed detection and safety outcomes, including failures.
+
+A passive watcher cannot improve raw guardrail recall. Any improvement needs a specified and evaluated response.
+
+## 7. Approval and response — planned
+
+Define action authority, labels, approval, verification, rollback, and independent final evidence. Do not promise that conformal calibration repairs classifier weights or restores recall.
+
+## 8. Dashboard and submission — planned
+
+The dashboard consumes numeric evidence, not raw harmful prompts. The demo shows actual native LinuxONE execution and measured results. Proposed enterprise targets remain acceptance goals, not demonstrated capacity or certification.

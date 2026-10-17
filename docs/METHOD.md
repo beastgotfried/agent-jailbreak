@@ -1,42 +1,47 @@
-# METHOD — start to end
+# Method and evidence boundary
 
-## 1. Problem
+## Product
 
-Deployed safety filters fail silently. New attacks, shifted traffic, and model updates break them. Labels do not arrive in real time. The first alarm today comes from outside the company.
+One guardrail gates traffic. A canary scores the same prompts in parallel. A separate monitor inspects their score relationship.
 
-## 2. Product
+The monitor reports change, not correctness. It cannot verify harm without independent labels or another justified source of evidence.
 
-A watcher, not a filter. One guardrail sits in the path. A canary scores the same traffic in parallel and never decides. A monitor reads the disagreement between them. A human approves the repair. Evidence is hash-chained.
+## Current classifiers
 
-## 3. Models
+Both models use ToxicChat and logistic regression with different TF-IDF views. Their 0–1 outputs are model scores, not validated harm severity or calibrated probabilities.
 
-- Guardrail: TF-IDF char n-grams (3-5) + logistic regression.
-- Canary: TF-IDF word n-grams (1-2) + logistic regression. Different family, different failures.
-- Both trained on ToxicChat train, frozen, digested, carded. Error correlation measured and reported.
+Each baseline detects 231 of 362 unsafe human-annotated official test prompts. Their human-cohort false-positive rates differ. Error correlation is approximately 0.81.
 
-## 4. Detection
+These results do not establish a useful canary or production safety. The frozen models remain baseline experiment assets.
 
-- Signal: score disagreement over a sliding window.
-- Test: KS statistic against a frozen benign reference window.
-- Alarm: scan-martingale threshold, calibrated on the negative control.
-- Detection proves change, not correctness. Holdout labels decide harm.
+## Prompt pools
 
-## 5. Response
+The verified native build contains 3,143 benign-routing and 1,209 attack-routing unique normalized prompt groups. Source labels remain task-specific. Constructed behavior goals are not automatically successful jailbreaks.
 
-- Triage: data fault, harmless drift, or degradation.
-- Repair: conformal recalibration, projection to <=32 dims (sweep 8/16/32/64).
-- Authority: a human approves. The repair is verified after. Rollback version recorded.
+Reference, calibration, and evaluation purposes remain disjoint by exact normalized text. Semantic and attack-family independence remain unproven. Read `docs/PROMPT-POOLS.md` before replay work.
 
-## 6. Benchmark
+## Current detector
 
-- Streams: negative control, attack shift, injection shift. Domain shift and over-refusal only if time remains.
-- Run A: guardrail alone. Run B: guardrail + watcher. Paired seeds, identical streams.
-- Metrics: detection latency in steps, detection rate, false alarms on negative control, harmful pass-through A vs B, coverage before/after repair.
+The signal is the signed difference between guardrail and canary scores. A sliding-window KS statistic compares this signal with a fixed reference.
 
-## 7. Demo
+Calibration uses separate benign-routing score observations. Seeded null replays provide whole-episode maximum statistics. An empirical upper quantile supplies the threshold.
 
-Live slow replay on the VM. Benign traffic, attacks at T, alarm at T + N, repair, restored coverage, scorecard. LinuxONE instance visible in the video.
+The design calibrates the maximum across scheduled looks rather than treating overlapping KS p-values as independent. Shared observations still prevent a formal anytime-valid claim.
 
-## 8. Pitch
+Default scope: window 64, stride 16, horizon 512, 200 null replays, alpha 0.05, seed 42. The horizon is an explicit episode limit. Read `docs/MONITOR.md` for the exact contract.
 
-Guardrails fail silently. A canary watches them. Statistics catch the drift. Conformal math repairs it. Same attacks twice: alone, the guardrail never noticed; watched, the failure was caught in N steps and repaired, with proof.
+Invalid pairing, sequence gaps, or model identity changes produce telemetry faults. A valid threshold exceedance produces an unverified change signal with no action authority.
+
+## Limits
+
+Harmless changes can alter disagreement. Common-mode failures can preserve disagreement and remain invisible. A static classifier does not forget merely because time passes.
+
+A numerical shift fixture tests detector mechanics. It does not prove safety degradation detection. Native execution establishes compatibility for the tested path, not enterprise scale or hardware attestation.
+
+## Next product stages
+
+Independent evaluation must compare identical frozen streams with and without the watcher. It must include harmless changes, shared failures, broken telemetry, and negative controls.
+
+Any response must specify its authority, required labels, approval, rollback, and independent verification. Conformal calibration does not update classifier weights or guarantee restored recall. Scalar score models do not require arbitrary dimension projection.
+
+The paired benchmark, response mechanism, approval workflow, and dashboard remain separate unfinished stages. No repair or end-to-end safety improvement result exists.

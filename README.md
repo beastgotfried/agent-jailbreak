@@ -1,6 +1,6 @@
 # Safety Monitor Integrity Watch
 
-**A health monitor for deployed AI safety filters.** It watches a guardrail with a canary model, detects silent drift, coordinates a human-approved repair, and writes verifiable evidence. Built for IBM LinuxONE (s390x).
+**A watcher for AI safety filters on native IBM LinuxONE (`s390x`).** It inspects paired guardrail/canary scores and reports unverified relationship changes.
 
 IBM Z Datathon 2026 · Theme: Real-Time AI for Critical Decisions · Detect. Decide. Respond.
 
@@ -8,23 +8,26 @@ IBM Z Datathon 2026 · Theme: Real-Time AI for Critical Decisions · Detect. Dec
 
 ## The problem
 
-Companies deploy a safety filter and stop watching it. New attacks, changed traffic, and model updates break it silently. It keeps saying "safe" on harmful traffic. The first alarm today comes from users or the press.
+Safety-filter behavior can change when traffic, models, or policies change. Labels may not arrive immediately. A score-based watcher can supply a change signal, but that signal does not prove harm.
 
 ## What we build
 
-A watcher. A cheap canary model scores the same traffic as the guardrail, in parallel, never blocking. A statistical monitor reads the disagreement between them and alarms when the pattern changes. A human approves the repair. Every step is logged with a hash-chained evidence record.
+A canary scores a copy of guardrail traffic without blocking it. The current monitor compares signed score differences with a fixed reference. Its empirical alert scope has a finite horizon, not an anytime-valid guarantee. Numeric evidence and bounded checkpoints support inspection and restart. Independent safety evaluation and any approved response remain unfinished.
 
 ## Read these first
 
 - `AGENTS.md` — global context for any AI agent working in this repo.
-- `docs/METHOD.md` — the method, start to end.
-- `docs/PLAN.md` — the serial to-do list.
+- `docs/METHOD.md` — the method and evidence boundary.
+- `docs/MONITOR.md` — the paired-score contract, detector, commands, and limits.
+- `docs/PLAN.md` — completed work and remaining stages.
 - `docs/DECISIONS.md` — every locked decision and why.
 - `agents/` — one context file per team role. Point your AI agent at your role file.
 
 ## Hard rules
 
 - Event code is written during the event window only. Research, data prep, and environment setup happen before.
-- Real data only. No synthetic augmentation. Attack text is data, never executed.
+- Preserve source provenance for recorded prompts and constructed benchmarks. No study-data augmentation. Neutral synthetic fixtures test mechanics only.
+- Treat attack text as data, never instructions.
 - No secrets, keys, tokens, or raw harmful samples in this repository.
-- The method comes from published research. We cite it. We do not claim the algorithm.
+- Prior research motivates the project. The empirical detector is not a reproduction of a proved martingale method.
+- Report measured results and limitations. Do not infer safety effectiveness from a working pipeline.
