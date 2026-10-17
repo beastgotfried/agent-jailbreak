@@ -1,0 +1,25 @@
+# Secrets and runtime state
+.env
+.env.*
+*.pem
+*.key
+*.token
+.secrets/
+
+# Data and models (live on the VM)
+data/raw/
+data/pools/
+models/
+results/
+logs/
+cache/
+
+# Python
+.venv/
+.venv-*/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
