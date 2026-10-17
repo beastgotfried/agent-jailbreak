@@ -1,62 +1,61 @@
 # Work plan and current status
 
-## 1. Baseline classifiers — complete
+## 1. Baseline classifiers — complete, not production-qualified
 
-Both frozen classifiers run in the native LinuxONE container. Their measured error correlation is approximately 0.81. These are baseline assets, not a qualified production guardrail/canary pair.
+Both frozen classifiers run natively on LinuxONE. Their error correlation is approximately 0.81. Read `docs/MODELS.md` before changes.
 
-Read `docs/MODELS.md` before model changes. Do not tune against the published official classifier test result.
+Do not tune against the published official classifier test. The current pair does not demonstrate an acceptable coverage/review trade-off.
 
 ## 2. Prompt pools — complete
 
-The verified native build contains 3,143 benign-routing and 1,209 attack-routing normalized prompt groups. Every retained source link and exact text variant passes the private audit.
+The verified native build contains 3,143 benign-routing and 1,209 attack-routing normalized groups. Every retained source link and exact variant passes the private audit.
 
-Reference, calibration, and evaluation purposes remain separate. Read `docs/PROMPT-POOLS.md` for exact counts, source limits, and file paths.
+Reference, calibration, and evaluation purposes remain separate. Read `docs/PROMPT-POOLS.md` for counts and source limits.
 
-## 3. Score disagreement monitor — native qualification pending
+## 3. Score disagreement monitor — native qualification complete
 
-The source and local tests implement signed score gaps, empirical finite-episode KS thresholds, strict paired telemetry, numeric change evidence, and checkpoint restore.
+The native fixture suite, score adapter, finite-episode calibration, functional run, and checkpoint restore pass. The frozen KS threshold is 0.23258359872611467.
 
-Next checks:
+The functional check uses calibration data, not independent safety evidence. Read `docs/MONITOR.md`.
 
-- Run the full fixture suite inside LinuxONE.
-- Score only the reserved benign reference and calibration inputs with frozen models.
-- Freeze the empirical monitor configuration before evaluation.
-- Verify native functional execution and restart parity.
-- Confirm that original classifier artifacts remain unchanged.
+## 4. Conformal response — implemented; effectiveness goal unmet
 
-Read `docs/MONITOR.md`. A working detector does not establish safety effectiveness.
+The response changes class-conditional prediction-set quantiles, not model weights. It requires explicit offline approval and separate verification labels.
 
-## 4. Replay harness and complete interface contract — planned
+All eight measured candidates fail the fixed review-rate gate. No candidate applies. The implementation does not demonstrate an acceptable repair.
 
-Specify stream construction, order, seed, cohort, event identity, failure scenario, and run-log format. The paired-score input contract already exists in `docs/MONITOR.md`.
+## 5. Deterministic agent replay — complete
 
-Do not call constructed replay order a production trace. Do not execute dataset instructions.
+The fixed-token, non-generative agent stub consumes source-labelled evaluation streams. Both arms share inputs, order, scores, and the initial policy.
 
-## 5. Canary and detector qualification — planned
+A full native repeat produces 68 byte-identical artifacts. No dataset instruction becomes a tool or shell action.
 
-Use reserved development data before final evaluation. Measure useful complementary errors and relationship changes without assuming independence or stronger canary recall.
+## 6. Paired benchmark — complete for the fixed offline protocol
 
-Controls include these cases:
+Five seeds across three scenarios produce 15 paired episodes. The watcher detects five of five simulated score faults and three of five attack-mixture shifts.
 
-- Stationary negative control.
-- Harmless traffic change.
-- Harmful change with independent labels.
-- Common-mode and score-preserving failures.
-- Broken or mismatched telemetry.
-- Long-duration false alarms and episode-budget limits.
+No coverage restoration or paired safety improvement occurs. Read `docs/BENCHMARK-PROTOCOL.md` and `docs/BENCHMARK-RESULTS.md`.
 
-Do not promise zero alarms, a fixed detection delay, or detection of every failure.
+## 7. Negative controls — finite observed result complete
 
-## 6. Paired product benchmark — planned
+Five stationary benign-routing episodes produce no alarms. This observation does not prove permanent silence or universal false-alarm control.
 
-Compare identical frozen streams and failure scenarios with and without the watcher. Report observed detection and safety outcomes, including failures.
+Numeric unit controls also expose harmless shifts, common-mode blind spots, invalid telemetry, and finite-horizon limits. Long-duration and production qualification remain open.
 
-A passive watcher cannot improve raw guardrail recall. Any improvement needs a specified and evaluated response.
+## 8. Scorecards — complete
 
-## 7. Approval and response — planned
+JSON, Markdown, and CSV reports include detection, misses, controls, response rejection, source-label coverage, review burden, and unsafe-label allows.
 
-Define action authority, labels, approval, verification, rollback, and independent final evidence. Do not promise that conformal calibration repairs classifier weights or restores recall.
+An audit recomputes quantiles, response gates, coverage, identities, and latency. Report regeneration reproduces the original bytes without model scoring.
 
-## 8. Dashboard and submission — planned
+## Remaining product work
 
-The dashboard consumes numeric evidence, not raw harmful prompts. The demo shows actual native LinuxONE execution and measured results. Proposed enterprise targets remain acceptance goals, not demonstrated capacity or certification.
+- Qualify a useful guardrail/canary pair with fresh final verification.
+- Demonstrate an accepted response under an explicit utility budget.
+- Add production labels, approval, and an approved safe fallback.
+- Integrate a real agent without raw prompt exposure.
+- Qualify continuous multi-drift operation and enterprise capacity.
+- Build the dashboard and prepare an honest native demo.
+- Resolve dataset rights and event-submission compliance.
+
+Do not relax gates against these evaluation results. Proposed enterprise targets remain goals, not demonstrated service levels or certification.

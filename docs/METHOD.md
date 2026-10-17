@@ -38,10 +38,18 @@ Harmless changes can alter disagreement. Common-mode failures can preserve disag
 
 A numerical shift fixture tests detector mechanics. It does not prove safety degradation detection. Native execution establishes compatibility for the tested path, not enterprise scale or hardware attestation.
 
-## Next product stages
+## Offline response and paired results
 
-Independent evaluation must compare identical frozen streams with and without the watcher. It must include harmless changes, shared failures, broken telemetry, and negative controls.
+The paired replay uses the same initial conformal policy and identical score streams in both arms. The watched arm adds the detector and a gated response. The fixed-token stub never generates content or executes tools.
 
-Any response must specify its authority, required labels, approval, rollback, and independent verification. Conformal calibration does not update classifier weights or guarantee restored recall. Scalar score models do not require arbitrary dimension projection.
+The response changes class-conditional set quantiles, not model weights. Initial, response, and verification labels use disjoint calibration-purpose groups. Evaluation labels cannot approve policies. The approval and label delay remain offline simulations.
 
-The paired benchmark, response mechanism, approval workflow, and dashboard remain separate unfinished stages. No repair or end-to-end safety improvement result exists.
+The native benchmark detects five of five simulated score faults and three of five attack-mixture shifts. Five stationary controls produce no alarms. Every response candidate fails the review-rate gate. No coverage restoration or paired safety improvement occurs.
+
+Read `docs/REPLAY.md` and `docs/BENCHMARK-RESULTS.md`. Coverage is prediction-set membership, not classifier accuracy or probability calibration.
+
+## Remaining product stages
+
+Production approval, fresh labels, an approved safe fallback, real-agent integration, continuous operation, and enterprise capacity remain unbuilt or unqualified.
+
+Future evaluation must retain harmless changes, shared failures, broken telemetry, and negative controls. Do not retune against the published final evaluation. Scalar score models do not require arbitrary dimension projection.

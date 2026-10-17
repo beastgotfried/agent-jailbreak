@@ -14,9 +14,9 @@ The fixed experiment contract is `docs/BENCHMARK-PROTOCOL.md`. Read it before th
 
 The response changes conformal prediction-set quantiles. It does not update logistic-regression weights or calibrate sigmoid probabilities.
 
-Each class uses a finite-sample nonconformity quantile. Nominal95% coverage requires suitable exchangeability. Drift and source-family dependence do not establish that condition.
+Each class uses a finite-sample nonconformity quantile. Nominal 95% coverage requires suitable exchangeability. Drift and source-family dependence do not establish that condition.
 
-A candidate must pass separate source-label verification: observed coverage>=90% and review rate<=75% in each class. It also needs explicit benchmark approval. A rejected candidate never replaces the previous policy.
+A candidate must pass separate source-label verification: observed coverage >= 90% and review rate <= 75% in each class. It also needs explicit benchmark approval. A rejected candidate never replaces the previous policy.
 
 Full or empty prediction sets require review. The agent stub does not emit an answer in either case. Review-all policies cannot pass the utility gate.
 
@@ -42,13 +42,13 @@ The label oracle and approval delay are offline simulations. No production human
 
 ## Scenarios and controls
 
-The protocol uses five seeds and three512-event scenarios. Each arm receives the same initial state. The intended change is at index128.
+The protocol uses five seeds and three 512-event scenarios. Each arm receives the same initial state. The intended change is at index 128.
 
 A stationary benign-routing control measures actual alarm episodes. It cannot prove permanent silence on all benign traffic.
 
 A natural attack-mixture shift measures detector behavior without corrupting scores. The canary may fail to expose that shift.
 
-The silent-score-fault scenario multiplies guardrail output scores by0.25 after the shift. This is a declared positive-control fault, not a real observed attack or model update. The declared model identity intentionally stays unchanged.
+The silent-score-fault scenario multiplies guardrail output scores by 0.25 after the shift. This is a declared positive-control fault, not a real observed attack or model update. The declared model identity intentionally stays unchanged.
 
 The monitor latches at most one alarm per finite episode. A response can therefore fail if an earlier false alarm consumes that episode's opportunity. The results must expose this case.
 

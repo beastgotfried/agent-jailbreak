@@ -107,12 +107,12 @@ The separate offline response and replay modules are described in `docs/REPLAY.m
 ## Native qualification — 2026-10-17
 
 Executed source: `f7ce7c8129b80c9f37edfa7a903769b0238cbfaa`.
-The native fixture suite reports154passes and four optional Mac converter skips.
+The native fixture suite reports 154 passes and four optional Mac converter skips.
 
-The frozen score adapter processes1,256 reference and942 calibration prompts. It scores no evaluation prompts and does not fit either classifier.
+The frozen score adapter processes 1,256 reference and 942 calibration prompts. It scores no evaluation prompts and does not fit either classifier.
 
-The default empirical KS threshold is0.23258359872611467. Nine of200 null calibration maxima exceed it, or4.5%. This is an in-sample empirical calibration result, not a deployment false-alarm estimate.
+The default empirical KS threshold is 0.23258359872611467. Nine of 200 null calibration maxima exceed it, or 4.5%. This is an in-sample empirical calibration result, not a deployment false-alarm estimate.
 
-A512-event calibration-data functional check completes29looks with no alarm. Checkpoint restore reproduces the exact state. These checks do not establish safety effectiveness.
+A 512-event calibration-data functional check completes 29 looks with no alarm. Checkpoint restore reproduces the exact state. These checks do not establish safety effectiveness.
 
 Private native evidence: `~/safety-watch/runs/monitor-20261017-01/verification.json`.

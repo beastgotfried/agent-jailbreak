@@ -37,4 +37,6 @@ The monitor has no repair authority. Labels and independent review must establis
 
 Conformal calibration does not train model weights or guarantee restored recall. No dimension projection is part of this scalar-score monitor.
 
-The baseline models share substantial errors. A useful canary and end-to-end safety improvement remain unverified.
+The baseline models share substantial errors. Native replay detects five of five simulated score faults and three of five attack-mixture shifts. Five stationary controls produce no alarms. Every measured response fails the review-rate gate.
+
+A useful canary and end-to-end safety improvement remain unqualified. Read `docs/BENCHMARK-RESULTS.md` before parameter changes or effectiveness claims.

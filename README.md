@@ -12,13 +12,17 @@ Safety-filter behavior can change when traffic, models, or policies change. Labe
 
 ## What we build
 
-A canary scores a copy of guardrail traffic without blocking it. The current monitor compares signed score differences with a fixed reference. Its empirical alert scope has a finite horizon, not an anytime-valid guarantee. Numeric evidence and bounded checkpoints support inspection and restart. Independent safety evaluation and any approved response remain unfinished.
+A canary scores a copy of guardrail traffic without blocking it. The current monitor compares signed score differences with a fixed reference. Its empirical alert scope has a finite horizon, not an anytime-valid guarantee. Numeric evidence and bounded checkpoints support inspection and restart.
+
+Offline paired replay and a gated conformal response now exist. Every measured candidate fails the review-rate gate, so no repair applies. Production approval and real-agent integration remain unfinished.
 
 ## Read these first
 
 - `AGENTS.md` — global context for any AI agent working in this repo.
 - `docs/METHOD.md` — the method and evidence boundary.
 - `docs/MONITOR.md` — the paired-score contract, detector, commands, and limits.
+- `docs/REPLAY.md` — offline response and paired benchmark commands.
+- `docs/BENCHMARK-RESULTS.md` — actual results, including rejected repairs.
 - `docs/PLAN.md` — completed work and remaining stages.
 - `docs/DECISIONS.md` — every locked decision and why.
 - `agents/` — one context file per team role. Point your AI agent at your role file.

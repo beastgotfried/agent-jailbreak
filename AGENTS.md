@@ -6,7 +6,11 @@ Safety Monitor Integrity Watch is a watcher for deployed AI safety filters. A gu
 
 A change signal does not establish harm. Independent labels and review must establish degradation before an approved response.
 
-Current work includes two frozen baseline classifiers, verified prompt pools, and score-monitor source code. Native monitor qualification is pending until an execution report records it. The paired benchmark, dashboard, approval workflow, and repair mechanism remain unbuilt.
+Current work includes frozen baseline classifiers, verified prompt pools, a native score monitor, gated conformal response code, and deterministic paired replay.
+
+The native benchmark detects 5/5 simulated score faults and 3/5 attack-mixture changes. Its five stationary controls produce no alarms. All eight response candidates fail the review-rate gate, so no repair applies. Read `docs/BENCHMARK-RESULTS.md` before any effectiveness claim.
+
+The dashboard, production approval service, real-agent integration, and approved safe fallback remain unbuilt. Continuous multi-drift operation is not qualified.
 
 Do not describe proposed enterprise requirements as delivered features. Do not claim that the market has no existing monitoring products.
 
@@ -44,7 +48,7 @@ The threshold is an empirical whole-episode maximum quantile. Calibration replay
 
 Validate paired event IDs, contiguous sequences, finite scores, and model/configuration identities. Treat broken telemetry as a data fault, not verified safety degradation.
 
-The monitor has no action authority. Conformal calibration does not automatically restore model recall. No dimension projection is mandatory for these scalar scores.
+The monitor has no action authority. The offline response requires explicit simulated approval and disjoint candidate verification. It changes prediction sets, not classifier weights or raw recall. Every measured candidate fails the fixed utility gate. No dimension projection is mandatory for these scalar scores.
 
 ## Work rules
 
@@ -61,6 +65,9 @@ The monitor has no action authority. Conformal calibration does not automaticall
 - `docs/MODELS.md`: Classifier protocol and score semantics.
 - `docs/PROMPT-POOLS.md`: Sources, exclusions, purposes, and verified counts.
 - `docs/MONITOR.md`: Detector API, calibration scope, commands, and limits.
+- `docs/REPLAY.md`: Offline response, deterministic replay, and report commands.
+- `docs/BENCHMARK-PROTOCOL.md`: Experiment choices fixed before evaluation.
+- `docs/BENCHMARK-RESULTS.md`: Measured results and unmet acceptance goals.
 - `docs/METHOD.md`: Product method and current evidence boundary.
 - `docs/DECISIONS.md`: Current technical decisions.
 - `agents/`: Team role context.

@@ -9,8 +9,8 @@ Everything the judges see: a live dashboard on the VM, the 3-minute demo video, 
 ## Owns
 
 - The VM: uptime, disk, memory, ports, firewall. The container: health, limits, restarts.
-- The dashboard: reads run logs; shows stream, scores, alarm, repair, scorecard.
-- The 3-minute video: LinuxONE instance visible, model running, failure, alarm, repair, scorecard.
+- The dashboard: Reads numeric logs and shows scores, alarms, response states, and scorecards.
+- The 3-minute video: Shows native execution and actual outcomes, including rejected repairs.
 - The pitch: three sentences. Watcher of the shield. Never "we built a guardrail."
 - The cut line at hour 18. Single owner. No debate.
 
@@ -20,7 +20,10 @@ Everything the judges see: a live dashboard on the VM, the 3-minute demo video, 
 - No secrets in the repo, the video, or the dashboard. Blur or truncate anything sensitive in recordings.
 - The dashboard never renders raw harmful text. Show scores, counts, and states only.
 - The video shows the real VM and the real run. No mockups.
-- The pitch cites the research (arXiv 2606.11949) and declares the replay-study framing.
+- The pitch cites prior research and declares the offline replay scope.
+- Read `docs/BENCHMARK-RESULTS.md` before any effectiveness claim.
+- Do not stage a successful repair, hide failed seeds, or claim production safety.
+- Keep the proposed enterprise design separate from delivered features.
 
 ## Interface contracts you consume
 

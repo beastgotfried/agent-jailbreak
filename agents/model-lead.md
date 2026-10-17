@@ -1,34 +1,35 @@
-# Agent: Model Lead
-
-You advise and execute for the team member who owns the two classifiers.
+# Model lead context
 
 ## Mission
 
-Two frozen, evaluated, documented models on the VM before the event: the guardrail (char n-grams + logistic regression) and the canary (word n-grams + logistic regression), both trained on ToxicChat train.
+Maintain native frozen classifiers and qualify future improvements without test leakage.
 
-## Owns
+## Current assets
 
-- Training and evaluation of both classifiers.
-- Prompt pools: benign pool (ToxicChat), attack pools (JBB, HarmBench, StrongREJECT, WAInjectBench).
-- The locked evaluation holdout. Nobody else may tune on it.
-- Model cards: versions, metrics, threshold, digests, training command.
+The native LinuxONE container holds the char 3–5 TF-IDF logistic-regression guardrail and word 1–2 TF-IDF logistic-regression canary. Both use scikit-learn 1.9.0 for fit and inference.
 
-## Rules
+They share an algorithm family and training source. Error correlation is approximately 0.81. Different feature views do not establish independence or a useful canary.
 
-- Train and freeze in the container environment (scikit-learn 1.9.0). Same environment at event time.
-- Label: unsafe = toxicity OR jailbreaking. Severity score = the sigmoid probability, 0 to 1.
-- Full dataset for training (owner decision). Headline metrics on the human-annotated rows only.
-- Dedupe across the train/test boundary. Log every removal.
-- Threshold: frozen near 5% FPR on a validation slice of train. Test is touched once.
-- Measure guardrail-canary error correlation on a holdout. Report the number. Do not assume independence.
-- No synthetic data. No augmentation. No pretrained transformer (DeBERTa was evaluated and excluded by owner decision).
+The model output is a 0–1 score. It is not validated harm severity or a calibrated probability.
 
-## Interface contracts you produce
+## Data discipline
 
-- Score artifact: `prompt_id, guardrail_score, canary_score, timestamp, split` (JSONL).
-- Frozen models: `models/guardrail.joblib`, `models/canary.joblib`, plus `models/model-cards.json`.
-- Prompt pools: `data/pools/{benign,attack-*}.jsonl` with source and license fields.
+Read `docs/MODELS.md`. Only `user_input` supplies features. The original target is toxicity OR jailbreaking.
 
-## Done when
+The official train source has separate fit, threshold-validation, and reserved reference roles after documented exclusions. No full-data refit follows threshold selection. The published official test result must not select future hyperparameters or cohorts.
 
-Both models load from disk on the VM, score 100 held-out prompts, and the model cards pass review against `docs/DECISIONS.md`.
+Do not use `model_output` or moderation outputs as features. Keep exact data and artifact hashes. Treat joblib artifacts as trusted-only inputs.
+
+## Current evidence
+
+Both models detect 231 of 362 unsafe human-annotated official test prompts. Their false-positive rates differ. Matching recall does not mean identical errors.
+
+The later harmful-request replay uses a distinct source-label policy. Its conformal prediction sets are not an updated classifier-test accuracy result.
+
+All measured response candidates require too much review and fail the gate. Classifier weights remain unchanged. Read `docs/BENCHMARK-RESULTS.md` before an effectiveness claim.
+
+## Future changes
+
+Use development data for model selection and reserve fresh final verification. Match the actual target task. Measure shared errors, cohort coverage, calibration, native runtime, and memory.
+
+Do not infer semantic understanding, guaranteed robustness, or safety from a sigmoid score. Do not choose human-only headlines after a favourable test result.
