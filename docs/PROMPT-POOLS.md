@@ -159,10 +159,11 @@ Repeated equivalent runs give identical pool bytes and partition assignments
 
 ### Error handling and logging
 
-No raw prompt is printed or logged; counts, hashes, and IDs only. Unsafe paths,
-missing/unreadable/malformed data, hash mismatches, blocked entries, and
-non-empty output all fail fast with a clear `SystemExit` message and leave the
-output directory empty or absent. Sources are left untouched.
+Error messages identify the field and row without the rejected annotation value.
+The tool rejects unsafe paths, missing required data, hash mismatches, and nonempty output directories.
+Blocked source entries remain excluded and appear in the audit counts.
+A filesystem failure can leave partial output. Use a new directory after an output failure.
+The tool does not rewrite source files.
 
 ### Repro rule
 
@@ -176,3 +177,38 @@ python3 -m src.data.build_prompt_pools --raw-root PATH --converted-root PATH \
 ```
 
 `data/pools/` and `data/raw/` are gitignored; real pools stay on the VM, not in Git.
+
+## Verified build — 2026-10-17
+
+The builder runs on native LinuxONE (`s390x`) with Python 3.12.15.
+The source commit is `12938148dfd032467a63b56421f88ce5d1891423` on branch `kush`.
+Mac format preparation preserves all field values across seven Parquet files and 587 rows.
+
+Host output: `~/safety-watch/data/pools/prompt-pools-20261017-01/`.
+Container output: `/home/ibm-user/shared/data/pools/prompt-pools-20261017-01/`.
+Execution and audit records: `~/safety-watch/runs/prompt-pools-20261017-02/`.
+
+| Purpose | Benign | Attack |
+|---|---:|---:|
+| Reference | 1,256 | 0 |
+| Calibration | 942 | 604 |
+| Evaluation | 945 | 605 |
+| Total | 3,143 | 1,209 |
+
+The build retains 4,352 unique normalized prompt groups from 5,032 candidate source rows.
+It removes 680 duplicate candidate rows and preserves their source links.
+It separately excludes 200 HarmBench contextual or copyright rows.
+
+An independent native audit verifies every original text field and all 5,032 retained source links.
+It finds no exact normalized overlap with classifier fit, threshold-validation, or official test prompts.
+It finds no cross-purpose normalized duplicates. A second build produces identical JSONL bytes.
+These checks do not prove semantic or attack-family independence.
+
+Local tests: 110 pass, including converter tests.
+Native tests: 106 pass; four optional PyArrow converter cases skip because the native image lacks PyArrow.
+The native builder does not need PyArrow. Both classifiers remain unchanged; no new model scoring occurs.
+
+The private output includes `benign.jsonl`, `attacks.jsonl`, `exclusions.jsonl`, and `pool-manifest.json`.
+The source labels remain task-specific. The attack pool includes behavior goals, not only optimized jailbreaks.
+These pools do not establish monitor effectiveness or production safety.
+License review remains necessary before redistribution or commercial use.
