@@ -14,6 +14,16 @@ from src.release.cli import load_selected
 from src.replay.synthetic import run
 
 
+def backend_type(models):
+    kind = json.loads((Path(models) / "model-cards.json").read_text()).get("backend")
+    if kind is None:
+        return SyntheticBackend
+    if kind == "frozen_minilm":
+        from src.models.semantic import SemanticBackend
+        return SemanticBackend
+    raise ValueError("unsupported_accuracy_backend")
+
+
 def fresh_test(development, models, baseline_models, output):
     require_native()
     development, models, output = Path(development), Path(models), Path(output)
@@ -27,7 +37,7 @@ def fresh_test(development, models, baseline_models, output):
             raise ValueError("development_data_changed_before_fresh_test")
     rows = read_aegis(development / "test.jsonl")
     _, baseline = load_selected(baseline_models)
-    candidate = SyntheticBackend(models)
+    candidate = backend_type(models)(models)
     outputs = {"baseline": [], "candidate": []}
     with (output / "scores.jsonl").open("x") as handle:
         for start in range(0, len(rows), 256):
@@ -71,7 +81,7 @@ def main():
             parser.error("--source-commit, --toxic-test, and --xstest are required")
         cards = json.loads((args.models / "model-cards.json").read_text())
         report = run(args.data, args.models, args.output, source_commit=args.source_commit,
-                     toxic_test=args.toxic_test, xstest=args.xstest,
+                     toxic_test=args.toxic_test, xstest=args.xstest, backend_factory=backend_type(args.models),
                      extra_report_fields={"evaluation_status": "exposed_synthetic_and_external_regression",
                                           "fresh_independent_confirmation": False,
                                           "additional_training_source": "Aegis human prompt labels",

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "approach": "Frozen pretrained semantic encoder plus a supervised linear head; no encoder fine-tune",
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "weight_sha256": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db",
+  "license": "Apache-2.0",
+  "model_scope": "MiniLM uses a distilled BERT-family encoder. It supplies semantic features, not a pretrained broad-harm classifier.",
+  "encoding": {
+    "device": "native s390x CPU",
+    "encoder_dtype": "float32",
+    "classifier_feature_dtype": "float64",
+    "encoder_batch_size": 1,
+    "max_length": 256,
+    "padding": false,
+    "pooling": "Attention-mask mean, then L2 normalization",
+    "runtime_output_cache": false,
+    "development_feature_reuse": "Allowed only for the two head fits; never used by the runtime backend",
+    "reason": "Single-text forward passes give identical neutral repeat embeddings. Variable padding removes unnecessary CPU work without shortening the published 256-token limit."
+  },
+  "fit_sampling": {
+    "synthetic": "For each train (family,target_index), choose one (context_index,frame_index) by minimum digest([42,semantic-fit-v1,family,target_index,context_index,frame_index]); retain both labels. Expected 1400 rows.",
+    "aegis": "Group by frozen lexical group_id. Within each single-label group stratum, select the first 2000 groups by digest([42,semantic-aegis-fit-v1,group_id]); retain all rows. Retain all mixed-label groups.",
+    "weights": "Equal source totals; equal class totals within each source; equal group mass within each source/class",
+    "sampling_scope": "This cost-bounded fit uses a disclosed subset of train data. No validation or test record becomes a fit record."
+  },
+  "fixed_heads": [
+    {"name": "minilm_frozen_lr_C1", "C": 1},
+    {"name": "minilm_frozen_lr_C4", "C": 4}
+  ],
+  "head_parameters": {"max_iter": 1000, "random_state": 42, "class_weight": null, "solver": "lbfgs"},
+  "maximum_head_fits": 2,
+  "new_encoder_fits": 0,
+  "convergence_retries": 0,
+  "development_manifest_sha256": "3fef09fde1d650157d68801ed166ab7ddfe3748bd0b26f9e79adec5442a2ea14",
+  "synthetic_manifest_sha256": "63db0f854b36ffe6d7f1e3053d70502ed644055509628cd302934db05e639597",
+  "validation": "Original 5000 synthetic threshold rows plus all 1174 prepared Aegis validation rows. Reused development data, not independent confirmation.",
+  "selection": "Use the unchanged src.models.accuracy select_threshold, quality, rejection_codes, objective, and tie rules. Keep raw and group-weighted safe FPR at most 0.05 for each source, synthetic balanced accuracy at least 0.90, Aegis harmful recall at least 0.50, and equal-source balanced-accuracy gain at least 0.005 over the released baseline on the same rows.",
+  "test_policy": "Select at most one head before test inference. Run the unchanged exposed 60-episode replay and audit only for an eligible head. Keep holds in the denominator. Then score the first-use prepared Aegis test. No test-driven change or automatic promotion.",
+  "goal_operational_accuracy_strictly_above": 0.84,
+  "canary_and_runtime_rules": "Unchanged",
+  "cost_limits_seconds": {"fit_and_validation": 3600, "full_benchmark": 21600, "fresh_aegis_test": 1800},
+  "alternatives": {
+    "WhyLabs_index": "LangKit source 5d6cab1e2ff32181ba5c514aaa2a4473421dc413 references the MiniLM harm_v2 Parquet index. Its published S3 URL returns HTTP 403 AccessDenied for HEAD and GET. Not acquired or used; index rights and provenance remain unverified.",
+    "ProtectAI_DeBERTa": "Checkpoint 90c9989b1a342275dd0d1a95aad283c04e075671 classifies SAFE versus INJECTION, not all harmful requests. Its card lists XSTest-derived training data. Not used as a broad-harm classifier; no study inference.",
+    "KoalaAI_DeBERTa": "Checkpoint 838ade0edb66dcffc5532d08ff6ed5c899abfb5c has nine content-moderation labels, not this full request policy. The card says v3 but config model_type is deberta. OpenRAIL conditions apply. Not selected; no study inference.",
+    "Microsoft_DeBERTa_small": "Checkpoint a36c739020e01763fe789b4b85e2df55d6180012 is a masked-language encoder, not a ready safety classifier. Not selected; no study inference."
+  },
+  "stop": "Stop after these two heads if neither passes. Do not modify the gates or choose a third head from test results."
+}

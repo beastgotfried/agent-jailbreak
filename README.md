@@ -37,4 +37,4 @@ The selected classifiers fit our **100,000-row synthetic study** with a 70,000/1
 
 Public access does not imply unrestricted reuse. [Source records](releases/baseline-20261017/data-sources.json) contain pinned revisions, licenses, and roles.
 
-The archived neural comparison uses [Google BERT-tiny](https://huggingface.co/google/bert_uncased_L-2_H-128_A-2). [MiniLM-L6](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) serves only a compatibility/cost check. Both model cards specify Apache-2.0.
+The archived neural comparison uses [Google BERT-tiny](https://huggingface.co/google/bert_uncased_L-2_H-128_A-2). The [semantic experiment](experiments/pretrained-semantic/protocol.json) tests frozen [MiniLM-L6](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) features. Both model cards specify Apache-2.0.

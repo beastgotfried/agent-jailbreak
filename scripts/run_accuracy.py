@@ -41,11 +41,14 @@ def main():
     for name in ("source-archive", "baseline-study", "raw-aegis", "toxic-train", "toxic-test", "xstest", "pools", "dolly", "output"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--source-commit", required=True)
-    parser.add_argument("--phase", choices=("mixed", "stack", "auxiliary"), default="mixed")
+    parser.add_argument("--phase", choices=("mixed", "stack", "auxiliary", "semantic"), default="mixed")
     parser.add_argument("--first-phase", type=Path)
+    parser.add_argument("--pretrained", type=Path)
     args = parser.parse_args()
     if args.phase != "mixed" and args.first_phase is None:
         parser.error("--first-phase is required for calibration")
+    if args.phase == "semantic" and args.pretrained is None:
+        parser.error("--pretrained is required for the semantic encoder")
     if platform.machine() != "s390x" or platform.system() != "Linux":
         raise ValueError("native_s390x_required")
     verify_source(args.source_archive, args.source_commit)
@@ -54,8 +57,9 @@ def main():
     out = args.output.resolve()
     out.mkdir(mode=0o700, parents=True, exist_ok=False)
     (out / "tmp").mkdir(mode=0o700)
-    protocol_name = {"mixed": "protocol.json", "stack": "stack-protocol.json", "auxiliary": "auxiliary-protocol.json"}[args.phase]
-    protocol = SOURCE / "experiments/accuracy-above-84" / protocol_name
+    protocol_names = {"mixed": "protocol.json", "stack": "stack-protocol.json", "auxiliary": "auxiliary-protocol.json"}
+    protocol = (SOURCE / "experiments/pretrained-semantic/protocol.json" if args.phase == "semantic"
+                else SOURCE / "experiments/accuracy-above-84" / protocol_names[args.phase])
     env = dict(os.environ, PYTHONPATH=str(SOURCE), PYTHONDONTWRITEBYTECODE="1", PYTHONUNBUFFERED="1",
                OMP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1", MKL_NUM_THREADS="1", NUMEXPR_NUM_THREADS="1",
                TOKENIZERS_PARALLELISM="false", HF_HUB_OFFLINE="1", TMPDIR=str(out / "tmp"))
@@ -107,9 +111,12 @@ def main():
                 protocol = out / "auxiliary/head-protocol.json"
                 receipt["derived_head_protocol_sha256"] = file_hash(protocol)
                 extra = ["--mixed-models", out / "auxiliary"]
+            elif args.phase == "semantic":
+                module = "src.models.semantic"
+                extra = ["--pretrained", args.pretrained]
         stage("03-fit", [sys.executable, "-m", module, "--synthetic", args.baseline_study / "data",
               "--development", out / "development", "--baseline-models", args.baseline_study / "models",
-              "--output", out / "candidates", "--protocol", protocol, "--source-commit", args.source_commit, *extra], 1200)
+              "--output", out / "candidates", "--protocol", protocol, "--source-commit", args.source_commit, *extra], 3600 if args.phase == "semantic" else 1200)
         selection = json.loads((out / "candidates/selection.json").read_text())
         receipt["selected"] = selection["selected"]
         if selection["selected"] is None:
@@ -120,10 +127,10 @@ def main():
             (out / "data").symlink_to(os.path.relpath(args.baseline_study / "data", out), target_is_directory=True)
             stage("04-benchmark", [sys.executable, "-m", "src.replay.accuracy", "benchmark", "--data", out / "data",
                   "--models", out / "models", "--output", out / "benchmark", "--source-commit", args.source_commit,
-                  "--toxic-test", args.toxic_test, "--xstest", args.xstest], 1200)
+                  "--toxic-test", args.toxic_test, "--xstest", args.xstest], 21600 if args.phase == "semantic" else 1200)
             stage("05-audit", [sys.executable, SOURCE / "scripts/audit_synthetic.py", out], 180)
             stage("06-fresh-test", [sys.executable, "-m", "src.replay.accuracy", "fresh-test", "--data", out / "development",
-                  "--models", out / "models", "--baseline-models", args.baseline_study / "models", "--output", out / "fresh-test"], 180)
+                  "--models", out / "models", "--baseline-models", args.baseline_study / "models", "--output", out / "fresh-test"], 1800 if args.phase == "semantic" else 180)
             report = json.loads((out / "benchmark/report.json").read_text())
             old_plan = json.loads((args.baseline_study / "benchmark/evaluation-plan.json").read_text())
             new_plan = json.loads((out / "benchmark/evaluation-plan.json").read_text())
