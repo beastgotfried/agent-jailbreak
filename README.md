@@ -20,6 +20,7 @@ A watcher. A cheap canary model scores the same traffic as the guardrail, in par
 - `docs/METHOD.md` — the method, start to end.
 - `docs/PLAN.md` — the serial to-do list.
 - `docs/DECISIONS.md` — every locked decision and why.
+- `docs/CLASSIFIER.md` — run and review the initial guardrail notebook on the VM.
 - `agents/` — one context file per team role. Point your AI agent at your role file.
 
 ## Hard rules
