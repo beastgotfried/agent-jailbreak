@@ -95,3 +95,30 @@ def test_backend_exceptions_are_redacted(tmp_path, monkeypatch, capsys):
     result = capsys.readouterr()
     assert "private fixture content" not in result.err
     assert json.loads(result.err)["error"] == "release_operation_failed"
+
+
+def test_model_state_ignores_only_vectorizer_process_cache():
+    import copy
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from src.release.state import learned_state_sha256
+    original = TfidfVectorizer().fit(["Describe neutral sample one", "Compare neutral sample two"])
+    rebuilt = copy.deepcopy(original)
+    original._stop_words_id = 123
+    rebuilt._stop_words_id = 456
+    assert learned_state_sha256(original) == learned_state_sha256(rebuilt)
+    rebuilt.vocabulary_["neutral"] = 99
+    assert learned_state_sha256(original) != learned_state_sha256(rebuilt)
+
+
+def test_model_state_detects_weight_and_dtype_changes():
+    import numpy as np
+    from src.release.state import learned_state_sha256
+    state = {"coef": np.array([[.1, .2]], dtype=np.float64)}
+    assert learned_state_sha256(state) != learned_state_sha256({"coef": np.array([[.1, .3]])})
+    assert learned_state_sha256(state) != learned_state_sha256({"coef": state["coef"].astype(np.float32)})
+
+
+def test_model_state_rejects_opaque_objects():
+    from src.release.state import learned_state_sha256
+    with pytest.raises(ValueError, match="unsupported_model_state_type"):
+        learned_state_sha256(object())

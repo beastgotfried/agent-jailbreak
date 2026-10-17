@@ -94,7 +94,9 @@ A new output path is required; earlier rows can exist if a later row fails.
 
 Create a new output directory owned by UID 1000, the runtime image user.
 The command runs offline with the package mounted read-only.
-It regenerates 100,000 rows, refits the fixed classifier pair, and compares data and model bytes with the selected artifacts.
+It regenerates 100,000 rows, refits the fixed classifier pair, and compares data bytes and complete learned model state.
+The state comparison excludes only scikit-learn's process-local `_stop_words_id` cache identifier.
+Distributed artifact hashes remain mandatory; this comparison does not authorize replacement model files.
 It then executes all 60 paired episodes through the release wheel and runs the independent numeric audit.
 
 ```bash
@@ -117,8 +119,9 @@ docker run --rm --network none --cpus 2 --memory 4g \
 
 Check `/out/run/reproduction-receipt.json` through the host output directory.
 The original training source supplies the fit; the installed release wheel supplies runtime replay.
-Source identifiers, new freeze identifiers, and elapsed times differ where expected.
-Data, weights, policy, metric values, and deterministic algorithm evidence must match.
+Source identifiers, file-bound model identities, freeze identifiers, and elapsed times can differ after a rebuild.
+Data, learned weights, decision policy, request scores, response actions, and metric values must match.
+Use the original bundle model files with `safety-watch`; their published hashes remain fixed.
 This repeat establishes reproducibility, not another independent effectiveness trial.
 
 ## Scope

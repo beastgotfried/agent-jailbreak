@@ -82,13 +82,24 @@ def main():
     for name in ("train.jsonl", "validation.jsonl", "test.jsonl", "manifest.json"):
         if sha(output / "data" / name) != sha(study / "data" / name):
             raise RuntimeError("reproduced_data_differs")
-    if sha(output / "models/models.joblib") != spec["model_files"]["models.joblib"]:
-        raise RuntimeError("reproduced_weights_differ")
+    import joblib
+    from src.release.state import learned_state_sha256
+    original_state = learned_state_sha256(joblib.load(study / "models/models.joblib"))
+    rebuilt_state = learned_state_sha256(joblib.load(output / "models/models.joblib"))
+    if original_state != rebuilt_state:
+        raise RuntimeError("reproduced_learned_state_differs")
     old_cards = json.loads((study / "models/model-cards.json").read_text())
     new_cards = json.loads((output / "models/model-cards.json").read_text())
-    for key in ("model_pair_id", "guardrail_threshold", "canary_threshold", "policy"):
+    for key in ("guardrail_threshold", "canary_threshold", "guardrail_method"):
         if old_cards[key] != new_cards[key]:
             raise RuntimeError("reproduced_policy_differs")
+    policies = [dict(cards["policy"]) for cards in (old_cards, new_cards)]
+    for policy, cards in zip(policies, (old_cards, new_cards)):
+        if policy.pop("model_pair_id") != cards["model_pair_id"]:
+            raise RuntimeError("reproduced_policy_binding_invalid")
+        policy.pop("policy_id")
+    if policies[0] != policies[1]:
+        raise RuntimeError("reproduced_policy_differs")
     stage("03-release-replay", [sys.executable, "-m", "src.replay.synthetic", "--data", str(output / "data"),
         "--models", str(output / "models"), "--output", str(output / "benchmark"),
         "--source-commit", args.release_source_commit, "--toxic-test", str(root / "external/toxic-chat_annotation_test.csv"),
@@ -98,9 +109,33 @@ def main():
     for file in sorted((study / "benchmark").iterdir()):
         if file.name in ("report.json", "evidence.json", "timing.json", "evaluation-plan.json"):
             continue
-        if sha(file) != sha(output / "benchmark" / file.name):
-            raise RuntimeError("release_algorithm_artifact_differs")
-        exact.append(file.name)
+        target = output / "benchmark" / file.name
+        if sha(file) == sha(target):
+            exact.append(file.name)
+        if file.name.endswith("-events.jsonl"):
+            before = [json.loads(line) for line in file.read_text().splitlines()]
+            after = [json.loads(line) for line in target.read_text().splitlines()]
+            if len(before) != len(after):
+                raise RuntimeError("release_event_count_differs")
+            for a, b in zip(before, after):
+                for key in ("index", "prompt_id", "label", "domain", "A_guardrail_score", "A_decision",
+                            "B_scores", "B_decision", "B_execute", "generation", "healthy_scores"):
+                    if a[key] != b[key]:
+                        raise RuntimeError("release_request_score_or_decision_differs")
+                if bool(a["response"]) != bool(b["response"]):
+                    raise RuntimeError("release_response_presence_differs")
+                if a["response"]:
+                    for key in ("method", "status", "applied", "response_index"):
+                        if a["response"].get(key) != b["response"].get(key):
+                            raise RuntimeError("release_response_action_differs")
+        elif file.name.endswith("-summary.json"):
+            before, after = json.loads(file.read_text()), json.loads(target.read_text())
+            before.pop("incidents")
+            after.pop("incidents")
+            if before != after:
+                raise RuntimeError("release_episode_metrics_differ")
+        elif sha(file) != sha(target):
+            raise RuntimeError("release_score_artifact_differs")
     old_report = json.loads((study / "benchmark/report.json").read_text())
     new_report = json.loads((output / "benchmark/report.json").read_text())
     for report in (old_report, new_report):
@@ -117,8 +152,12 @@ def main():
         raise RuntimeError("release_evaluation_plan_differs")
     dump(output / "reproduction-receipt.json", {"status": "passed", "architecture": platform.machine(),
         "release_source_commit": args.release_source_commit, "training_source_commit": commit,
-        "data_reproduced_byte_identical": True, "models_reproduced_byte_identical": True,
-        "policy_unchanged": True, "benchmark_metrics_identical": True, "byte_identical_algorithm_files": len(exact),
+        "data_reproduced_byte_identical": True, "learned_state_reproduced_exact": True,
+        "learned_state_sha256": original_state,
+        "serialized_model_bytes_identical": sha(output / "models/models.joblib") == spec["model_files"]["models.joblib"],
+        "serialization_scope": "Exclude only the process-local TfidfVectorizer._stop_words_id cache from learned-state comparison. File-bound model and policy identities can differ after a refit.",
+        "all_request_scores_decisions_and_response_actions_identical": True,
+        "decision_policy_unchanged": True, "benchmark_metrics_identical": True, "byte_identical_algorithm_files": len(exact),
         "paired_episodes": 60, "paired_requests": 30720, "model_selection_repeated": False,
         "stages": stages, "scope": "Native reproducibility, not an additional independent effectiveness trial."})
     print(json.dumps({"status": "passed", "exact_algorithm_files": len(exact)}), flush=True)
