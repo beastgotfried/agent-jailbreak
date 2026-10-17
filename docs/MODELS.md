@@ -4,6 +4,56 @@ Original code: `src/models/train_classifiers.py` and `src/models/score.py`.
 These CPU scikit-learn tools produce the preserved original classifiers.
 Local fixture tests alone do not establish classifier effectiveness.
 
+## Bounded neural follow-up: preserved negative result
+
+Code: `src/models/neural.py` and `src/replay/neural.py`.
+Executed source: `dfd16aa730ce7a8f156979e4749f668cdd9412a1`.
+The run uses native s390x PyTorch 2.11.0+cpu and Transformers 5.19.0.
+
+The pretrained model is `google/bert_uncased_L-2_H-128_A-2`, under Apache-2.0.
+Pinned revision: `30b0a37ccaaa32f332884b96992754e246e48c5f`.
+The model has 4,386,049 parameters with the new binary head; 396,673 parameters receive updates.
+The final two transformer blocks and head receive updates. Embeddings remain fixed.
+
+MiniLM-L6 passes the initial native compatibility check but fails the practical cost screen.
+Its neutral float64 inference takes 0.176 seconds per request at length 128.
+BERT-tiny takes 0.0096 seconds in the same neutral check.
+This model change precedes all study inference and fit. No test result selects it.
+
+The fit uses two fixed epochs with 14,000 rows per epoch from the original 70,000-row train pool.
+Each epoch selects one frame for every target/context case and retains both labels.
+The AdamW encoder rate is 2e-5; the head rate is 2e-4.
+The batch size is 16, with a 128-token limit and fixed padding.
+No selected train or validation row exceeds that token limit.
+The neural component can truncate long external requests; the lexical component retains the full text.
+Scores use float64 during evaluation to preserve the unchanged 1e-8 runtime tolerance.
+The recorded batch-shape score difference is approximately 5.15e-19.
+
+The first candidate reaches 93.90% validation accuracy.
+The second candidate stacks its logit with the frozen lexical guardrail logit.
+Only the reserved 3,000-row fallback-calibration role fits that logistic stack.
+The separate 5,000-row threshold role selects the cutoff.
+The ensemble passes the fixed gain, recall, and false-refusal criteria and reaches 97.12% validation accuracy.
+Its guardrail threshold is `0.5073191806158435`; the unchanged canary threshold is `0.2771334648132324`.
+
+The selected ensemble reaches only 85.93% healthy synthetic test accuracy, with 28.12% safe false refusals.
+Its monitored operational score is 78.22%, versus the previous 81.69%.
+External accuracy is 62.33% on XSTest and 50.79% on human ToxicChat.
+The original models remain unchanged. The new model does not receive promotion.
+
+All 60 main episodes and the numeric audit complete.
+The seed-zero repeat for all 12 conditions matches 36 files exactly.
+No token or model-output cache replaces actual inference during runtime or candidate checks.
+Ensemble guardrail evaluations execute the neural classifier, lexical classifier, and logistic stack.
+Do not interpret one guardrail evaluation as one primitive model call.
+
+The run preserves both candidate results and all 310 frozen native files.
+Neural weights use explicit-byte-order NumPy arrays without pickle.
+The lexical and stack artifacts remain trusted private joblib files.
+The loader verifies artifact hashes and exact dependency versions before use.
+All exposed tests remain regression evidence, not new independent confirmation.
+No additional fit or post-test threshold change follows the result.
+
 ## Separate synthetic study, October 17
 
 New code: `src/data/synthetic.py`, `src/models/synthetic.py`, and `src/replay/synthetic.py`.

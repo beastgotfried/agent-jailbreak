@@ -8,7 +8,11 @@ A change signal does not establish harm. Independent labels and review must esta
 
 Current work includes frozen baseline classifiers, verified prompt pools, separate traffic and runtime checks, verified recovery, approved containment, and deterministic paired replay.
 
-The latest separate synthetic study runs natively from `d86d384e2ee7d0f07f2f2fc5bf2b6dec64e13cac`. It creates 100,000 rows: 70,000 train, 10,000 validation, and 20,000 test. The 91 reviewed intent groups do not cross splits. Context variants are not independent intents.
+The completed neural follow-up uses `dfd16aa730ce7a8f156979e4749f668cdd9412a1`. Its BERT-tiny/TF-IDF ensemble reaches 97.12% validation accuracy but only 85.93% healthy synthetic test accuracy. Safe false refusals rise to 28.12%. Its monitored score falls to 78.22%, below the 81.69% TF-IDF baseline. It does not replace that baseline.
+
+The native neural run completes 60 paired episodes, an independent numeric audit, and a 12-episode subset repeat with 36 exact file matches. It has 278 native test passes and four optional skips. Both fixed candidates are preserved. No third model, post-test parameter change, or post-test threshold change occurs. No fresh independent confirmation exists. Read `README.md` and `docs/MODELS.md` for details before another experiment.
+
+The 100,000-row synthetic study runs natively from `d86d384e2ee7d0f07f2f2fc5bf2b6dec64e13cac`. It creates 100,000 rows: 70,000 train, 10,000 validation, and 20,000 test. The 91 reviewed intent groups do not cross splits. Context variants are not independent intents.
 
 The complete-stream benchmark score is 75.64% for guardrail alone and 81.69% with runtime monitoring and recovery. Harmful allowances fall from 29.91% to 3.76%. Holds receive no automatic-correctness credit. Safe refusals increase. Read `README.md` for full denominators and costs.
 

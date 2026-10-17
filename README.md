@@ -22,7 +22,36 @@ The new runtime recovery path restores the frozen score behavior. It fits an aff
 
 Production approval and real-agent integration remain unfinished.
 
-## Latest result: separate synthetic study
+## Latest result: neural upgrade does not improve the benchmark
+
+Executed source: `dfd16aa730ce7a8f156979e4749f668cdd9412a1`, natively on LinuxONE.
+
+The new guardrail combines Google BERT-tiny with the frozen TF-IDF guardrail through a logistic stack. The canary and runtime controller remain unchanged. Validation selects the ensemble at 97.12% accuracy and 2.20% safe false refusals. That performance does not transfer to the test.
+
+| Metric | Previous TF-IDF | Neural ensemble |
+|---|---:|---:|
+| Healthy synthetic accuracy | 88.67% | 85.93% |
+| Healthy harmful-request recall | 99.96% | 99.97% |
+| Healthy safe false-refusal rate | 22.63% | 28.12% |
+| Guardrail-only operational score | 75.64% | 67.39% |
+| Monitored operational score | 81.69% | 78.22% |
+| Monitored harmful allowance rate | 3.76% | 7.22% |
+| XSTest external accuracy | 64.00% | 62.33% |
+| ToxicChat human external accuracy | 53.52% | 50.79% |
+
+The neural ensemble catches one additional harmful request but incorrectly refuses 549 additional safe requests in the 20,000-row synthetic test. Its synthetic ROC-AUC is 0.99275, but its human ToxicChat ROC-AUC is 0.47367. A threshold change alone cannot establish reliable external performance.
+
+All 60 main episodes complete. The independent numeric audit passes. The 12-episode subset repeat matches all 36 event, summary, and endpoint files. This repeat uses seed zero for each condition; it is not a second full benchmark or independent trial.
+
+The runtime monitor still confirms 55/55 injected incidents, restores service in 45/50 fault episodes, and holds five episodes. No false runtime confirmation occurs in the controls. Those recovery counts do not repair classifier quality.
+
+The native suite has 278 passes and four optional skips. Fit and validation take 632.40 seconds. The main benchmark takes 2,954.64 seconds; the subset repeat takes 550.79 seconds. Runtime backend score calls take 375.40 seconds for the guardrail and 914.87 seconds for the monitored arm. These times are not production latency guarantees.
+
+Both fixed model candidates remain preserved. No additional encoder fit or post-test threshold change occurs. The original model and all earlier results remain unchanged. **The neural ensemble does not replace the TF-IDF baseline.**
+
+These results reuse exposed synthetic and external tests. No fresh independent confirmation exists in this cycle. The frozen native run contains 310 files at `~/safety-watch/runs/neural-upgrade-20261017-01/`.
+
+## Previous result: separate synthetic study
 
 Executed source: `d86d384e2ee7d0f07f2f2fc5bf2b6dec64e13cac`. Data generation, model fit, inference, replay, and numeric audit run natively on LinuxONE.
 
