@@ -1,13 +1,15 @@
 """Neutral fixtures establish mechanics, not classifier effectiveness."""
 from collections import Counter
 from itertools import islice
+import warnings
 
 import numpy as np
 import pytest
 
-from src.data.synthetic import digest, expand, family_splits, validate_catalog, validation_roles
-from src.models.synthetic import BinaryPolicy, metrics, select_threshold
-from src.replay.synthetic import build_stream, endpoint_rows, episode, select_probes, service_metrics
+from src.data.synthetic import digest, expand, family_splits, native_only, validate_catalog, validation_roles
+from src.models.synthetic import BinaryPolicy, logistic_candidate, metrics, select_threshold
+from src.replay.synthetic import build_stream, endpoint_rows, episode, run, select_probes, service_metrics
+from sklearn.exceptions import ConvergenceWarning
 
 
 def catalog_fixture():
@@ -75,6 +77,34 @@ def test_threshold_uses_balanced_accuracy_and_safe_fpr_cap():
     assert result["accuracy"] == .975
     with pytest.raises(ValueError, match="invalid_threshold_scores"):
         select_threshold([0, 1], [float("nan"), .5])
+
+
+def test_nonconvergence_records_one_failed_candidate_without_retry(monkeypatch):
+    calls = []
+    def warn_once(self, x, y):
+        calls.append(1)
+        warnings.warn("neutral convergence fixture", ConvergenceWarning)
+    monkeypatch.setattr("src.models.synthetic.LogisticRegression.fit", warn_once)
+    attempt, candidate = logistic_candidate(None, None, None, None, None)
+    assert candidate is None and calls == [1]
+    assert attempt == {"method": "tfidf_logistic_C4", "valid": False, "code": "nonconverged_no_retry"}
+
+
+def test_local_execution_requires_explicit_operator_flag(monkeypatch):
+    monkeypatch.setattr("src.data.synthetic.platform.machine", lambda: "arm64")
+    monkeypatch.delenv("SAFETY_WATCH_ALLOW_LOCAL", raising=False)
+    with pytest.raises(RuntimeError, match="explicit_local_authorization_required"):
+        native_only()
+    monkeypatch.setenv("SAFETY_WATCH_ALLOW_LOCAL", "1")
+    native_only()
+
+
+def test_external_regression_paths_are_required(monkeypatch, tmp_path):
+    monkeypatch.setenv("SAFETY_WATCH_ALLOW_LOCAL", "1")
+    output = tmp_path / "output"
+    with pytest.raises(ValueError, match="required_external_regression_inputs_missing"):
+        run(tmp_path, tmp_path, output, source_commit="0" * 40, toxic_test=tmp_path / "test.csv")
+    assert not output.exists()
 
 
 def test_streams_pair_arms_and_keep_fault_scenarios_on_same_inputs(records):

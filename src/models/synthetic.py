@@ -104,6 +104,22 @@ def probabilities(model, x):
     return estimator.predict_proba(x)[:, list(estimator.classes_).index(1)]
 
 
+def logistic_candidate(x, y, validation_features, validation_labels, threshold_ids):
+    estimator = LogisticRegression(C=4, max_iter=500, class_weight="balanced", random_state=42)
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", ConvergenceWarning)
+            estimator.fit(x, y)
+    except ConvergenceWarning:
+        return {"method": "tfidf_logistic_C4", "valid": False, "code": "nonconverged_no_retry"}, None
+    model = {"estimator": estimator, "calibrator": None}
+    values = probabilities(model, validation_features)
+    threshold = select_threshold(validation_labels[threshold_ids], values[threshold_ids])
+    quality = metrics(validation_labels[threshold_ids], values[threshold_ids], threshold)
+    return ({"method": "tfidf_logistic_C4", "valid": True, "validation": quality},
+            (quality["balanced_accuracy"], quality["recall"], "tfidf_logistic_C4", model, threshold))
+
+
 def train(data, output, *, source_commit):
     native_only()
     start = time.perf_counter()
@@ -124,20 +140,9 @@ def train(data, output, *, source_commit):
     calibration_ids = np.asarray([i for i, r in enumerate(validation) if r.role == "fallback_calibration"])
     features = guard_features()
     x, v = features.fit_transform(texts), features.transform(vx)
-    attempts, candidates = [], []
-    estimator = LogisticRegression(C=4, max_iter=500, class_weight="balanced", random_state=42)
-    try:
-        with warnings.catch_warnings():
-            warnings.simplefilter("error", ConvergenceWarning)
-            estimator.fit(x, y)
-        model = {"estimator": estimator, "calibrator": None}
-        values = probabilities(model, v)
-        threshold = select_threshold(vy[threshold_ids], values[threshold_ids])
-        quality = metrics(vy[threshold_ids], values[threshold_ids], threshold)
-        attempts.append({"method": "tfidf_logistic_C4", "valid": True, "validation": quality})
-        candidates.append((quality["balanced_accuracy"], quality["recall"], "tfidf_logistic_C4", model, threshold))
-    except ConvergenceWarning:
-        attempts.append({"method": "tfidf_logistic_C4", "valid": False, "code": "nonconverged_no_retry"})
+    attempt, candidate = logistic_candidate(x, y, v, vy, threshold_ids)
+    attempts = [attempt]
+    candidates = [candidate] if candidate is not None else []
     if not candidates or candidates[0][0] < .90:
         estimator = LinearSVC(C=1, max_iter=5000, class_weight="balanced", random_state=42, dual="auto")
         try:
@@ -159,7 +164,7 @@ def train(data, output, *, source_commit):
         raise RuntimeError("both_model_approaches_failed_no_third_attempt")
     chosen = max(candidates, key=lambda item: (item[0], item[1]))
     guard = {"features": features, **chosen[3]}
-    del x, v, candidates, estimator
+    del x, v, candidates
     gc.collect()
     canary_features = TfidfVectorizer(analyzer="char", ngram_range=(3, 5), min_df=2,
                                      max_features=100000, sublinear_tf=True, dtype=np.float32)

@@ -29,6 +29,19 @@ SCENARIOS = ("healthy", "traffic_mix_without_fault", "scale", "affine", "square"
              "inverted", "common_mode_scale", "persistent_restart_fault", "late_scale", "scale_then_constant")
 
 
+class TimedBackend(CountedBackend):
+    def __init__(self, backend, ledger, arm, timings):
+        super().__init__(backend, ledger, arm)
+        self.timings = timings
+
+    def score(self, texts):
+        start = time.perf_counter()
+        try:
+            return super().score(texts)
+        finally:
+            self.timings[self.arm + ":" + self.ledger.current] += time.perf_counter() - start
+
+
 class GuardrailView:
     """No canary inference in arm A; its unused canary field is a sentinel."""
     def __init__(self, backend):
@@ -112,7 +125,8 @@ def service_metrics(rows, decisions):
     return result
 
 
-def episode(scenario, seed, *, factory, policy, test, endpoint, fit, verification, healthy):
+def episode(scenario, seed, *, factory, policy, test, endpoint, fit, verification, healthy, timings=None):
+    timings = Counter() if timings is None else timings
     stream = build_stream(test, scenario, seed)
     onsets = [] if scenario in ("healthy", "traffic_mix_without_fault") else [256 if scenario == "late_scale" else 128]
     if scenario == "scale_then_constant":
@@ -127,7 +141,7 @@ def episode(scenario, seed, *, factory, policy, test, endpoint, fit, verificatio
         if restart and scenario == "persistent_restart_fault":
             raw.scenario, raw.enabled = "constant", True
         registries[arm].append(raw)
-        return CountedBackend(raw, ledger, arm)
+        return TimedBackend(raw, ledger, arm, timings)
 
     a, b = wrapped("A"), wrapped("B")
     manager = RecoveryManager(b, policy)
@@ -220,6 +234,8 @@ def external_scores(backend, toxic_test, xstest):
 
 def run(data, models, output, *, source_commit, toxic_test=None, xstest=None):
     native_only()
+    if toxic_test is None or xstest is None:
+        raise ValueError("required_external_regression_inputs_missing")
     start = time.perf_counter()
     data, models, output = Path(data), Path(models), Path(output)
     output.mkdir(mode=0o700, parents=True, exist_ok=False)
@@ -257,11 +273,11 @@ def run(data, models, output, *, source_commit, toxic_test=None, xstest=None):
     labels = np.asarray([r.label for r in test])
     gpred = np.asarray([healthy[r.prompt_id]["guardrail_score"] >= backend.guardrail_threshold for r in test])
     cpred = np.asarray([healthy[r.prompt_id]["canary_score"] >= backend.canary_threshold for r in test])
-    summaries = []
+    summaries, timings = [], Counter()
     for scenario in SCENARIOS:
         for seed in range(5):
             events, summary, final = episode(scenario, seed, factory=factory, policy=policy, test=test,
-                endpoint=endpoint, fit=fit, verification=verification, healthy=healthy)
+                endpoint=endpoint, fit=fit, verification=verification, healthy=healthy, timings=timings)
             prefix = f"{scenario}-{seed}"
             with (output / (prefix + "-events.jsonl")).open("x") as handle:
                 for event in events:
@@ -293,7 +309,7 @@ def run(data, models, output, *, source_commit, toxic_test=None, xstest=None):
         "paired_episodes": len(summaries), "costs": dict(costs),
         "runtime_model_inputs": {"A_guardrail": deployed_inputs["A"], "A_canary": 0,
                                  "B_guardrail": deployed_inputs["B"], "B_canary": deployed_inputs["B"]},
-        "external_regression": external_scores(backend, toxic_test, xstest) if toxic_test and xstest else None,
+        "external_regression": external_scores(backend, toxic_test, xstest),
         "elapsed_seconds": time.perf_counter() - start,
         "limits": ["100000 compositional rows, not 100000 independent human requests.",
                    "Scenario prevalence is experimental, not a production estimate.",
@@ -303,6 +319,12 @@ def run(data, models, output, *, source_commit, toxic_test=None, xstest=None):
                    "Offline approvals and an agent stub are not a deployed autonomous service.",
                    "No raw requests or personal data belong in public reports."]}
     write_json(output / "report.json", report)
+    write_json(output / "timing.json", {"architecture": platform.machine(),
+        "backend_score_wall_seconds": dict(timings),
+        "runtime_seconds": {arm: sum(value for key, value in timings.items()
+                            if key.startswith(arm + ":") and not key.endswith(":endpoint")) for arm in ("A", "B")},
+        "scope": "Actual backend score calls; excludes model loads, controller logic and endpoint inference. Not a production latency or throughput SLA.",
+        "memory_evidence": "Separate execution receipt records process-scope peak RSS, not per-arm memory."})
     for name, value in freeze["files"].items():
         if file_hash(models / name) != value:
             raise ValueError("model_changed_during_evaluation")
@@ -316,8 +338,8 @@ def main():
     for name in ("data", "models", "output"):
         parser.add_argument("--" + name, required=True, type=Path)
     parser.add_argument("--source-commit", required=True)
-    parser.add_argument("--toxic-test", type=Path)
-    parser.add_argument("--xstest", type=Path)
+    parser.add_argument("--toxic-test", type=Path, required=True)
+    parser.add_argument("--xstest", type=Path, required=True)
     args = parser.parse_args()
     report = run(args.data, args.models, args.output, source_commit=args.source_commit,
                  toxic_test=args.toxic_test, xstest=args.xstest)
