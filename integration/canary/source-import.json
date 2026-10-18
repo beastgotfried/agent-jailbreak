@@ -1,0 +1,171 @@
+{
+  "source_branch": "pr3thiv-classifier-init",
+  "source_commit": "afb13172ac506e951718384cabc4eb064f59f388",
+  "scope": "Source-only archival integration. Private model artifacts, notebooks with outputs, and obsolete Markdown are excluded. The selected backend remains unchanged.",
+  "files": [
+    {
+      "path": "integration/canary/score-record.schema.json",
+      "original_sha256": "38b82cbd7b3e71efef7250a539e6cdff12b78a17eace8b069b929b529d24dbc4",
+      "imported_sha256": "38b82cbd7b3e71efef7250a539e6cdff12b78a17eace8b069b929b529d24dbc4"
+    },
+    {
+      "path": "integration/canary/verification.json",
+      "original_sha256": "d18cd534cf0251c09062ad7a9fbc2fc80f3bfc6a3be61e8c7b3e54c18d1185f2",
+      "imported_sha256": "d18cd534cf0251c09062ad7a9fbc2fc80f3bfc6a3be61e8c7b3e54c18d1185f2"
+    },
+    {
+      "path": "integration/legacy-classifier/scripts/canary_classifier.py",
+      "original_sha256": "52c2530284b4b9f08fdde7ae1a28d3a97784dd56cc9001952f4812a8474bd67d",
+      "imported_sha256": "52c2530284b4b9f08fdde7ae1a28d3a97784dd56cc9001952f4812a8474bd67d"
+    },
+    {
+      "path": "integration/legacy-classifier/scripts/evaluate_classifier.py",
+      "original_sha256": "421425571b2f1fe9a365ae1090ab4facf0002369fa90e055fd2e258fb619682c",
+      "imported_sha256": "421425571b2f1fe9a365ae1090ab4facf0002369fa90e055fd2e258fb619682c"
+    },
+    {
+      "path": "integration/legacy-classifier/scripts/export_classifier.py",
+      "original_sha256": "a815732764875216877a120355b144a22c5a4383565e3fe5f6675f147ade0de6",
+      "imported_sha256": "a815732764875216877a120355b144a22c5a4383565e3fe5f6675f147ade0de6"
+    },
+    {
+      "path": "integration/legacy-classifier/scripts/run_classifier.sh",
+      "original_sha256": "5901c896c421e1c95f91a606d0ebc70b4860e50ed647ae82b5cf14c377097ac2",
+      "imported_sha256": "e7960c6b39b8b28d9b894e9647bbb1400dd8350d893e1002b3bcf60be94f8f5c"
+    },
+    {
+      "path": "integration/legacy-classifier/scripts/score_classifier.py",
+      "original_sha256": "8d1627dcffb8d8663360277593e4417b05e3c3fd87a12f5f8339568c2f3d12d3",
+      "imported_sha256": "8d1627dcffb8d8663360277593e4417b05e3c3fd87a12f5f8339568c2f3d12d3"
+    },
+    {
+      "path": "integration/legacy-classifier/scripts/train_classifier.py",
+      "original_sha256": "db3b3ea2a150457939ddc4641aadca6cab0486720c4cecfd1eb490a63e5e065e",
+      "imported_sha256": "db3b3ea2a150457939ddc4641aadca6cab0486720c4cecfd1eb490a63e5e065e"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/__init__.py",
+      "original_sha256": "7b2f07f386e5a0dcb8b580d22561d65e09b5465aba6c83fcb1a554f59eb09072",
+      "imported_sha256": "7b2f07f386e5a0dcb8b580d22561d65e09b5465aba6c83fcb1a554f59eb09072"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/canary/__init__.py",
+      "original_sha256": "eedb1adc70ec0a81ff44f5ef503a26f2439cde5fe940068cb1288d7a6a41cb62",
+      "imported_sha256": "eedb1adc70ec0a81ff44f5ef503a26f2439cde5fe940068cb1288d7a6a41cb62"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/canary/__main__.py",
+      "original_sha256": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+      "imported_sha256": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/canary/artifacts.py",
+      "original_sha256": "34f9628a822ceef572147c2216752e8315bc47b46428344c6bf2cc9742c3efdd",
+      "imported_sha256": "34f9628a822ceef572147c2216752e8315bc47b46428344c6bf2cc9742c3efdd"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/canary/cli.py",
+      "original_sha256": "ebc1a52e144e6103aa5f892dfbe0a547767e757de37cd26eabd6b16e7c69d436",
+      "imported_sha256": "ebc1a52e144e6103aa5f892dfbe0a547767e757de37cd26eabd6b16e7c69d436"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/canary/model.py",
+      "original_sha256": "3063d01107196aa03dc3cc57d91c61d35e9483d7eea141aa16894658d0bbb3f6",
+      "imported_sha256": "3063d01107196aa03dc3cc57d91c61d35e9483d7eea141aa16894658d0bbb3f6"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/canary/pair.py",
+      "original_sha256": "3385e2ad871317fe6fce91220c9af49fcdd90e539424cda0a6e49c7d20afe94e",
+      "imported_sha256": "3385e2ad871317fe6fce91220c9af49fcdd90e539424cda0a6e49c7d20afe94e"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/canary/training.py",
+      "original_sha256": "6ac871f609312ed3abd9e7477eed79cf4155eb2339af6f5a5f123bb8eca7351e",
+      "imported_sha256": "6ac871f609312ed3abd9e7477eed79cf4155eb2339af6f5a5f123bb8eca7351e"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/classifier/__init__.py",
+      "original_sha256": "26a81cc077501e1f9d52dc469aa657f76d37e283420e5d3637e5dcbbb9204ab2",
+      "imported_sha256": "26a81cc077501e1f9d52dc469aa657f76d37e283420e5d3637e5dcbbb9204ab2"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/classifier/__main__.py",
+      "original_sha256": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+      "imported_sha256": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/classifier/artifacts.py",
+      "original_sha256": "ce878218b67672af2782d39cd4456a96a62fbe00f2b1fd715a5df9656305c614",
+      "imported_sha256": "ce878218b67672af2782d39cd4456a96a62fbe00f2b1fd715a5df9656305c614"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/classifier/cli.py",
+      "original_sha256": "53264ba4f6c035fc56c4888759234ad03b13503d9b6b913aa7020e782e95d42b",
+      "imported_sha256": "53264ba4f6c035fc56c4888759234ad03b13503d9b6b913aa7020e782e95d42b"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/classifier/config.py",
+      "original_sha256": "5d1419ba6e7b6159c5bdf46c25db21e6d021c53d4bd150d0bd307d3ef71f3328",
+      "imported_sha256": "5d1419ba6e7b6159c5bdf46c25db21e6d021c53d4bd150d0bd307d3ef71f3328"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/classifier/data.py",
+      "original_sha256": "43494cd733ab459a7cc62c956b16d7dc512eeac57413e57009c24480b47a47c9",
+      "imported_sha256": "43494cd733ab459a7cc62c956b16d7dc512eeac57413e57009c24480b47a47c9"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/classifier/evaluation.py",
+      "original_sha256": "1ed8bdbc5f888c85dbad9713a16f45124fde3bbdba119c3319c3d242eabbfb2f",
+      "imported_sha256": "1ed8bdbc5f888c85dbad9713a16f45124fde3bbdba119c3319c3d242eabbfb2f"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/classifier/evidence.py",
+      "original_sha256": "0e0953d1db0431567ecd38e2a4383736105aef296eeda498e1c1aa0986c9cb6e",
+      "imported_sha256": "0e0953d1db0431567ecd38e2a4383736105aef296eeda498e1c1aa0986c9cb6e"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/classifier/io.py",
+      "original_sha256": "7d0278ae02c806096383437729e711e7d7c3184bac5706bfdac659ac5ea1115f",
+      "imported_sha256": "7d0278ae02c806096383437729e711e7d7c3184bac5706bfdac659ac5ea1115f"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/classifier/metrics.py",
+      "original_sha256": "1f213907c443a831e1985010c94a496f0622041dd1fdae14acd3395bc73942e4",
+      "imported_sha256": "1f213907c443a831e1985010c94a496f0622041dd1fdae14acd3395bc73942e4"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/classifier/model.py",
+      "original_sha256": "ec806536398763124ab392678d4bfda8487edf4da6bb345003fc093861dde60b",
+      "imported_sha256": "ec806536398763124ab392678d4bfda8487edf4da6bb345003fc093861dde60b"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/classifier/runtime.py",
+      "original_sha256": "f294ffb5271176ecf17815895d22edc9ad57bf4fe0b8ce57fd695e2deec23c9c",
+      "imported_sha256": "f294ffb5271176ecf17815895d22edc9ad57bf4fe0b8ce57fd695e2deec23c9c"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/classifier/selection.py",
+      "original_sha256": "e14643b0d3978229dd563c81695c41c585e51a1cd19d0ffcdf05aeb0ae8c63e0",
+      "imported_sha256": "e14643b0d3978229dd563c81695c41c585e51a1cd19d0ffcdf05aeb0ae8c63e0"
+    },
+    {
+      "path": "integration/legacy-classifier/src/safety_watch/classifier/training.py",
+      "original_sha256": "a064021edc5cb1476627a666ce0603a0f041c9f686eff117d0cef4420f0fa3d2",
+      "imported_sha256": "a064021edc5cb1476627a666ce0603a0f041c9f686eff117d0cef4420f0fa3d2"
+    },
+    {
+      "path": "integration/legacy-classifier/tests/test_canary.py",
+      "original_sha256": "18027f23df604ee3f295b119165f4d232132cc1af8b437a1a6b14ddf0aa1d093",
+      "imported_sha256": "18027f23df604ee3f295b119165f4d232132cc1af8b437a1a6b14ddf0aa1d093"
+    },
+    {
+      "path": "integration/legacy-classifier/tests/test_classifier.py",
+      "original_sha256": "07e90fc77a46d3ab46bfe20cb0539ef302af52eb749a631e17607964240aa800",
+      "imported_sha256": "07e90fc77a46d3ab46bfe20cb0539ef302af52eb749a631e17607964240aa800"
+    }
+  ],
+  "changes": [
+    "Move source into an explicit legacy directory.",
+    "Require an explicit private runtime path instead of a hardcoded server home."
+  ]
+}

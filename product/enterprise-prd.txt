@@ -1,0 +1,964 @@
+# Veyra
+
+Enterprise Product Requirements Document
+Version 1.0 · 16 October 2026 · Proposed enterprise specification
+
+Observe change. Verify impact. Control response.
+
+## 01. Purpose and document control
+
+### What this document does
+
+This PRD defines the users, outcomes, product scope, requirements, and acceptance tests for an enterprise safety-observability product. It sets the product contract for engineering, design, security, operations, and model-risk teams. Architecture choices support those requirements. They do not replace detailed engineering designs.
+
+### Document contract
+
+| Field | Decision |
+|---|---|
+| Product | Veyra; short name: Veyra. |
+| Scope | Full enterprise general availability, called GA in this document. |
+| Status | Proposed specification. No production-readiness approval exists. |
+| Accountable functions | Product owner; platform lead; ML lead; security lead; privacy lead; SRE lead. Individual approvers remain unassigned. |
+| Release authority | Product, engineering, security, privacy, and SRE approve all GA gates. Model Risk approves any performance claim or policy relaxation. |
+| Change control | Each approved change records its reason, affected requirement IDs, owner, and acceptance-test impact. |
+| Requirement language | “Must” is mandatory. “Target” is a proposed acceptance threshold, not a measured result. |
+| Evidence labels | Verified environment; research evidence; product requirement; unverified assumption. These labels remain separate. |
+
+### Read this before implementation
+
+The current server is a development environment. No product application or product-trained model exists. This PRD does not claim that enterprise scale, hardware attestation, statistical guarantees, customer demand, or certifications are already proven. This document supersedes earlier concept pitches and design notes wherever their claims conflict.
+
+### Approval rule
+
+An unmeasured acceptance test has status **Not demonstrated**, not Pass. A required control cannot be removed to meet a release date. Release exceptions require a named risk owner, expiry date, and compensating control. Tenant isolation and unauthorized-action defects cannot receive an exception.
+
+## 02. Executive product brief
+
+### The customer problem
+
+An enterprise uses safety classifiers to screen AI requests and responses. New traffic, changed models, new policies, or attacks can alter their behavior. Existing scores do not establish whether the classifiers still meet the enterprise's safety objectives. Ground-truth labels often arrive late or cover only a sample.
+
+### The product promise
+
+Veyra observes deployed safety controls, finds behavior changes, gathers evidence, and coordinates an approved response. It distinguishes a statistical signal from confirmed performance loss. It provides operators with a decision record instead of an unexplained risk score.
+
+### The complete enterprise loop
+
+- Receive versioned score events from existing guardrails and gateways.
+- Compare current behavior with approved reference periods and independent signals.
+- Separate data faults, distribution change, confirmed errors, and missing evidence.
+- Open an incident with the affected deployment, evidence, and accountable owner.
+- Evaluate a proposed response with labelled data and a locked acceptance policy.
+- Apply an authorized change or rollback through a constrained connector.
+- Verify the result and preserve an exportable audit record.
+
+### Three operating modes
+
+**Observe:** collect evidence without control over application traffic.
+
+**Advise:** create incidents and propose actions. A person approves changes.
+
+**Enforce:** execute only pre-approved, bounded actions through a customer-controlled enforcement point.
+
+Observe is the default. A passive observer cannot prevent an unsafe response that has already left the application. Inline prevention requires a separate, explicitly integrated enforcement path.
+
+### Core boundaries
+
+The product does not guarantee safe AI, detect every attack, or repair model weights from unlabelled scores. It does not replace the customer's guardrail, incident team, or legal judgement.
+
+## 03. Customers, users, and outcomes
+
+### Primary customer profile
+
+Target organizations already operate AI applications, own a guardrail policy, and maintain an incident process. They need private deployment, accountable changes, and evidence across multiple models or gateways. Buyers include AI platform leaders, security leaders, and model-risk leaders. These are proposed customer profiles, not verified sales demand.
+
+| User | Decision to support | Required outcome |
+|---|---|---|
+| LinuxONE platform operator | Is the safety-observability service reliable and within capacity? | Native s390x operation, private data paths, and clear service health. |
+| AI platform engineer | Does a model or gateway change alter the safety control? | Version-specific comparisons and a controlled rollback path. |
+| Trust and safety analyst | Does an alert show a data fault, behavior change, or confirmed error? | Evidence, label coverage, affected scope, and one incident owner. |
+| Model-risk reviewer | Does a candidate change preserve the approved risk limits? | A reproducible evaluation with uncertainty and an approval record. |
+| SRE on call | Is the monitor itself unavailable or behind? | A separate service alarm and a tested recovery procedure. |
+| Auditor or compliance reviewer | Who approved a change, and what evidence supported it? | Read-only, verifiable exports with retained provenance. |
+
+### Proposed product outcomes
+
+- A customer can instrument an approved deployment within one business day after identity and network access exist.
+- Every incident identifies the deployment version, policy version, evidence coverage, and next responsible person.
+- Every production change has an authorization, test result, execution result, and rollback reference.
+- Every tenant can identify missing telemetry instead of mistaking silence for safety.
+- Content remains inside the approved data boundary unless the customer explicitly permits an export.
+
+### Product success measures
+
+The north-star metric is the share of active deployments with fresh telemetry, an approved reference, qualified evidence, and a named owner. Secondary metrics include review delay, verified rollback time, and false pages per monitor-hour. Report coverage separately from incident counts.
+
+### Discovery gate
+
+Product validates the problem with at least ten structured interviews and three design partners before commercial GA. Interviews cover current tools, incident frequency, approval delays, false-alert tolerance, and willingness to pay. Discovery results can change positioning; they cannot erase safety controls.
+
+## 04. Positioning, scope, and exclusions
+
+### Positioning
+
+Veyra is a safety-control observability and response platform. Proposed differentiation combines evidence-linked behavior assessment, delayed-label evaluation, governed action, and native LinuxONE deployment. Customer and competitive validation remain required.
+
+### Prior art and competition
+
+Research already describes canary disagreement, sequential change detection, conformal adaptation, and guardrail attestation. Open-source implementations exist. Guardrail vendors, AI gateways, ML observability tools, and governance platforms are adjacent competitors. No claim of an empty market, first invention, or unique algorithm is permitted without a separate competitive study.
+
+### Enterprise GA includes
+
+- Tenant, organization, workspace, deployment, and policy management.
+- Score and label intake, reference periods, detectors, and service-health checks.
+- Incidents, approvals, evaluation, controlled actions, rollback, and evidence export.
+- Enterprise identity, scoped service credentials, privacy controls, and retention.
+- Multi-node deployment, capacity controls, disaster recovery, and support procedures.
+- Customer-hosted and dedicated private deployments with a qualified LinuxONE data plane.
+
+### Explicit exclusions
+
+- Universal jailbreak prevention or proof that an AI system is safe.
+- Unsupervised automatic policy relaxation or self-modification of guardrail weights.
+- Employee surveillance, identity inference, or general-purpose content collection.
+- Automatic execution of instructions found in prompts, reports, or retrieved documents.
+- A model marketplace, malicious-pickle execution service, or general red-team platform.
+- A legal-compliance certificate or a claim that a hash chain proves hardware execution.
+
+### Scope discipline
+
+Text safety is the supported decision surface for first enterprise GA. Multimodal and autonomous-agent controls require separate validation and approvals. Connectors can record unsupported modalities, but the console must display **Unsupported coverage**, not imply protection.
+
+## 05. End-to-end user journeys
+
+### Journey A · Connect and observe
+
+1. A tenant administrator creates a workspace and selects its region and retention policy.
+2. A platform engineer registers a guardrail, model version, task, score definition, and owner.
+3. The engineer sends telemetry through a scoped collector credential.
+4. The console validates schema coverage, event counts, and version consistency.
+5. A reviewer approves a reference period after it passes data and label checks.
+6. Observe mode starts. No application control changes.
+
+### Journey B · Investigate a signal
+
+1. A detector reports a change after its configured evidence window is ready.
+2. The incident shows current and reference behavior, uncertainty, missing signals, and affected traffic slices.
+3. An analyst checks data faults, deployment changes, repeated sessions, and delayed labels.
+4. The analyst classifies the finding and requests labels if evidence remains incomplete.
+5. The owner resolves a data fault or proposes a policy or model response.
+
+### Journey C · Approve and verify a response
+
+1. An engineer submits an immutable candidate with a rollback version.
+2. A replay job evaluates it against a locked, task-matched holdout.
+3. Model Risk reviews performance, subgroup results, confidence intervals, and costs.
+4. An authorized approver permits a bounded rollout.
+5. The enforcer applies the change with an idempotency key and an expiry.
+6. Independent checks verify the outcome. A failed check triggers the approved rollback.
+
+### Journey D · Audit and recover
+
+An auditor exports the evidence package without write access. An SRE rehearses recovery from a recorded checkpoint. Both journeys preserve tenant scope, source versions, action history, and gaps in observation.
+
+## 06. States and decision authority
+
+### Monitor states
+
+| State | Meaning | Permitted response |
+|---|---|---|
+| Initializing | The stream or reference period is not ready. | Collect evidence. No health assertion. |
+| Nominal | Available signals remain within the approved reference policy. | Continue observation. This is not proof of safety. |
+| Change suspected | A qualified statistical signal changes. | Open or update an incident; request review. |
+| Performance concern | Labelled results breach a configured risk limit. | Propose containment or an approved version change. |
+| Insufficient data | Counts, label coverage, or slice coverage do not support a conclusion. | Request evidence; display the gap. |
+| Degraded | Telemetry, a detector, a dependency, or the monitor fails. | Raise a service alarm; apply the contracted fallback. |
+| Paused | An authorized operator pauses an assessment. | Record reason, scope, expiry, and owner. |
+
+### Incident states
+
+An incident follows **Open → Acknowledged → Investigating → Contained → Resolved**. New evidence can reopen it. A state change requires an actor, timestamp, reason, and related evidence. Resolution does not delete the event history.
+
+### Authority boundaries
+
+- A statistical signal can create an incident. It cannot establish that a request is harmful.
+- A score change cannot authorize a more permissive safety threshold.
+- An operator can contain within a pre-approved policy. A reviewer must approve a relaxed policy or a new model.
+- Low evidence cannot produce a green health indicator.
+- Missing telemetry cannot reset the incident state to Nominal.
+
+### Fallback policy
+
+Each deployment declares fail-open, fail-closed, or human-review behavior before Enforce mode starts. The customer risk owner approves it. A service outage cannot silently choose a different fallback.
+
+## 07. Functional requirements · intake
+
+| ID | Product requirement | Acceptance evidence |
+|---|---|---|
+| INT-01 | Register each source with tenant, workspace, deployment, model version, task, score contract, and owner. | Intake rejects events for an unknown source. A registered source appears with its exact version. |
+| INT-02 | Accept authenticated HTTPS JSON batches and a documented stream adapter. Acknowledge only after durable receipt. | A broker fault returns a retryable failure. No success response precedes durable receipt. |
+| INT-03 | Validate types, score ranges, finite numbers, timestamps, payload limits, and schema versions. | Invalid data receives a specific error. NaN, infinity, and unsupported schema versions cannot enter detectors. |
+| INT-04 | Support at-least-once delivery with event IDs and deduplication. Do not claim exactly-once processing. | Repeated IDs do not duplicate counts or actions within the 72-hour retry window. Conflicting content receives HTTP 409. |
+| INT-05 | Preserve source event time and intake time. Mark late, missing, reordered, and clock-skewed events. | A late-data test retains the record and excludes it from the wrong live window. |
+| INT-06 | Receive delayed labels and adjudications with task, provenance, reviewer, confidence, and label version. | Labels attach to the correct event and version. Contradictions enter adjudication rather than overwrite history. |
+| INT-07 | Apply per-tenant event, feature, storage, and query quotas. Use explicit backpressure and retries. | One tenant exceeds its limit without exhausting another tenant's allocation. |
+| INT-08 | Expose completeness, queue delay, schema errors, sequence gaps, and drop counts. | A stopped collector produces a service-health alert, not a healthy classifier result. |
+
+### Operational rules
+
+The default event contains metadata and scores, not prompt or response text. Optional content requires a tenant policy, approved purpose, retention setting, and data classification. Replay sources carry an immutable replay flag and cannot trigger production actions.
+
+## 08. Functional requirements · assessment
+
+| ID | Product requirement | Acceptance evidence |
+|---|---|---|
+| MON-01 | Maintain immutable, approved reference periods per deployment version, task, and policy. | A new model or score contract requires a new reference or an explicit reviewed migration. |
+| MON-02 | Assess score distributions, refusal rates, traffic composition, missing signals, and labelled error rates separately. | A console explains which signal changes and does not label all changes as safety loss. |
+| MON-03 | Support configurable windows, minimum counts, seasonality, warm-up, and alert cooldowns. | Low-volume traffic produces Insufficient data until the declared evidence requirement is met. |
+| MON-04 | Allow KS-style distribution checks and versioned sequential detectors through a bounded plugin contract. | Each detector publishes assumptions, resource limits, parameters, and a reproducible result. Unsigned or unreviewed plugins cannot load. |
+| MON-05 | Calibrate repeated-test and multiple-slice alert policies with temporally structured null data. | An acceptance report states false-alert units, test duration, uncertainty, and calibration method. |
+| MON-06 | Support optional reference-model disagreement. Do not assume that model families fail independently. | Common-mode failure tests remain in the report. Missing reference scores cannot become zero or safe. |
+| MON-07 | Report evidence volume, label coverage, delayed-label bias, and confidence beside each performance metric. | Removing labels reduces evidence status instead of raising a reliability score. |
+| MON-08 | Separate monitoring errors and source errors from content-risk signals. | Broken telemetry, model latency, and score-schema changes produce distinct incident types. |
+| MON-09 | Keep assessment state across restarts and reassignments. Version state by detector and source. | Worker replacement resumes from a checkpoint without reset storms or double-counted alerts. |
+| MON-10 | Provide model, task, language, source, and time slices with controlled cardinality. | Unsupported or underpowered slices remain visible and receive no unsupported performance claim. |
+
+### Interpretation rule
+
+Unlabelled change is evidence of changed behavior only. Labelled evaluation and human review establish whether the change breaches a customer objective.
+
+## 09. Functional requirements · response
+
+| ID | Product requirement | Acceptance evidence |
+|---|---|---|
+| RES-01 | Create a deduplicated incident with severity, affected deployment, evidence, owner, and next action. | Related alerts join one incident without hiding distinct model or tenant versions. |
+| RES-02 | Support acknowledgement, assignment, escalation, comments, resolution, and reopening. | Every transition appears in an append-only history with a responsible actor. |
+| RES-03 | Permit only an allowlisted action set: observe, request review, increase approved sampling, route to review, freeze rollout, or rollback. | Arbitrary commands and prompt-supplied actions fail validation. |
+| RES-04 | Require explicit approval for a threshold relaxation, new guardrail, or changed safety policy. | The requester cannot approve the same high-risk change. The complete proposal is bound to the approval. |
+| RES-05 | Use idempotency, version preconditions, bounded scope, and expiry for every external action. | Retried actions apply once. Stale policy versions and expired approvals are rejected. |
+| RES-06 | Verify the applied state through an independent read path and a post-change observation window. | An unverified action remains Pending or Failed. It cannot appear as completed containment. |
+| RES-07 | Roll back to an approved known-good configuration when the declared checks fail. | A rehearsal restores the version and preserves evidence of both the failed change and rollback. |
+| RES-08 | Provide a customer-controlled stop switch, break-glass workflow, and maintenance mode. | The stop switch halts new automated actions without deleting intake or audit records. |
+
+### Enforcement boundary
+
+Observe and Advise modes have no write credential to the application control plane. Enforce mode uses a narrowly scoped connector. A failed or compromised monitor cannot obtain unrestricted application credentials.
+
+### Response objective
+
+The goal is a correct, explainable, reversible decision. “Automatic repair” is not an acceptable substitute for evidence, authorization, or outcome verification.
+
+## 10. Functional requirements · evaluation
+
+| ID | Product requirement | Acceptance evidence |
+|---|---|---|
+| VAL-01 | Register datasets with source, revision, rights, label definition, origin, split, and permitted use. | Every evaluation resolves to an immutable manifest and a rights decision. |
+| VAL-02 | Preserve official splits. Detect duplicate prompts, shared sessions, and cross-split leakage where identifiers permit. | A report lists exclusions and unresolved leakage risks before results receive approval. |
+| VAL-03 | Keep toxicity, injection, refusal, and other tasks separate unless a reviewed label map exists. | A dataset with injection labels cannot silently become toxicity ground truth. |
+| VAL-04 | Run reproducible replay jobs with pinned model, tokenizer, detector, policy, and dataset versions. | A second run within the declared numerical tolerance reproduces the result. |
+| VAL-05 | Report missed harmful cases, false alarms, precision, recall, relevant calibration metrics, and coverage by task. | Reports show denominators and uncertainty. Aggregate accuracy alone cannot pass a model. |
+| VAL-06 | Compare candidate changes with the incumbent, no-monitor baseline, and fixed-threshold baseline where applicable. | A candidate receives no promotion from a comparison that lacks the appropriate baseline. |
+| VAL-07 | Require a locked holdout and approved non-regression limits before promotion. | Threshold selection cannot use the final holdout. An underpowered result remains inconclusive. |
+| VAL-08 | Require independent reviewers for disputed or high-impact labels. Track agreement and provenance. | Corrections create a new label version and a rerun request. Prior reports remain reproducible. |
+
+### Real-data policy
+
+Model-quality claims use authorized real data with declared annotation provenance. Constructed attacks remain benchmark evidence, not production-incidence evidence. Synthetic load events can test capacity and faults only. They cannot support a claim about safety accuracy or real-world harm avoided.
+
+## 11. Functional requirements · evidence
+
+| ID | Product requirement | Acceptance evidence |
+|---|---|---|
+| EVD-01 | Record intake provenance, detector output, label references, policy version, approval, action, and outcome. | An incident export reconstructs the decision without access to mutable dashboard state. |
+| EVD-02 | Bind exports to content digests and signed checkpoint manifests. | The verifier detects changed records, missing segments, or an invalid signing chain. |
+| EVD-03 | Store checkpoint manifests in separately controlled immutable storage. | An administrator who changes the hot store cannot silently regenerate the external checkpoint. |
+| EVD-04 | Export a scoped evidence package with a machine-readable manifest and a human-readable explanation. | An offline verifier identifies versions, omissions, signing keys, and verification results. |
+| EVD-05 | Record all privileged access, sensitive exports, and evidence deletions. | Security can reconstruct actor, tenant, purpose, scope, and time. |
+| EVD-06 | Distinguish tamper evidence, signed software provenance, and hardware attestation. | The UI never labels a hash chain or container digest as proof of hardware execution. |
+| EVD-07 | Apply retention, legal hold, and authorized deletion without fabricating an uninterrupted record. | Deletion produces a scoped tombstone and gap notice. Retained audit entries exclude erased content. |
+
+### No false proof
+
+A signature proves control of a signing key and integrity of the signed content. It does not prove that a classifier is correct. Hardware attestation, if supported, proves a measured execution context under its threat model. It does not prove that the guardrail blocks every harmful request.
+
+### Time and identity
+
+Use UTC timestamps, source clock information, tenant-scoped actor IDs, and key identifiers. Record clock-skew warnings. Evidence ordering uses durable sequence information, not only wall-clock time.
+
+## 12. Functional requirements · administration
+
+| ID | Product requirement | Acceptance evidence |
+|---|---|---|
+| ADM-01 | Separate organizations, tenants, workspaces, environments, and deployments. | A cross-tenant identifier never grants read, search, export, or action access. |
+| ADM-02 | Support enterprise federation, managed user provisioning, scoped roles, and service identities. | Identity revocation blocks new privileged requests within five minutes. |
+| ADM-03 | Version every policy, detector setting, routing rule, retention change, and connector secret reference. | Configuration changes show author, diff, effective time, approval, and rollback version. |
+| ADM-04 | Support tenant-approved data locations and export restrictions. | A restricted tenant never exports content to another region through support or notification paths. |
+| ADM-05 | Define spend, event, reference-inference, storage, and query budgets per tenant. | A budget breach is explicit and cannot silently disable existing protective controls. |
+| ADM-06 | Expose tenant usage, capacity, connector health, policy expiry, and evidence gaps. | The administrator can identify every unsupported or unobserved deployment. |
+| ADM-07 | Support organization offboarding, legal hold review, key revocation, and verified data deletion. | The offboarding package records retained exceptions, deletion deadlines, and revoked access. |
+
+### Tenant isolation model
+
+Shared deployments use authenticated tenant context at every API, queue, worker, database, object, cache, and export boundary. Dedicated tenants can receive isolated compute, queues, databases, and keys. A dedicated deployment has no undocumented shared-content path.
+
+### Administrative controls
+
+Global support access is off by default. Customer approval, short expiry, and a recorded purpose govern any support session. Administrators cannot grant themselves unrecorded content access or bypass an action approval.
+
+## 13. Statistical assurance and limits
+
+### What the system can conclude
+
+A distribution test can identify changed scores or features under declared assumptions. It does not identify the cause or prove a loss of accuracy. A reference-model disagreement is another signal, not an oracle. Common-mode attacks, shared data, and shared model lineage can defeat both signals.
+
+### Required assessment design
+
+- Reference periods must represent approved traffic and carry version and coverage metadata.
+- Monitoring units must account for sessions, bursts, seasonality, and correlated requests.
+- Threshold calibration must consider repeated looks, parallel slices, and alert suppression.
+- Sequential guarantees apply only under their stated assumptions. Assumption failures must appear in the report.
+- The detector must expose minimum count, window duration, cooldown, missing-data behavior, and parameter version.
+- Embedding projection is a configurable, evaluated transform. A universal 32-dimension rule is not a product guarantee.
+
+### Alert-quality acceptance
+
+Target: no more than one false page per 168 monitor-hours on the approved nominal-traffic suite. Report observation duration and an uncertainty interval. Correlated streams require block-based analysis. An underpowered test cannot establish the target.
+
+### Change-sensitivity acceptance
+
+For each supported task, define harmful-change and harmless-change scenarios before testing. Target: detect at least 90% of the approved material-change scenarios within two completed assessment windows. Report missed scenarios and false pages. This is a scenario-suite target, not an all-attack guarantee.
+
+### Labelling policy
+
+Use approved random sampling to estimate performance without selection bias. Add an incident-focused sample for investigation, but report it separately. Do not estimate fleet accuracy from escalated cases alone.
+
+### Strongest claim permitted
+
+“Available evidence indicates a change and supports this response.” The product cannot state “all requests are safe” or “no labels are needed for verified repair.”
+
+## 14. Models, calibration, and release policy
+
+### Model registry
+
+Record task, label semantics, architecture, model digest, tokenizer digest, numerical precision, training provenance, license, supported languages, context limit, resource profile, and approved deployment targets. Unsupported inputs receive an explicit coverage state.
+
+### Calibration is not retraining
+
+Calibration changes how a score maps to a decision or uncertainty set. It does not repair the underlying model weights. A candidate calibration requires suitable labels, a justified method, a locked holdout, and a reviewed operating point. Distribution-shift guarantees do not survive arbitrary attack conditions by default.
+
+### Promotion policy
+
+- Evaluate candidate recall, false-alarm rate, uncertainty, and subgroup coverage against the incumbent.
+- Default recall non-regression margin: one percentage point. The tenant risk owner can tighten this limit.
+- Report confidence intervals and the available sample size. Inconclusive evidence blocks promotion.
+- Test context truncation, long requests, language changes, missing scores, and token-budget failure.
+- Run in shadow mode before a bounded canary rollout. Hold the rollback version and execution credentials ready.
+- Separate the change author from the high-risk approver.
+
+### Automatic action limits
+
+Pre-approved conservative containment can proceed within its contract. A more permissive threshold, model replacement, or new safety taxonomy always requires review. No loop can train on its own predicted labels and then claim independent improvement.
+
+### Change acceptance
+
+A rollback command receives acceptance within 60 seconds at the contracted load. Deployment verification completes within the connector-specific budget. External control-plane delays remain visible and are not reported as a successful repair.
+
+## 15. Event and label data contracts
+
+### Score-event envelope
+
+| Field group | Required semantics |
+|---|---|
+| Identity | event_id; tenant context from authentication; workspace_id; deployment_id; source_id. |
+| Time and order | source_time in UTC; received_time; optional session and sequence IDs; clock-skew status. |
+| Versions | schema_version; model_digest; tokenizer_digest where relevant; guardrail_version; policy_version. |
+| Task and scores | task_id; category scores; score range; direction; refusal or decision code; truncation and error flags. |
+| Observation | sample probability; measured model latency; context length; source and language coverage. |
+| Provenance | production or replay; source revision; content-consent class; evidence and feature references. |
+
+### Labels
+
+Labels include event_id, task_id, label definition version, annotator type, source, adjudication state, label_time, and confidence. An unlabelled event remains unlabelled. A model judgement cannot silently become a human label.
+
+### Limits and ordering
+
+- Representative envelope: 2 KiB. Hard score-envelope limit: 8 KiB after decompression.
+- Optional feature objects use a separate endpoint with a 128 KiB limit and at most 4,096 numeric dimensions.
+- Raw text is disabled by default and follows a separate approved content policy.
+- Default live watermark: two minutes. Tenant-approved tolerance cannot exceed ten minutes without a separate capacity review.
+- Records up to 24 hours late can enter retrospective assessment, but not a closed live window without a recorded revision.
+- Event ID retry window: 72 hours. Action idempotency records follow the longer audit-retention policy.
+
+### Interpretation
+
+A score is not automatically a probability. Score contracts declare its meaning. Cross-model comparisons require a validated mapping, not just a shared 0-to-1 range.
+
+## 16. API and SDK requirements
+
+### External API surface
+
+| Method and path | Purpose | Required control |
+|---|---|---|
+| POST /v1/events:batch | Submit score events. | Scoped identity, schema validation, idempotency, durable receipt. |
+| POST /v1/labels:batch | Submit delayed labels. | Label provenance, task match, adjudication policy. |
+| POST /v1/deployments | Register a monitored deployment. | Workspace permission and version contract. |
+| POST /v1/baselines | Propose a reference period. | Evidence checks and reviewer approval. |
+| GET /v1/monitors/{id} | Read state and coverage. | Tenant scope and explicit stale-data fields. |
+| POST /v1/evaluations | Request an isolated replay. | Dataset rights, resource budget, immutable input manifest. |
+| POST /v1/incidents/{id}/actions | Propose a response. | Allowlist, approval, version precondition, expiry. |
+| POST /v1/actions/{id}/approvals | Approve the exact proposal. | Separate authorized approver and proposal digest. |
+| POST /v1/exports | Create an evidence export. | Purpose, content scope, expiry, and audited access. |
+| GET /v1/operations/{id} | Read a long-running result. | Bounded status polling and stable operation ID. |
+
+### Contract rules
+
+Publish OpenAPI specifications, typed errors, cursor pagination, rate limits, and retry guidance. HTTP 429 and 503 include bounded retry guidance. Accepted asynchronous jobs return an operation ID. Unknown fields follow a published compatibility policy. Breaking changes require a new major API version and at least 180 days of support for the prior version.
+
+### Batch semantics
+
+A batch contains one tenant and at most 250 events. Its decompressed size cannot exceed 2 MiB. The response identifies accepted, duplicate, and rejected records. Only durably accepted records receive success. Retries use the original event IDs.
+
+### SDKs
+
+GA requires Python, Java 17 or later, and TypeScript clients. Each client supports batching, timeouts, bounded retries, TLS, identity rotation, trace context, and local redaction. Retry behavior cannot duplicate a side effect. The compatibility matrix identifies tested runtime and gateway versions.
+
+## 17. Operator experience and accessibility
+
+### Console map
+
+The console contains Fleet, Deployment, Incident, Evaluation, Change Approval, Evidence, and Administration views. Navigation follows the operator's decision sequence. It does not present one unexplained universal “AI safety score.”
+
+| ID | Experience requirement | Acceptance evidence |
+|---|---|---|
+| UX-01 | Fleet view shows model version, coverage, state, freshness, owner, and incident count. | Missing or stale data remains visible without opening each deployment. |
+| UX-02 | Deployment view shows reference and current signals with units, counts, thresholds, and uncertainty. | A reviewer can distinguish a score change from a labelled error-rate change. |
+| UX-03 | Incident view presents scope, timeline, evidence gaps, proposed actions, and accountable owner. | The analyst can identify the next decision without reading raw prompts. |
+| UX-04 | Approval view shows the exact configuration diff, holdout result, risk limits, expiry, and rollback. | Approval binds to that immutable proposal only. |
+| UX-05 | All views include initial, empty, stale, partial, denied, degraded, and failed states. | Missing evidence never renders a green default state. |
+| UX-06 | The web console uses supported Carbon components and targets WCAG 2.2 AA. | Keyboard, screen-reader, contrast, focus, and live-region tests pass. Color is never the only signal. |
+| UX-07 | Tables provide search, bounded filters, export permissions, keyboard navigation, and pauseable live updates. | Focus remains stable during updates. Time uses UTC plus the user's selected time zone. |
+
+### Language and content
+
+English is the initial console language. Strings use an internationalization framework. Model-language coverage remains separate from console language. Sensitive samples are hidden by default and require an audited reveal action. Notification previews never include raw prompts.
+
+## 18. Identity and permission model
+
+### Required identity controls
+
+Support OIDC and SAML federation, customer-enforced MFA, SCIM provisioning, short-lived workload identities, and scoped API credentials. Long-lived bootstrap credentials require an expiry and rotation path. Shared interactive accounts are not a production access pattern.
+
+| Role | Read evidence | Request change | Approve high-risk change | Execute action | Manage identity |
+|---|---|---|---|---|---|
+| Tenant administrator | Metadata; content only by grant. | Yes. | Only with separate approver grant. | No by default. | Tenant scope. |
+| Platform engineer | Assigned deployments. | Yes. | No for own proposal. | Through approved connector only. | Service credentials by scope. |
+| Safety analyst | Assigned evidence scope. | Containment proposal. | Only within assigned policy. | No direct credential. | No. |
+| Model-risk approver | Evaluation and policy evidence. | Yes. | Yes, except own proposal. | No direct credential. | No. |
+| SRE | Service telemetry; no content by default. | Recovery operations. | No safety-policy relaxation. | Infrastructure recovery only. | Operational scope. |
+| Auditor | Read-only approved exports. | No. | No. | No. | No. |
+| Enforcement service | Minimum action inputs. | No. | No. | Exact signed action scope. | No. |
+
+### Privileged access
+
+Support sessions require customer permission, a purpose, a short expiry, and audit. Break-glass access expires within one hour and requires a post-event review. The system records denied requests and cross-tenant access attempts. Revoked users cannot obtain new privileges; active privileged sessions terminate within five minutes.
+
+## 19. Security requirements and threat model
+
+| ID | Threat or requirement | Required acceptance test |
+|---|---|---|
+| SEC-01 | Tenant escape through IDs, search, cache, queue, object URLs, or exports. | Cross-tenant tests cover every data path and reject all unauthorized access. |
+| SEC-02 | Forged, replayed, or altered telemetry. | Authenticate producers, validate schemas, detect duplicates, and bind event provenance. |
+| SEC-03 | Prompt injection against the operator console or analysis pipeline. | Treat all source content as data. No prompt text can create a command, approval, connector, or policy. |
+| SEC-04 | Malicious model artifacts and unsafe deserialization. | Require approved digests and formats. No untrusted pickle or remote model code executes in production. |
+| SEC-05 | Poisoned labels, reference periods, or calibration sets. | Preserve provenance, separate reviewer roles, detect conflicting labels, and require candidate approval. |
+| SEC-06 | Resource exhaustion and alert floods. | Enforce decompressed-size, complexity, time, cardinality, and tenant resource limits. |
+| SEC-07 | Stolen enforcement credentials or unsafe outbound connections. | Use scoped secrets, rotation, egress allowlists, SSRF controls, signed webhooks, and replay protection. |
+| SEC-08 | Compromised builds or dependencies. | Produce an SBOM, scan dependencies, sign images, verify admission, and publish a vulnerability response process. |
+| SEC-09 | Host or administrator access beyond the declared trust boundary. | Publish the deployment threat model. Do not claim protection from a host administrator without qualified confidential-compute controls. |
+
+### Security baseline
+
+Use TLS 1.2 or later for external traffic and approved TLS 1.3 where supported. Encrypt persistent stores with customer-approved keys. Apply least privilege, non-root processes, network policies, and short-lived secrets. No privileged container or Docker socket belongs in the application runtime.
+
+### Release restriction
+
+An independent penetration test, a tenant-isolation review, and a threat-model review are mandatory. No unresolved critical or exploitable high-severity issue can remain at GA. Lower-severity exceptions have owners and expiry dates.
+
+## 20. Privacy, residency, and retention
+
+### Default data posture
+
+Scores and approved metadata are sufficient for the default integration. Prompt and response text stay in the customer application. Content collection requires an explicit purpose, user authority, minimization policy, and retention setting. Low-entropy content hashes can leak information; use tenant-scoped HMAC references where correlation is required.
+
+| ID | Product requirement | Acceptance evidence |
+|---|---|---|
+| PRI-01 | Disable raw-content collection by default. | A new tenant emits no prompt or response text into telemetry, logs, alerts, or traces. |
+| PRI-02 | Apply field allowlists, redaction, and content classification at the collector. | Disallowed fields cannot cross the tenant's approved data boundary. |
+| PRI-03 | Separate encryption keys and access scope by tenant. Support customer-managed keys. | Key rotation and tenant revocation do not expose another tenant's data. |
+| PRI-04 | Enforce region constraints for active stores, backups, support, and exports. | A residency test includes notification and recovery paths. |
+| PRI-05 | Support purpose-scoped sensitive-data reveal and export. | Every reveal records actor, scope, reason, and expiry. |
+| PRI-06 | Process authorized deletion, legal holds, and offboarding with clear exceptions. | A deletion report identifies active-store completion and backup expiry. |
+| PRI-07 | Keep content out of product analytics and model training unless separately authorized. | Customer data is not used to improve shared models by default. |
+| PRI-08 | Preserve privacy notices, source rights, and customer processing agreements. | Commercial onboarding cannot finish with an unresolved data-rights gate. |
+
+### Proposed default retention
+
+| Data class | Default | Hard control |
+|---|---|---|
+| Durable queue | 24 hours. | Quota, encryption, and lag alarms. |
+| Searchable event metadata | 7 days. | Partition expiry; customer-configurable reduction. |
+| Archived score envelopes | 30 days. | Tenant key and object lifecycle. |
+| Raw text | Off; at most 7 days when enabled. | Separate approval and access policy. |
+| Incident and configuration audit | 365 days. | No raw text; declared legal-hold exception. |
+| Backups | 35 days. | Restore reapplies deletion tombstones before access. |
+
+Authorized deletion targets active stores within 24 hours. Backups expire within 35 days unless a legal hold applies. Product and Legal resolve retention conflicts before a tenant receives a contract.
+
+## 21. Evidence, audit, and governance outputs
+
+### Evidence package
+
+An export includes the incident timeline, source and policy versions, detector parameters, coverage, label provenance, candidate tests, approvals, action receipts, outcome checks, and gap notices. The machine-readable manifest binds each retained object to a digest and a signing-key identifier.
+
+### Integrity model
+
+Use per-tenant append-only audit sequences and signed checkpoints. Anchor checkpoints outside the mutable application store. A deletion tombstone records what is no longer available without retaining the erased content. Retained checkpoint integrity and privacy rights require a reviewed key and retention design.
+
+### Verification result
+
+The offline verifier returns Valid, Invalid, Incomplete, or Unverifiable. It reports missing keys, expired evidence links, omitted segments, and unsupported attestation types. It never converts incomplete evidence into a compliance pass.
+
+### Governance alignment
+
+The product supports customer evidence for NIST AI RMF activities: Govern, Map, Measure, and Manage. It uses OWASP GenAI risks to organize security tests. These are design references, not certifications. Legal reviews applicability of privacy law, sector rules, contractual duties, and AI regulation for each deployment.
+
+### Enterprise assurance artifacts
+
+- Architecture, data-flow, threat-model, and shared-responsibility documents.
+- Access-control matrix, encryption design, backup policy, and subprocessor list.
+- Evaluation protocol, model cards, data cards, and change-approval records.
+- Security test summaries, vulnerability policy, SBOM, and signed release manifest.
+- Incident response plan, customer notification procedure, and recovery test report.
+
+SOC 2 and ISO 27001 are assurance-program objectives only. No certification claim is allowed before independent completion. Any FIPS claim requires a qualified cryptographic module and approved configuration. Deployment on IBM Z alone does not establish that claim.
+
+## 22. Reference product architecture
+
+[ARCHITECTURE]
+
+### System boundaries
+
+The **data plane** receives tenant telemetry, maintains assessment state, and stores approved event evidence inside the customer-approved region. The **control plane** holds configuration, roles, policies, approvals, and deployment metadata. A separate **enforcement boundary** owns the authority to change an application.
+
+### Selected logical services
+
+- Collectors authenticate and minimize data before intake.
+- A replicated Apache Kafka event bus provides durable, partitioned delivery.
+- Stateless intake workers validate envelopes and apply quotas.
+- Stateful assessment workers use versioned windows and checkpoints.
+- An incident service joins qualified signals with labels and deployment changes.
+- An evaluation service runs isolated replay jobs without production action credentials.
+- A policy and approval service authorizes bounded actions.
+- PostgreSQL stores control records and indexed operational metadata.
+- An S3-compatible object store retains scoped evidence and score archives.
+- A constrained action service connects to the customer's enforcement point.
+
+### Architectural acceptance
+
+The design must prove tenant isolation, durable acknowledgement, controlled cardinality, backpressure, independent recovery, and auditable action. Component selection alone does not establish those properties. Broker, database, object-store, and orchestration distributions require deployment-specific qualification.
+
+## 23. IBM Z and LinuxONE deployment contract
+
+### Why the platform is meaningful
+
+The data plane, local inference where selected, statistical assessment, and evidence services run on qualified LinuxONE resources. Private application data does not need to leave the enterprise boundary for this workflow. No claim of a processor-specific speed advantage follows without measurements.
+
+| ID | Deployment requirement | Acceptance evidence |
+|---|---|---|
+| DEP-01 | Ship native linux/s390x OCI images for all supported data-plane components. | CI verifies image manifests and runtime architecture. Production does not rely on x86 emulation. |
+| DEP-02 | Qualify the supported Linux, Python, JVM, container, and orchestration versions. | A published compatibility matrix includes dependency and upgrade tests on actual s390x hardware. |
+| DEP-03 | Support horizontal replicas, independent state stores, and placement across declared failure domains. | The production topology passes a failure-domain test. One VM is not presented as HA. |
+| DEP-04 | Integrate enterprise identity, private networking, approved key services, and operator-managed secrets. | Customer security verifies the end-to-end trust boundary. |
+| DEP-05 | Treat IBM Secure Execution or another TEE as an optional qualified profile. | A hardware-backed claim requires a verified measurement chain, freshness checks, key lifecycle, and documented host support. |
+| DEP-06 | Keep development notebooks out of the production service path. | Production exposes no Jupyter service and does not share a development user account. |
+
+### Current verified environment · not a production sizing claim
+
+The existing development VM has 3 vCPUs, about 8 GiB RAM, Ubuntu 24.04, and a 50 GB root disk. Docker and private Jupyter work. The container imports PyTorch CPU, Transformers, Tokenizers, scikit-learn, and FastAPI on s390x. No product application or trained product model exists. Hardware attestation remains unverified.
+
+### Production profiles
+
+Qualify customer-hosted LinuxONE, dedicated private cloud, and a separately approved managed control plane. OpenShift or Kubernetes is an orchestration candidate, not a current certification claim. Each supported profile needs its own installation, backup, upgrade, capacity, and recovery evidence.
+
+## 24. Scale and capacity contract
+
+### Reference workload W1 · proposed qualification target
+
+| Dimension | Target or assumption |
+|---|---|
+| Regional intake | 1,000 score events per second sustained for 24 hours. |
+| Burst | 5,000 events per second for five minutes with bounded recovery. |
+| Tenancy | 100 active tenants and 5,000 registered deployment streams per region. |
+| Event size | 2 KiB average; 8 KiB score-envelope limit. |
+| Queries | 50 concurrent console users with bounded tenant and time filters. |
+| Reference inference | Independently metered and capped. Not included as 1,000 model inferences per second. |
+| Placement | At least three worker replicas across declared independent failure domains. |
+| Capacity reserve | At least 30% measured headroom at W1 after one planned worker drain. |
+
+### Storage arithmetic
+
+At 1,000 events per second, W1 produces 86.4 million events per day. At 2 KiB per event, this is about **176.95 GB per day** before compression, indexes, or replication. Thirty days require about **5.31 TB** for one archive copy. A replicated queue and hot indexes add separate capacity. Compression and deduplication savings cannot enter a quote without measurement.
+
+### Scale controls
+
+Partition by tenant and stream identity. Keep per-stream order where available. Isolate replay, query, and reference-inference pools from live assessment. Apply tenant quotas before expensive work. Autoscaling uses intake, lag, window-state size, and resource limits. Tenant sharding and regional placement prevent a single unbounded shared database from becoming the scaling plan.
+
+### Qualification rule
+
+W1 is a target, not a benchmark result. The present 3-vCPU VM cannot establish enterprise capacity. Production sizing requires measured service curves, failure tests, storage growth, and model-specific inference costs. Define larger workload profiles before promising more throughput.
+
+## 25. Service objectives and performance
+
+All values below are proposed GA acceptance targets under W1. They exclude invalid or unauthorized requests, but include server failures and planned service maintenance. Customer-originated network faults are reported separately.
+
+| ID | Objective | Measurement and acceptance |
+|---|---|---|
+| NFR-01 | Intake API availability: 99.95% per calendar month. | Valid authorized submissions with successful durable receipt divided by valid authorized attempts. Publish the denominator. |
+| NFR-02 | Console and control API availability: 99.9% per month. | External probes plus real requests; no hidden planned-maintenance exclusion. |
+| NFR-03 | Intake latency: p95 <=100 ms; p99 <=250 ms. | Server-side receipt to durable acknowledgement at W1. Model inference is a separate budget. |
+| NFR-04 | Assessment lag: p95 <=10 seconds; p99 <=30 seconds. | Durable receipt to window-state update after required samples are available. Not a guaranteed time from attack onset. |
+| NFR-05 | Notification dispatch: p95 <=30 seconds. | Incident creation to accepted first delivery attempt. Third-party receipt remains separately visible. |
+| NFR-06 | Standard console query: p95 <=2 seconds. | First page of at most 100 rows within one tenant and a one-hour filter. Large exports are asynchronous. |
+| NFR-07 | Action acceptance and rollback acceptance: p95 <=60 seconds. | Authorization to connector acceptance. Actual application change needs separate outcome confirmation. |
+| NFR-08 | Isolation and durability. | No cross-tenant access; no acknowledged event loss under the contracted single-failure-domain test. |
+| NFR-09 | Recoverable backlog. | After the W1 burst, live lag returns below 30 seconds within ten minutes without loss of acknowledged events. |
+
+### Error-budget policy
+
+A 99.95% objective permits 21.6 minutes of unavailability in a 30-day month. A 99.9% objective permits 43.2 minutes. Exhaustion pauses nonessential production changes. SRE and Product approve recovery work before normal release cadence resumes.
+
+### Detection time is evidence-dependent
+
+End-to-end signal time includes minimum sample collection, window completion, and processing lag. Confirmed performance loss also includes label delay. Low traffic cannot support a seconds-scale accuracy guarantee.
+
+## 26. High availability and disaster recovery
+
+### Failure model
+
+Design for worker death, broker loss, database failover, object-store errors, network partitions, regional loss, identity outages, and customer enforcement outages. High availability requires independent failure domains. Multiple containers on one VM do not satisfy this requirement.
+
+| Failure | Required behavior | Recovery proof |
+|---|---|---|
+| Worker restart | Resume versioned state from the last durable checkpoint. | No duplicate action and no false “healthy” reset. |
+| One broker or failure domain | Preserve durable receipt within the qualified quorum policy. | Acknowledged events remain recoverable. Intake backpressures when quorum is lost. |
+| Metadata primary failure | Fence the old writer and fail over without approval-history loss. | Read and write invariants pass after promotion. |
+| Archive outage | Buffer within budget and display evidence lag. | No evidence-complete claim before archive confirmation. |
+| Control-plane outage | Continue approved observation where cached policy permits. Freeze unapproved changes. | Existing policy and fallback remain explicit. |
+| Region loss | Restore in an approved recovery location. | Residency, keys, tombstones, and approval state survive the drill. |
+
+### Recovery objectives
+
+Target regional RTO: 60 minutes. Target regional RPO: at most 15 minutes for telemetry and at most five minutes for control metadata. Within one failure domain, acknowledged-event durability has a zero-loss target. Regional disaster loss limits remain explicit and do not inherit that zero-loss claim.
+
+### Backup and rehearsal
+
+Encrypt backups with independent access controls. Verify restores quarterly and after major storage changes. Reconcile sequence gaps before resuming alerts. Apply deletion tombstones before restored data becomes accessible. Rehearse key loss, secret rotation, and stale approvals. Publish a drill report with measured recovery times and residual gaps.
+
+## 27. Operability and monitor health
+
+### Monitor the monitor
+
+A separate health path measures collector freshness, intake success, queue lag, worker progress, checkpoint age, label backlog, alert delivery, action reconciliation, and evidence-store lag. This path uses its own alerts and cannot depend only on the component under test.
+
+### Required operating signals
+
+- Rate, errors, latency, and saturation by service and bounded tenant class.
+- Active and missing streams; schema errors; late-data counts; deduplication counts.
+- Completed windows; evidence counts; reference age; label coverage; detector failures.
+- Open incidents; notification failures; approval age; expired actions; rollback results.
+- Storage growth; key expiry; signing failures; backup and restore freshness.
+
+### Alert policy
+
+Separate service incidents from content-risk incidents. Deduplicate, route, and suppress by approved maintenance policies. Preserve suppressed counts. Use severity, owner, and runbook links. A page contains evidence and a clear next action, not raw customer text.
+
+### Operational practices
+
+Use versioned runbooks, staged releases, feature flags, dependency inventories, capacity reviews, and incident postmortems. Apply OpenTelemetry-compatible traces and metrics through a pinned semantic-convention mapping. Do not assume evolving GenAI attributes remain stable across upgrades.
+
+### On-call acceptance
+
+SRE can diagnose an intake outage, a stuck window, an expired key, a failed export, and an enforcement failure from documented telemetry. A simulated total monitor outage must produce an independent service alarm within two minutes.
+
+## 28. Connectors and compatibility
+
+### GA integration set
+
+| Integration | Required capability | Qualification boundary |
+|---|---|---|
+| Application SDKs | Python, Java, TypeScript score and label intake. | Runtime versions, retry behavior, telemetry redaction, and task contract. |
+| AI gateways and guardrails | An HTTP adapter plus tested connectors for selected enterprise gateways. | Publish exact vendor versions and available score fields. No blanket vendor-support claim. |
+| Enterprise identity | OIDC, SAML, and SCIM. | Federation failure, revocation, group mapping, and tenant scope. |
+| Incident systems | Signed webhooks; tested PagerDuty and ServiceNow adapters. | Delivery acknowledgement, retry, deduplication, and private-content policy. |
+| Team notifications | Tested Slack and Microsoft Teams adapters. | No raw prompts; scoped channels; credential rotation and deletion. |
+| Security telemetry | OpenTelemetry and a documented SIEM export. | Field schema, rate limits, redaction, and replay semantics. |
+| Customer enforcement | Approved HTTP action adapter with read-back verification. | Action allowlist, idempotency, authorization, timeout, and rollback. |
+| Data and key services | Qualified PostgreSQL, Kafka, S3-compatible storage, and customer key service. | Native architecture, encryption, durability, backup, and recovery. |
+
+### Connector safety
+
+Outbound destinations require an allowlist and TLS verification. Reject internal metadata endpoints and unauthorized private ranges. Signed webhook requests include timestamps and replay identifiers. A destination failure cannot create unlimited retries or exhaust live assessment resources.
+
+### Certification policy
+
+Supported means tested against a published version matrix. A connector's installation success does not establish support. Deprecation notices include migration guidance and an agreed support period. Unsupported combinations remain visible in the console.
+
+## 29. Quality and assurance plan
+
+| Test family | Coverage | Required evidence |
+|---|---|---|
+| Q-INT | INT-01 to INT-08 and API contracts. | Schema fuzzing, duplicate IDs, late events, durable receipt, quota isolation, and label conflicts. |
+| Q-MON | MON-01 to MON-10 and statistical policy. | Matched null streams, material and harmless changes, low volume, seasonality, shared failures, and missing labels. |
+| Q-RES | RES-01 to RES-08. | Approval separation, stale versions, repeated actions, connector failure, expiry, read-back, and rollback. |
+| Q-VAL | VAL-01 to VAL-08. | Data-rights checks, official splits, leakage analysis, locked holdouts, confidence intervals, and task separation. |
+| Q-EVD | EVD-01 to EVD-07. | Offline verification, edited records, missing segments, key rotation, deletion, and legal hold. |
+| Q-IAM | ADM controls, role matrix, and SEC-01. | Every operation under every role; cross-tenant paths; revocation; privileged support. |
+| Q-SEC | SEC-02 to SEC-09 and PRI controls. | Injection, artifact safety, replay, poisoning, SSRF, credential theft, resource exhaustion, and exfiltration. |
+| Q-UX | UX-01 to UX-07. | State coverage, keyboard, screen reader, focus, contrast, units, uncertainty, and sensitive reveal. |
+| Q-SCL | W1 and NFR-01 to NFR-09. | Sustained load, burst recovery, tenant noise, long windows, large exports, and model budgets. |
+| Q-DR | Recovery policy and DEP-03. | Failure-domain drills, regional restore, tombstone replay, key recovery, and no duplicate action. |
+| Q-ARC | DEP-01 to DEP-06. | Native s390x execution, image signatures, compatibility matrix, and production hardening. |
+
+### Test-data separation
+
+Use authorized real examples for model-quality claims. Constructed attacks remain declared adversarial tests. Synthetic events test load and fault behavior only. Test and replay identities cannot act on production systems. The release report records source revisions, test configuration, sample counts, and unresolved limits.
+
+## 30. Enterprise release acceptance
+
+### All gates are mandatory for commercial GA
+
+| Gate | Required evidence | Accountable approval |
+|---|---|---|
+| G-01 · Customer value | Ten interviews, three design partners, documented workflow need, and validated buyer. | Product. |
+| G-02 · Product completeness | Intake, assessment, incident, approval, response, export, and administration journeys pass their tests. | Product and engineering. |
+| G-03 · Model and statistics | Locked evaluation protocol, label rights, task-specific performance, uncertainty, and false-alert results. | ML and Model Risk. |
+| G-04 · Security and privacy | Threat model, penetration test, isolation proof, deletion test, rights review, and key controls. | Security and Privacy. |
+| G-05 · Scale and resilience | W1 report, SLO instruments, capacity reserve, recovery drill, and backlog test. | Platform and SRE. |
+| G-06 · IBM Z qualification | Native images, actual s390x tests, supported deployment matrix, and no unverified hardware claim. | Platform. |
+| G-07 · Operations and support | Runbooks, staffed response model, release procedure, backup ownership, and customer notification plan. | SRE and support. |
+| G-08 · Commercial readiness | Contract, shared-responsibility statement, price model, support terms, and permitted data/model use. | Product, Legal, and Finance. |
+
+### Release evidence
+
+The release package includes a signed manifest, SBOM, tested image digests, migration plan, rollback plan, known limits, and the test report. Approval records bind to the exact release. A changed dependency, model, policy, or detector can require requalification.
+
+### Current status
+
+Only environment preparation and research/data intake are verified. No gate above is declared passed by this document. Enterprise readiness follows evidence, not the completeness of a PRD.
+
+## 31. Customer onboarding and migration
+
+### Onboarding sequence
+
+1. Confirm the customer's data authority, deployment profile, threat model, residency, and support contacts.
+2. Configure identity, keys, private endpoints, quotas, and retention before data intake.
+3. Register task definitions, owners, score contracts, and source versions.
+4. Validate sample telemetry and completeness without changing application behavior.
+5. Approve references and labelled evaluation. Start Observe mode.
+6. Rehearse an incident, action approval, rollback, export, and service outage.
+7. Enable Advise or Enforce only after the customer's risk owner approves the exact policy.
+
+### Migration from an existing tool
+
+Import approved metadata and permitted historical evidence through a documented adapter. Preserve original timestamps, source versions, and label provenance. Missing source fields remain missing. Run both systems in parallel for a tenant-approved comparison period. Do not describe an imported aggregate metric as event-level evidence.
+
+### Upgrade policy
+
+Use signed versioned releases, compatible schema migrations, bounded dual reads, and staged rollout. Keep a tested rollback or a forward-repair plan before an irreversible migration. Clients receive compatibility and deprecation notices. Active incidents and pending approvals survive upgrades.
+
+### Exit and portability
+
+Customers can export their permitted configuration, evidence, labels, and audit metadata in documented formats. Offboarding revokes credentials and connectors, applies retention and legal hold rules, and produces a deletion report. Product analytics cannot retain customer content after the agreed boundary ends.
+
+## 32. Commercial model and support
+
+### Packaging proposal
+
+Sell by deployment profile, protected event volume, retained evidence, reference-inference budget, and support tier. Dedicated private deployments have a minimum infrastructure footprint. Unlimited throughput, unlimited model inference, and unlimited retention are not part of the product promise.
+
+### Metering requirements
+
+Meter durable accepted events, retained storage, replay compute, and optional reference inference separately. Deduplicated retries do not inflate event charges. Keep billing records free of prompt content. Billing failure cannot silently weaken an approved safety control. Quota exhaustion has an explicit customer-approved behavior.
+
+### Cost model
+
+Track compute, state, queue replication, hot indexes, archive copies, backup, network transfer, key services, observability, and support. Use W1's 176.95 GB/day archive input as an uncompressed planning input. Pricing requires measured cost per million events, model-specific inference cost, and a margin review. This PRD contains no invented vendor quote.
+
+### Proposed enterprise support targets
+
+- Severity 1: active exposure, control failure, tenant isolation, or wide outage; staffed 24/7; acknowledgement within 15 minutes.
+- Severity 2: material degradation with a safe workaround; acknowledgement within one hour.
+- Severity 3: noncritical defect or advice; acknowledgement within one business day.
+- Resolution time depends on the fault and remains distinct from acknowledgement.
+- Security and privacy notifications follow the customer contract and applicable law.
+
+### Commercial acceptance
+
+Support staffing, escalation authority, subprocessor terms, incident communications, and an SLA must exist before sale. Security or certification claims require evidence. A research dataset's public availability does not grant commercial redistribution or model-training rights.
+
+## 33. Delivery program and dependencies
+
+### Build toward enterprise GA, not a reduced product promise
+
+| Workstream | Complete deliverable | Dependency or exit condition |
+|---|---|---|
+| Product and discovery | Validated customer workflows, buyer, outcomes, and competitive study. | G-01 evidence. |
+| Data and ML | Versioned task contracts, permitted datasets, evaluator, detectors, label workflow, and model policy. | Statistical and Model Risk approval. |
+| Core platform | Durable intake, assessment state, incident service, policy service, and evidence store. | Isolation, durability, and recovery tests. |
+| Security and identity | Federation, role policy, secrets, keys, artifact trust, privacy, and audit. | Independent security and privacy approval. |
+| Experience and integrations | Complete stateful console, SDKs, certified connectors, and accessible workflows. | UX and contract test results. |
+| Scale and SRE | Qualified topology, W1 results, SLOs, autoscaling, backup, DR, and runbooks. | G-05 and G-06 evidence. |
+| Commercial operations | Support, legal agreements, price model, documentation, and onboarding. | G-07 and G-08 approval. |
+
+### Delivery sequence
+
+Start with approved contracts and threat models. Build the complete observation path before adding action authority. Validate labelled outcomes before any policy relaxation. Qualify private s390x deployment and recovery before commercial availability. Release dates follow staffed estimates and dependency evidence; no unsupported calendar is promised here.
+
+### Required operating functions
+
+Assign product, platform, ML, UX/accessibility, security/privacy, QA/performance, SRE, support, and commercial owners. One person can hold several roles only if approval separation remains intact. A project team size does not establish 24/7 enterprise operating capacity.
+
+## 34. Risks, assumptions, and decision log
+
+| Risk | Impact | Required control or decision |
+|---|---|---|
+| Behaviour change does not equal accuracy loss. | False confidence or unnecessary containment. | Separate signal states; require labels for performance claims. |
+| Primary and reference models share blind spots. | A harmful change produces no disagreement. | Common-mode tests, independent evidence, and clear detection limits. |
+| Production labels are sparse or biased. | Invalid calibration or fleet metrics. | Random sampling, adjudication, coverage indicators, and inconclusive status. |
+| Attackers poison telemetry or references. | Hidden exposure or harmful policy changes. | Producer trust, versioned references, audit, and independent approvals. |
+| Commercial rights are absent. | Product cannot ship data or model artifacts. | Resolve rights or replace the corpus before GA. |
+| Native dependencies or vendor support differ on s390x. | Unsupported runtime or failed upgrades. | Native qualification and a versioned support matrix. |
+| The product's own console exposes sensitive data. | Privacy or tenant breach. | Content minimization, RBAC, audited reveal, export policy, and security tests. |
+| Large model inference dominates cost. | Missed latency, spend, and capacity limits. | Instrument existing scores; cap and isolate optional reference inference. |
+| A customer control connector fails. | Partial containment or unsafe state. | Bounded actions, read-back, explicit pending state, and tested rollback. |
+| A competitor already provides the complete workflow. | Weak differentiation or sales case. | Validate product-level differences before claiming novelty. |
+
+### Decisions fixed by this PRD
+
+Observe is the default. Scores alone cannot authorize relaxed controls. Raw content is off by default. Hardware attestation is optional and qualification-gated. Native LinuxONE is a product requirement. No commercial data use proceeds without rights.
+
+### Decisions that block launch
+
+Customer discovery, the model selection, the production topology, supported connectors, commercial corpus rights, hardware profile, price, and staffed support require explicit approval evidence. They are not silently assumed complete.
+
+## 35. Traceability and glossary
+
+### Requirement-to-test traceability
+
+| Requirement family | Verification family | GA gate |
+|---|---|---|
+| INT and API contracts | Q-INT | G-02. |
+| MON and statistical policy | Q-MON | G-03. |
+| RES and action authority | Q-RES | G-02 and G-04. |
+| VAL and dataset governance | Q-VAL | G-03 and G-08. |
+| EVD and audit design | Q-EVD | G-04. |
+| ADM and identity matrix | Q-IAM | G-04. |
+| SEC and PRI | Q-SEC | G-04. |
+| UX | Q-UX | G-02. |
+| W1 and NFR | Q-SCL | G-05. |
+| Recovery contract | Q-DR | G-05. |
+| DEP | Q-ARC | G-06. |
+
+### Terms with fixed meaning
+
+**Guardrail:** a safety control that evaluates or constrains AI traffic. It is not necessarily a single small classifier.
+
+**Drift:** a change in an observed distribution or relationship. Drift does not always reduce accuracy.
+
+**Reference model:** an optional comparison signal. It is not a trusted source of ground truth.
+
+**Calibration:** the relationship between model scores, decisions, uncertainty, and observed labels. It does not repair weights.
+
+**Coverage:** the declared proportion of traffic, labels, slices, or prediction sets represented by evidence. The UI states which definition applies.
+
+**Attestation:** a verifiable statement about a measured execution context under a specific hardware trust model.
+
+**Evidence complete:** all items required by the declared evidence policy are present. It does not mean that the AI system is safe.
+
+## 36. Research basis and prior implementations
+
+These papers inform requirements. Their reported results are not transferred into product guarantees. The local reference library contains complete extracted text; figures and exact formula layout are absent.
+
+| Reference | Product relevance | Source |
+|---|---|---|
+| R-01 · Online Shift Detection and Conformal Adaptation for Deployed Safety Classifiers. | Sequential signals, canary limits, shift tests, calibration assumptions. | [arXiv 2606.11949v4](https://arxiv.org/abs/2606.11949v4). |
+| R-02 · Constitutional Classifiers++. | Conversation context, cascades, and cost-aware safety controls. | [arXiv 2601.04603v1](https://arxiv.org/abs/2601.04603v1). |
+| R-03 · Proof-of-Guardrail in AI Agents and What Not to Trust from It. | Attestation scope and the difference between execution and correctness. | [arXiv 2603.05786v2](https://arxiv.org/abs/2603.05786v2). |
+| R-04 · Open Problems in AI Incident Governance. | Incident definitions, reporting, evidence gaps, and classification. | [arXiv 2607.05163v1](https://arxiv.org/abs/2607.05163v1). |
+| R-05 · Standardised schema and taxonomy for AI incident databases in critical digital infrastructure. | Incident fields, severity, causes, and harms. | [arXiv 2501.17037v1](https://arxiv.org/abs/2501.17037v1). |
+| R-06 · LongPIBench. | Long-context attacks and benchmark-versus-production distinction. | [arXiv 2608.28411v1](https://arxiv.org/abs/2608.28411v1). |
+| R-07 · WAInjectBench. | Web-agent injection tasks and detector coverage limits. | [arXiv 2510.01354v2](https://arxiv.org/abs/2510.01354v2). |
+| R-08 · SafePickle. | Artifact threat model; unsafe formats stay out of the runtime. | [arXiv 2602.19818v1](https://arxiv.org/abs/2602.19818v1). |
+| R-09 · A Large-Scale Exploit Instrumentation Study of AI/ML Supply Chain Attacks in Hugging Face Models. | Artifact provenance, format restrictions, and execution risk. | [arXiv 2410.04490v1](https://arxiv.org/abs/2410.04490v1). |
+| R-10 · XSTest. | Over-refusal and separate measures of harmless-request rejection. | [arXiv 2308.01263](https://arxiv.org/abs/2308.01263). |
+| R-11 · OR-Bench. | Over-refusal benchmark design and generated-data limits. | [arXiv 2405.20947](https://arxiv.org/abs/2405.20947). |
+| R-12 · Fine-tuning Aligned Language Models Compromises Safety. | Version changes require safety requalification. | [arXiv 2310.03693](https://arxiv.org/abs/2310.03693). |
+| R-13 · WildGuard. | Harm, refusal, annotation, and synthetic-source distinctions. | [arXiv 2406.18495](https://arxiv.org/abs/2406.18495). |
+| R-14 · ToxicChat. | Real user prompts, annotation provenance, and task-specific labels. | [arXiv 2310.17389](https://arxiv.org/abs/2310.17389). |
+
+## 37. Standards and evidence boundaries
+
+### Normative design references
+
+| Reference | Use in this product | Link |
+|---|---|---|
+| NIST AI Risk Management Framework. | Govern, Map, Measure, and Manage evidence organization. | [NIST AI RMF](https://www.nist.gov/itl/ai-risk-management-framework). |
+| OWASP Top 10 for LLM and GenAI applications. | Threat categories and security assurance cases. | [OWASP GenAI risks](https://genai.owasp.org/llm-top-10/). |
+| WCAG 2.2. | AA target for the operator console. | [W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/). |
+| Carbon accessibility guidance. | Enterprise interaction, accessibility, and component design. | [Carbon accessibility](https://carbondesignsystem.com/guidelines/accessibility/overview/). |
+| OpenTelemetry semantic conventions. | Versioned telemetry mapping; evolving fields remain compatibility-gated. | [GenAI conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-spans/). |
+| LinuxONE Community Cloud ML environment. | Verified development tooling source, not a production architecture. | [Official ML environment](https://github.com/linuxone-community-cloud/jupyter-lab-ml). |
+
+### Prior implementations to credit
+
+[Cheap Canaries reference implementation](https://github.com/junwenleong/safety-classifier-shift-monitor) already implements research in guardrail shift assessment. [Verifiable-ClawGuard](https://github.com/SaharaLabsAI/Verifiable-ClawGuard) implements TEE-based guardrail proof. Product requirements cannot claim these mechanisms as original inventions.
+
+### Claims the product must not make
+
+- “Nobody monitors guardrails” or “no competing product exists.” The competitive study remains open.
+- “New publication means the data is absent from model training.” No such training-set audit exists.
+- “No labels are needed to prove performance or repair calibration.” Labels remain necessary for those claims.
+- “Different models cannot fail together.” Common-mode failure remains possible.
+- “A hash chain is hardware attestation” or “hardware attestation proves safety.” Neither statement is correct.
+- “This PRD makes the current server production-ready.” Deployment and release gates remain unmet.
+
+### Evidence date
+
+Environment, dataset cards, manifests, and the listed standard pages are checked on 16 October 2026. Recheck rights, versions, and support status before any commercial release.
+
+## 38. Dataset catalog and source links
+
+### Available research data · not commercial production data
+
+| Dataset | Verified contents and role | Rights and product restriction |
+|---|---|---|
+| ToxicChat 0124. | 10,165 real user prompts. The human-annotation flag covers 5,654 examples: 2,801 train and 2,853 test. Candidate real-data source for task-specific research evaluation. | CC-BY-NC-4.0. Commercial product use requires legal approval or a different licensed corpus. Do not claim training-set exclusion. |
+| WAInjectBench text. | 12 JSONL files; 2,707 benign and 991 malicious samples. Injection evaluation only. The full image set is not downloaded. | License metadata is absent in the inspected card. Constructed attacks are not real production incidence. Commercial use and redistribution remain blocked pending rights review. |
+| WildGuardMix. | Provider-gated corpus. Its training card reports 87% synthetic, 11% in-the-wild, and 2% annotator-written data. Metadata only is staged. | ODC-BY metadata plus provider access conditions. User acceptance is required. It cannot support a blanket real-only claim. |
+| LongPIBench. Inspected RainWatcher release. | The card is tagged synthetic and contains 100 linked benchmark IDs. It is not used as real production traffic. | MIT metadata with separate third-party template terms. Confirm the release-to-paper relationship before use. |
+| XSTest and OR-Bench. | Research references for over-refusal. They are not staged as real production streams. | Obtain the exact release, rights, and source provenance before use. OR-Bench uses generated benchmark content. |
+
+### Production data policy
+
+The enterprise product receives customer-owned or separately licensed telemetry and labels under a processing agreement. Research corpora are not bundled into commercial releases. Preserve official splits, task definitions, source revisions, human-annotation flags, and file hashes. Never manufacture labels or call constructed examples real production traffic.
+
+### Clickable dataset links
+
+- [ToxicChat dataset](https://huggingface.co/datasets/lmsys/toxic-chat) · huggingface.co/datasets/lmsys/toxic-chat
+- [WAInjectBench dataset](https://huggingface.co/datasets/Norrrrrrr/WAInjectBench) · huggingface.co/datasets/Norrrrrrr/WAInjectBench
+- [WildGuardMix dataset](https://huggingface.co/datasets/allenai/wildguardmix) · huggingface.co/datasets/allenai/wildguardmix
+- [Inspected LongPIBench dataset](https://huggingface.co/datasets/RainWatcher/LongPIBench) · huggingface.co/datasets/RainWatcher/LongPIBench
+- [XSTest source](https://github.com/paul-rottger/exaggerated-safety) · github.com/paul-rottger/exaggerated-safety
+- [OR-Bench paper and release reference](https://arxiv.org/abs/2405.20947) · arxiv.org/abs/2405.20947
+
+Immutable dataset revisions and SHA-256 records remain in the preparation manifest. A dataset's popularity, freshness, or public location does not establish its quality, commercial rights, or absence from a model's training data.

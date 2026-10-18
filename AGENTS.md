@@ -2,7 +2,7 @@
 
 ## Project
 
-Safety Monitor Integrity Watch combines a guardrail, a canary, runtime probes, verified recovery, and approved containment.
+Veyra combines a guardrail, a canary, runtime probes, verified recovery, and approved containment.
 The selected release uses a frozen TF-IDF model pair on native LinuxONE.
 The repository provides the offline execution pipeline, tests, package tools, and reproducibility checks.
 
@@ -31,3 +31,15 @@ The repository provides the offline execution pipeline, tests, package tools, an
 - `scripts/reproduce_selected.py`: Native end-to-end reproduction
 - `scripts/package_private.py`: Private release archive assembly
 - `releases/baseline-20261017/`: Machine-readable evidence and source records
+- `web/veyra/`: Public React product website
+- `frontend/`: Read-only Next.js evidence dashboard
+- `presentation/`: Pitch, voiceover, diagrams, and export source
+- `integration/legacy-classifier/`: Archived classifier source; not the selected runtime
+
+## Brand and provenance
+
+Use `Veyra` in all current product text.
+Preserve frozen study IDs, historical release names, model hashes, and compatibility imports.
+Do not rename those identities to simulate a new qualification.
+The `safety-watch` command names remain compatibility aliases for `veyra`.
+Run legacy integration tests only against their separately approved native data and artifacts.

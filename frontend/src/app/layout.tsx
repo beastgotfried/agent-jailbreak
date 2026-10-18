@@ -5,8 +5,8 @@ import "./globals.css";
 const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat" });
 
 export const metadata: Metadata = {
-  title: "Safety Monitor | Integrity Watch",
-  description: "A dashboard for monitoring AI guardrail integrity.",
+  title: "Veyra",
+  description: "Veyra: read-only evidence for guardrail runtime checks and verified recovery on IBM LinuxONE.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

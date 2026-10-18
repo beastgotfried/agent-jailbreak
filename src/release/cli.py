@@ -1,4 +1,4 @@
-"""Verify and score with the selected private TF-IDF model pair.
+"""Veyra: verify and score with the selected private TF-IDF model pair.
 
 This command classifies text only. It does not run requests, enable a runtime
 monitor, authorize recovery, or provide a production API. Use paired replay to
@@ -17,6 +17,9 @@ import sys
 from src.data.synthetic import file_hash, native_only
 from src.models.synthetic import SyntheticBackend
 from src.monitor.runtime import checked_scores
+
+
+PRODUCT_NAME = "Veyra"
 
 
 class ReleaseError(ValueError):
@@ -73,7 +76,7 @@ def score_lines(backend, source, target):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(prog="veyra", description=__doc__)
     parser.add_argument("command", choices=("inspect", "score"))
     parser.add_argument("--models", type=Path, required=True)
     parser.add_argument("--input", default="-", help="JSONL with one text field per row; default stdin")
@@ -82,7 +85,7 @@ def main(argv=None):
     try:
         if args.command == "inspect":
             spec = verify_selected(args.models)
-            print(json.dumps({"release_id": spec["release_id"], "verified_model_files": len(spec["model_files"]),
+            print(json.dumps({"product_name": PRODUCT_NAME, "release_id": spec["release_id"], "verified_model_files": len(spec["model_files"]),
                 "model_pair_id": spec["model_pair_id"], "current_architecture": platform.machine(),
                 "qualified_architecture": spec["qualified_architecture"], "model_loaded": False,
                 "scope": spec["scope"]}, sort_keys=True))

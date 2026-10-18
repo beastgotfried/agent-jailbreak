@@ -1,0 +1,367 @@
+# Veyra — Pitch Deck Content (10 Slides)
+
+All numbers below are from the frozen native studies. Use them exactly as written.
+Image placeholders describe exactly what each visual should show.
+Placeholders marked **[EXISTS]** have finished files in `visuals/` (PNG + SVG) and inside the built deck `Veyra-IBM-Z-Datathon.pptx`.
+Placeholders marked **[CREATE]** need new images or captures.
+
+---
+
+## Slide 1 — Veyra: Verify the Guardrail
+
+**Main message:** AI safety controls need their own integrity checks. Veyra provides that control loop on IBM LinuxONE.
+
+**Tagline:** Observe change. Verify recovery. Keep control.
+
+**Slide points:**
+- Detect changes in guardrail runtime behavior with matched reference probes.
+- Permit a replacement only after approval and fresh paired verification.
+- Run the complete workflow on native LinuxONE CPUs, without an external model API.
+
+**One-sentence intro:** Veyra checks AI guardrail behavior and supports approved recovery or explicit containment when runtime outputs change.
+
+**Central value:** Turn a changed safety-control output into an evidence-backed operational decision, not an unexplained alert.
+
+**Key numbers:** 100,000-row selected study · 60 paired episodes · 30,720 request observations · 292 native tests pass (4 optional PyArrow skips).
+
+```text
+[IMAGE — CREATE]
+Dark navy title slide. Left: "Veyra" in large white type with the tagline.
+Right: three numbered chips — 01 Native s390x CPU execution / 02 Matched runtime
+integrity checks / 03 Approved, verified recovery. Bottom bar: "IBM Z Datathon".
+No stock imagery, no fake dashboard.
+```
+
+**Speaker notes:** "We do not replace the guardrail. We check whether its runtime behavior still matches an approved baseline. A response needs evidence and approval. The complete selected workflow runs on native IBM LinuxONE."
+
+---
+
+## Slide 2 — A Valid Score Can Hide a Changed Control
+
+**Main message:** A guardrail can return valid numbers while its decision behavior changes.
+
+**Slide points:**
+- Traffic, model versions, wrappers, and score transformations can change guardrail behavior.
+- A lower score can mean a safer request—or a changed scoring path.
+- One score cannot distinguish those causes without a reference or labels.
+- Veyra checks runtime consistency separately from traffic change and classifier quality.
+
+**Simple example (illustrative, not a customer deployment):** A bank's guardrail wrapper rescales scores after a deployment. Outputs stay valid numbers, but decisions change. Veyra checks fixed probes, identifies the change, and verifies recovery.
+
+**Technical detail:** The implemented `scale` fault multiplies guardrail scores by 0.25. Model weights and the request stream stay fixed. Other implemented faults: affine, square, clipped, constant, inverted, common-mode scaling, persistent replacement, late onset, recurrent fault.
+
+**Actual recorded example (scale / seed 0):** healthy guardrail score 0.7426 vs rescaled 0.1856, fixed threshold 0.2083 — a valid number, a changed decision.
+
+```text
+[IMAGE — CREATE]
+Split comparison of one request: left "Approved baseline 0.7426", right
+"After ×0.25 fault 0.1856", one fixed threshold line at 0.2083 drawn across both.
+Caption: "Recorded scale / seed 0 · Request index 135 · decision changed."
+Style: clean numbers, IBM blue, no raw prompt text.
+```
+
+**Speaker notes:** "A system can look healthy because it returns a number. That number does not prove the control behaves as before. Our experiment changes the output path while it keeps the model and requests fixed. This makes runtime integrity measurable."
+
+---
+
+## Slide 3 — Separate Observation, Verification, and Authority
+
+**Main message:** Veyra links runtime evidence to a controlled response.
+
+**Slide points:**
+- **Guardrail:** makes the allow/refuse decision under a frozen policy.
+- **Canary:** supplies a second score view; it does not make the request decision.
+- **Runtime check:** compares both models with fixed reference probes.
+- **Response:** verifies a correction or trusted reload, or keeps the service contained.
+
+**Authority table:**
+
+| Component | Responsibility | Authority |
+|---|---|---|
+| Guardrail | Score request text; apply the binary threshold | Request decision |
+| Canary | Score the same text and verification probes | Observation only |
+| Passive KS monitor | Detect a distribution change in signed score gaps | Warning only |
+| RuntimeWatch | Detect changed outputs on matched probes | Runtime incident evidence |
+| RecoveryManager | Execute and verify candidate backends | Activation needs explicit approval |
+| SupervisedRuntime | Gate requests and maintain a hold | Separate containment and release authority |
+
+**Why useful:** A response never follows a traffic warning automatically. The runtime checks the active backend, not a stale cached candidate. A new incident can open after a verified recovery. An unsuccessful replacement leaves an explicit hold, not a false restoration claim.
+
+```text
+[IMAGE — CREATE]
+Three horizontal lanes: "Traffic observation" (gray), "Runtime integrity" (blue),
+"Response authority" (teal). Only the runtime lane reaches a gate icon labelled
+"Approval + verification". The traffic lane ends at a warning flag.
+```
+
+**Speaker notes:** "The canary is not an oracle or a second blocking filter. We keep three questions separate: Has traffic changed? Has the runtime changed? Does labelled evaluation show a quality change? This separation prevents a traffic warning from becoming an automatic model change."
+
+---
+
+## Slide 4 — The Implemented Architecture
+
+**Main message:** The working system is a native Python execution pipeline with explicit evidence and response boundaries.
+
+**Slide points:**
+- Ordered requests enter an offline Python replay or classifier CLI.
+- The supervisor checks runtime health and uses the current model backend.
+- Candidate execution, paired verification, and approval precede activation.
+- Local JSON/JSONL records preserve decisions, incidents, costs, and artifact identities.
+
+**Actual flow:**
+1. Validate the request and model identity.
+2. Run 8 scheduled matched probes every 16 request positions.
+3. Confirm a runtime incident if either score vector changes beyond 1e-8.
+4. Execute an affine candidate or a trusted backend reload.
+5. Verify both score vectors and decisions on 128 separate verification probes.
+6. Reverify the candidate before generation-bound, single-use activation.
+7. Gate the request with the current policy, or retain an explicit hold.
+8. Record events and outcomes for the independent audit.
+
+**IBM LinuxONE boundary:** data generation, model fit, inference, probes, response, replay, audit, wheel build, and release qualification all run on native `s390x`. Qualified container: two-CPU quota, 4 GiB memory. Development VM: 3 vCPUs, ~8 GiB RAM, Ubuntu 24.04.
+
+**Status honesty:** Current interfaces are CLI and Python API. Web console, REST intake, Kafka, PostgreSQL, S3, and customer enforcement connectors are PRD roadmap items — never show them inside the implemented boundary.
+
+```text
+[IMAGE — EXISTS]
+visuals/architecture.png (and .svg; editable source visuals/architecture.mmd)
+Contents: one rounded IBM LinuxONE s390x boundary containing
+Request stream → Supervisor → Guardrail+canary → Frozen policy → Agent stub;
+below it RuntimeWatch → RecoveryManager → Verify+activate → Explicit hold;
+bottom strip: frozen models/probes, separate KS traffic study, local evidence.
+Built PPT slide 4 contains a simplified editable-shape version of the same flow.
+```
+
+**Speaker notes:** "This is the architecture we execute, not the larger enterprise roadmap. The selected runtime is Python on LinuxONE. Our diagram keeps the passive traffic study separate from the runtime recovery path."
+
+---
+
+## Slide 5 — Data and Models Built for a Native CPU Workflow
+
+**Main message:** A controlled dataset and lightweight models make the runtime experiment reproducible on LinuxONE.
+
+**Slide points:**
+- **100,000 synthetic requests** with explicit intent labels and family-based splits.
+- Word/character TF-IDF guardrail and character TF-IDF canary.
+- Thresholds selected on validation data only; test labels never enter live decisions.
+- The release selects by measured operational results, not model size.
+
+**Dataset design:**
+
+| Item | Value |
+|---|---:|
+| Total rows | 100,000 (train 70,000 / validation 10,000 / test 20,000, class-balanced) |
+| Template families | 100 |
+| Reviewed semantic groups | 91 |
+| Target-intent combinations | 1,000 |
+| Normalized duplicates / cross-split group overlap | 0 / 0 |
+
+Rows are compositional variants, not independent human requests. Related cases stay in one split.
+
+**Selected models:** Guardrail = word 1–2 gram + char_wb 3–5 gram TF-IDF, logistic regression C=4, threshold 0.20832091569900513. Canary = char 3–5 gram TF-IDF, logistic regression C=1, threshold 0.2771334648132324. Balanced class weights, seed 42.
+
+**Healthy synthetic test (20,000 rows):** Guardrail — accuracy 88.665%, harmful recall 99.960%, safe FPR 22.630%, ROC-AUC 0.9917. Canary — accuracy 86.265%, recall 99.610%, safe FPR 27.080%.
+
+**Model selection:** On the same exposed benchmark, selected TF-IDF monitored score **81.69%** vs BERT-tiny + lexical stack **78.22%**. The neural comparison catches one additional harmful test request but refuses 549 additional safe test requests. Both outcomes stay preserved; the release keeps the stronger completed operational candidate.
+
+**External datasets (roles, not selected-model fit):** ToxicChat 0124 (CC-BY-NC-4.0) · WAInjectBench (license not verified) · JBB-Behaviors (MIT) · JailbreakBench mirror (not listed) · StrongREJECT (not listed) · HarmBench (MIT) · XSTest (CC-BY-4.0) · Dolly 15k (CC-BY-SA-3.0) · OASST1 (Apache-2.0, acquisition/schema only, evaluation paused).
+
+```text
+[IMAGE — EXISTS]
+visuals/data-split.png (and .svg)
+Contents: 70/10/20 horizontal split bar (train/validation/test) plus three
+figures: 100 template families · 91 reviewed semantic groups · 0 cross-split
+group overlap. Side note: validation roles 5,000 threshold / 3,000 reserved
+calibration / 1,000 probe-fit / 1,000 probe-verification.
+```
+
+**Speaker notes:** "We use a declared synthetic study to isolate runtime behavior. We split related families before expansion and feed only text to the models. Both models run on LinuxONE CPUs. The release uses the strongest completed operational result, while it preserves the neural comparison."
+
+---
+
+## Slide 6 — Two Evidence Channels, One Clear Decision Boundary
+
+**Main message:** A traffic warning and a runtime confirmation answer different questions.
+
+**Slide points:**
+- Compare guardrail and canary scores through a signed gap `g = guardrail − canary`.
+- Empirical KS windows detect a traffic relationship change (warning only).
+- Matched probes confirm changed runtime outputs (response evidence).
+- Runtime evidence plus approved verification — not a KS warning — controls recovery.
+
+**Original KS configuration (separate historical path):** window 64 / stride 16 / horizon 512 / 29 looks / 200 null episodes / threshold 0.23258359872611467. It reports a distance, not a p-value; not an anytime-valid guarantee.
+
+**Selected runtime configuration:** 8-probe health panel · cadence every 16 requests · tolerance 1e-8 · 64 fit probes / 128 verification probes · supervisor budget 128 incidents.
+
+**Scan martingales:** **Not implemented in Veyra.** Present in the Cheap Canaries reference (conformal p-values, betting evidence, union-bound threshold). Mention as prior art only.
+
+**MMD:** **Not implemented in Veyra.** Reference implementation exists in Cheap Canaries (Gaussian-kernel MMD on embeddings).
+
+**What we add beyond the inspected reference:** actual candidate execution, fresh paired verification, generation-bound single-use activation, trusted backend reload, explicit holds, repeated incidents, complete-stream exposure accounting, and native LinuxONE reproducibility. No head-to-head performance comparison is measured.
+
+```text
+[IMAGE — CREATE]
+Two horizontal lanes. Lane 1 (gray): "Signed score gap → KS statistic → Traffic
+warning (no authority)". Lane 2 (blue): "8 matched probes → both-model comparison
+→ verified response gate". Small third box in gray: "Cheap Canaries prior art:
+scan martingale + MMD (research reference, not implemented here)".
+```
+
+**Speaker notes:** "We credit Cheap Canaries for the research direction. Our selected experiment does not use its headline results or its scan martingale. We add an explicit runtime response loop and verify that loop on LinuxONE. A traffic warning alone never authorizes a replacement."
+
+---
+
+## Slide 7 — Demonstrate a Real Runtime Recovery
+
+**Main message:** Show the runtime change, the evidence, and the verified state transition.
+
+**Slide points:**
+- Verify the frozen model identity on native LinuxONE (`safety-watch inspect`).
+- Show guardrail-only and monitored paths on identical requests.
+- Follow the scale fault: onset 128 → confirmation 143 → verified correction 175.
+- Show a persistent fault entering an explicit hold instead.
+
+**Recorded native scale / seed-0 trace:** fault starts at index 128; matched probes confirm at 143 (15-request delay); response applies at 175 (32-position configured delay). Endpoint check on 1,000 fixed requests: guardrail error 0.0, canary error 0.0, decision mismatches 0.
+
+**Supporting cases:** square / seed 0 — affine candidate rejected, trusted reload applied at 175. persistent_restart_fault / seed 0 — no candidate passes; explicit hold from 175. scale_then_constant / seed 0 — two incidents (143 and 335), two verified responses (175 and 367).
+
+**Frontend status:** Product frontend screens are **not implemented**. Use terminal output and evidence charts; do not present a console screenshot as delivered.
+
+```text
+[IMAGE — EXISTS]
+visuals/runtime-recovery.png (and .svg)
+Contents: line chart of absolute guardrail score error vs archived healthy score,
+512 request positions; gray line = guardrail only (stays high), blue line =
+monitored (returns to baseline after 175); dashed markers at 128 / 143 / 175;
+shaded fault window 128–175. Caption: "Recorded native replay, no smoothing."
+```
+
+**Speaker notes:** "This trace comes from actual native model calls. The fault starts at index 128. The runtime confirms it at 143 and applies a verified correction at 175. Both endpoint score vectors return to baseline. If verification does not pass, the system keeps an explicit hold."
+
+---
+
+## Slide 8 — Measured Improvement, With the Full Denominator
+
+**Main message:** The monitored system improves correct automatic decisions and reduces harmful allows in the controlled fault suite.
+
+**Slide points:**
+- Correct automatic decisions: **75.64% → 81.69%** (+6.05 pp).
+- Harmful allows: **4,738 → 595** (−87.44% relative).
+- **55 of 55** injected runtime incidents confirmed; **45 of 50** fault episodes restored; five held.
+- Report safe refusals, holds, controls, and model cost beside the gains.
+
+**Complete-stream results (30,720 observations, both arms on identical requests):**
+
+| Metric | Guardrail only (A) | Monitored (B) |
+|---|---:|---:|
+| Correct automatic decisions | 23,238 | 25,096 |
+| Operational score | 75.6445% | 81.6927% |
+| Harmful allow rate | 29.9116% | 3.7563% |
+| Safe refusal rate | 18.4409% | 22.4731% |
+| Held requests | 0 | 1,685 (5.4850%) |
+| Automatic coverage | 100% | 94.5150% |
+
+Score definition: `(safe allow + harmful refuse) / all requests`. Holds count as zero. A hold is containment, not restored service.
+
+**Detection by condition (5 episodes each):** all eight single-fault conditions confirm 5/5 with 15-request confirmation delay; persistent_restart_fault confirms 5/5 and holds all 5; scale_then_constant confirms 10/10 across two onsets; healthy and traffic-mix controls: 0/10 false runtime confirmations.
+
+**Native LinuxONE resource evidence:** selected fit 39.82 s; main 60-episode benchmark stage 191.64 s; full study cycle 432.89 s; peak child RSS 923.84 MiB; fresh offline-container reproduction 239.00 s; runtime score-call time 33.55 s (A) vs 74.38 s (B); model-input evaluations 30,720 vs 152,150. Timed score calls exclude loads, controller logic, and endpoint inference — not a production latency SLA. p95 latency, throughput, CPU utilization, and per-million cost: **Not measured**.
+
+**Baselines:** measured baseline = identical guardrail without monitoring. Always-refuse = 51.5625%; always-allow = 48.4375% (arithmetic references, not executed models). No per-component ablation measured.
+
+```text
+[IMAGE — EXISTS]
+visuals/stream-outcomes.png (and .svg)
+Contents: four panels — correct automatic decisions 75.64% vs 81.69%; harmful
+allow rate 29.91% vs 3.76%; safe refusal rate 18.44% vs 22.47%; hold rate 0% vs
+5.49%. Denominators printed under each panel title.
+Companion: visuals/response-outcomes.png — stacked bar of 45 restored / 5 held /
+10 controls, with 55/55 confirmations and 0/10 false confirmations.
+```
+
+**Speaker notes:** "The monitored arm makes 1,858 more correct automatic decisions and permits 4,143 fewer harmful-labelled requests. We count every request, including holds. The response restores 45 fault episodes and contains five. These results measure the controlled native fault suite, not production-wide safety."
+
+---
+
+## Slide 9 — Recovery Requires Evidence, Not Optimism
+
+**Main message:** A candidate becomes active only after the system verifies the actual replacement behavior.
+
+**Slide points:**
+- Fit a correction only from a separate trusted probe set.
+- Execute candidates on disjoint verification requests.
+- Check both models, decisions, and class-specific outcomes before activation.
+- Keep containment explicit; require full verification before release.
+
+**Implemented workflow:** confirm change → explicit approval and actor → bounded affine fit (`healthy ≈ slope × current + intercept`) → verify within 1e-8 on both score vectors → manager-owned single-use plan → fresh re-verification immediately before activation → trusted backend reload as the alternative → hold if nothing passes → explicit approved release after full paired verification.
+
+**Affine recovery vs recalibration:** selected recovery never changes weights or the policy threshold. The separate earlier conformal experiment computes class-conditional prediction-set quantiles from labelled calibration rows; all eight candidate applications stayed blocked by the fixed verification gate (harmful-class review 92% vs 75% ceiling). That result demonstrates rejection behavior, not successful recalibration. The current binary policy makes no conformal coverage claim.
+
+**Reliability controls (test-backed):** actual candidate execution, single-use manager-bound plans, whole-pair verification, no response on matching probes, traffic warnings cannot consume a later runtime response, new incidents after verified release, verified restart when current output is unavailable, separate containment approval, redacted error reporting.
+
+**Validation scope (state honestly):** recovery restores the tested baseline, not universal semantic correctness. Finite probes can miss input-specific or probe-evading faults. Guardrail and canary share data and one estimator family (healthy error correlation 0.7888; both wrong on 2,033/20,000). Offline approval flags exist; production authentication, durable incidents, and connectors are not implemented. Digests detect changed bytes; they are not signatures or hardware attestation.
+
+```text
+[IMAGE — CREATE]
+Horizontal gate diagram: Candidate → Execute on verification probes → Verify
+both score vectors + decisions → Reverify before activation → Activate.
+Below, a branch from any failed check to a teal "Explicit hold" state.
+Small separate box (gray, dashed): "Historical conformal experiment:
+8 candidates, 0 applied — gate held."
+```
+
+**Speaker notes:** "Our strongest reliability feature is the activation gate. A plan is not enough; the candidate must execute and pass fresh verification. We preserve the original policy during runtime recovery. A contained service is shown as contained, not as repaired or correctly classified."
+
+---
+
+## Slide 10 — Native IBM Z Execution, Evidence-Backed Control
+
+**Main message:** Veyra demonstrates a complete guardrail-integrity workflow on the native platform where enterprise Linux AI runs.
+
+**Slide points:**
+- Data generation, model fit, inference, checks, recovery, and audit run natively on LinuxONE.
+- The selected workflow reproduces in a fresh container with networking disabled.
+- Model artifacts and request data stay in the private execution environment.
+- Platform, safety, and model-risk teams get a traceable response decision.
+
+**Why LinuxONE matters here:** big-endian `s390x` execution is demonstrated, not assumed — no x86 emulation. The full loop runs with no external model API once artifacts are present. Reproduction matches all data bytes, learned model state, request scores, decisions, response actions, and benchmark metrics (156 byte-identical algorithm files; serialized model bytes can differ only in scikit-learn's process-local cache field, while the distributed model file keeps its fixed hash).
+
+**Verified platform facts:** Python 3.12.15 · NumPy 2.0.2 · SciPy 1.13.1 · scikit-learn 1.9.0 · joblib 1.6.0 · (neural comparison: PyTorch 2.11.0+cpu, Transformers 5.19.0) · native tests 292 pass / 4 optional skips · selected fit 39.82 s · peak child RSS 923.84 MiB.
+
+**Platform scope:** Telum/Spyre acceleration, Secure Execution, hardware attestation, z/OS, HA, and IBM certification are not implemented or measured. No LinuxONE-vs-x86 speed claim.
+
+**Target users (proposed, not measured customers):** AI platform engineers (validate runtime changes) · LinuxONE platform operators (qualify a local CPU safety workflow) · trust & safety analysts (separate traffic warnings from runtime incidents) · model-risk reviewers (examine recovery evidence).
+
+**Closing line:** **"A guardrail needs a watcher. On LinuxONE, we make that watcher measurable — and every recovery verifiable."**
+
+**Release:** https://github.com/beastgotfried/agent-jailbreak/tree/release/safety-watch-baseline-20261017
+
+```text
+[IMAGE — EXISTS]
+visuals/native-proof.png (and .svg)
+Contents: six-step proof chain inside one LinuxONE boundary —
+Generate → Fit → Infer → Detect → Verify → Audit — with the platform facts:
+s390x big-endian, two-CPU quota / 4 GiB limit, 292 tests pass,
+fresh offline container reproduction.
+```
+
+**Speaker notes:** "LinuxONE is the execution foundation of this project. We verify the actual native CPU workflow, including model fit and recovery. The private kit repeats the result offline. Our contribution is a measurable response loop around guardrails, with evidence for each transition."
+
+---
+
+## Asset quick reference
+
+| Placeholder | File | Status |
+|---|---|---|
+| Slide 1 title treatment | — | CREATE in deck (text-only title slide built) |
+| Slide 2 score-change example | — | CREATE (numbers above are from the recorded trace) |
+| Slide 3 authority lanes | — | CREATE |
+| Slide 4 architecture | `visuals/architecture.png/.svg`, `architecture.mmd` | EXISTS |
+| Slide 5 data split | `visuals/data-split.png/.svg` | EXISTS |
+| Slide 6 detector lanes | — | CREATE |
+| Slide 7 runtime recovery | `visuals/runtime-recovery.png/.svg` | EXISTS |
+| Slide 8 outcomes | `visuals/stream-outcomes.png/.svg`, `response-outcomes.png/.svg` | EXISTS |
+| Slide 9 verification gate | — | CREATE |
+| Slide 10 native proof | `visuals/native-proof.png/.svg` | EXISTS |
+
+Full evidence, tables (CSV), demo script, and source citations: `Veyra-Pitch-Content.txt`, `Veyra-Pitch-Content.pdf`, `tables/`, `evidence/`.

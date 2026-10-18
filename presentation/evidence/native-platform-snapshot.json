@@ -1,0 +1,18 @@
+{
+  "machine": "s390x",
+  "system": "Linux",
+  "python": "3.12.15",
+  "byteorder": "big",
+  "cpu_quota": "200000 100000",
+  "memory_limit_bytes": 4294967296,
+  "packages": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "scikit-learn": "1.9.0",
+    "pandas": "3.0.6",
+    "joblib": "1.6.0",
+    "torch": "2.11.0+cpu",
+    "transformers": "5.19.0"
+  },
+  "scope": "Read-only environment snapshot; no model fit or inference in this check."
+}

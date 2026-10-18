@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "safety-monitor-integrity-watch"
-version = "0.1.0"
-description = "Experimental guardrail runtime integrity checks and paired replay"
+name = "veyra"
+version = "0.2.0"
+description = "Veyra: experimental guardrail runtime integrity checks and verified response"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
@@ -21,6 +21,8 @@ test = ["pytest==9.1.1"]
 neural = ["torch==2.11.0", "transformers==5.19.0"]
 
 [project.scripts]
+veyra = "src.release.cli:main"
+veyra-replay = "src.replay.synthetic:main"
 safety-watch = "src.release.cli:main"
 safety-watch-replay = "src.replay.synthetic:main"
 
@@ -31,3 +33,6 @@ namespaces = true
 
 [tool.setuptools.package-data]
 "src.release" = ["selected.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

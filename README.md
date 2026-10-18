@@ -1,4 +1,4 @@
-# Safety Monitor Integrity Watch
+# Veyra
 
 A guardrail makes request decisions. A canary scores copies. Runtime probes detect output changes and support approved, verified recovery or containment.
 
@@ -15,6 +15,16 @@ A guardrail makes request decisions. A canary scores copies. Runtime probes dete
 The release provides a frozen TF-IDF guardrail and canary pair, deterministic runtime checks, verified recovery, and approved containment for offline research.
 
 The private kit contains the models, data, native runtime image, and reproduction instructions. Public Git contains source and aggregate evidence, not raw requests or model binaries.
+
+## Source and interfaces
+
+- [Website](web/veyra/): `npm ci && npm run dev` from `web/veyra/`.
+- [Evidence dashboard](frontend/): `npm ci && npm run dev` from `frontend/`.
+- [Python pipeline](src/): Install the pinned native environment, then use `veyra` or `veyra-replay`.
+- [Presentation source](presentation/): Slide content, voiceover, diagrams, and export scripts.
+- [Legacy classifier source](integration/legacy-classifier/): Separate archived implementation; not the selected backend.
+
+The older `safety-watch` commands remain compatibility aliases. Frozen study IDs, hashes, and release records remain unchanged.
 
 [Model identity](src/release/selected.json) · [Results](releases/baseline-20261017/summary.json) · [Native verification](releases/baseline-20261017/qualification.json)
 

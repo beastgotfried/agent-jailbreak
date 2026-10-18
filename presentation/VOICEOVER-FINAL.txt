@@ -1,0 +1,43 @@
+VEYRA — RECORD-READY VOICEOVER
+
+Read only the script below. Pause briefly between paragraphs.
+Target duration: 2 minutes 40 seconds to 2 minutes 55 seconds at 145–155 words per minute.
+Pronunciation: LinuxONE = “Linux One”; IBM Z = “I B M Zee”; s390x = “ess three ninety ex”.
+
+SCRIPT
+
+Your AI application has a guardrail. But what checks the guardrail?
+
+A deployment change can alter its scores without an obvious error. The output still looks valid, but the decision changes.
+
+That is the problem Veyra addresses.
+
+Veyra checks whether an AI guardrail still behaves like the baseline you approve. It detects runtime changes and verifies a response before activation.
+
+Here is the design. The guardrail decides whether to allow or refuse a request. A canary classifier scores the same request as an observer.
+
+Every sixteen requests, eight fixed probes check both models against their recorded baseline. Traffic warnings stay separate from runtime confirmations. A warning alone never authorizes a replacement.
+
+When the probes confirm a change, the system executes a candidate correction or reloads a trusted model backend. It verifies both score vectors and decisions on separate probes.
+
+Before activation, it verifies the candidate again. If no candidate passes, the service stays on hold. We distinguish containment from recovery.
+
+And IBM LinuxONE is where we execute this entire loop.
+
+We generate the study data, fit the models, run inference, detect runtime changes, verify responses, and audit results natively on s390x CPUs. No x86 emulation. No external model API.
+
+For our main demonstration, a controlled fault starts at request index one hundred twenty-eight. Probes confirm the change at one hundred forty-three. A verified correction activates at one hundred seventy-five.
+
+The final check covers one thousand requests. Both score vectors return to the baseline, with zero decision mismatches.
+
+Our benchmark has sixty paired episodes and thirty thousand seven hundred twenty request observations. Correct automatic decisions rise from seventy-five point six to eighty-one point seven percent.
+
+Harmful allows fall by eighty-seven point four percent. Runtime checks confirm all fifty-five injected incidents. Forty-five fault episodes restore service; five remain contained. Ten no-fault controls produce zero false runtime confirmations.
+
+These are controlled synthetic-study results, not production guarantees. Our score includes every request and gives holds zero correctness credit. We report safe refusals and inference cost beside those gains.
+
+We also reproduce the selected pipeline in a fresh native container with networking disabled. Every request score, decision, response action, and benchmark metric matches.
+
+That is our contribution: a measurable runtime response loop, with explicit approval and verified activation, demonstrated end to end on IBM LinuxONE.
+
+A guardrail needs a watcher. Every recovery needs evidence. That is Veyra.

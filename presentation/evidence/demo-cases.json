@@ -1,0 +1,177 @@
+{
+  "scale": {
+    "source_event_sha256": "4de396935a0bc7683ea122c1723c33c4c53fd0b80a3518af6dd7ef62d1c0bbaa",
+    "source_summary_sha256": "334dec1bd241a79cf7d0232da36c140309cb3284ca1548efa162f23a42dd7995",
+    "onsets": [
+      128
+    ],
+    "causal_detection": [
+      {
+        "confirmation_delay": 15,
+        "confirmed_index": 143,
+        "fault_index": 128,
+        "response_index": 175
+      }
+    ],
+    "responses": [
+      {
+        "index": 175,
+        "method": "paired_affine_correction",
+        "status": "applied",
+        "applied": true,
+        "attempts": [
+          {
+            "method": "paired_affine_correction",
+            "accepted": true,
+            "rejected": null
+          }
+        ]
+      }
+    ],
+    "restored_service": true,
+    "held": false,
+    "final_guardrail_error": 0.0,
+    "final_canary_error": 0.0,
+    "final_decision_mismatches": 0
+  },
+  "square": {
+    "source_event_sha256": "475397be9453546f1b8d952b833a94131456a78caeaea05d156ca37a3440a4a2",
+    "source_summary_sha256": "839d204fbefe7e21a82ae9179e7fd94c51f7096976071f26e9372a0a6c35cea5",
+    "onsets": [
+      128
+    ],
+    "causal_detection": [
+      {
+        "confirmation_delay": 15,
+        "confirmed_index": 143,
+        "fault_index": 128,
+        "response_index": 175
+      }
+    ],
+    "responses": [
+      {
+        "index": 175,
+        "method": "trusted_scorer_restart",
+        "status": "applied",
+        "applied": true,
+        "attempts": [
+          {
+            "method": "paired_affine_correction",
+            "accepted": null,
+            "rejected": "non_affine_score_change"
+          },
+          {
+            "method": "trusted_scorer_restart",
+            "accepted": true,
+            "rejected": null
+          }
+        ]
+      }
+    ],
+    "restored_service": true,
+    "held": false,
+    "final_guardrail_error": 0.0,
+    "final_canary_error": 0.0,
+    "final_decision_mismatches": 0
+  },
+  "persistent_restart_fault": {
+    "source_event_sha256": "3e464ccc19f1ade9500ae6e3f1ca09067723872837efb2f89eb2911fec30afe0",
+    "source_summary_sha256": "d433050239870ccfa23fda211dee3b87d055b80170ac09015732f104c91d39b4",
+    "onsets": [
+      128
+    ],
+    "causal_detection": [
+      {
+        "confirmation_delay": 15,
+        "confirmed_index": 143,
+        "fault_index": 128,
+        "response_index": 175
+      }
+    ],
+    "responses": [
+      {
+        "index": 175,
+        "method": null,
+        "status": "recovery_rejected",
+        "applied": false,
+        "attempts": [
+          {
+            "method": "paired_affine_correction",
+            "accepted": null,
+            "rejected": "insufficient_probe_score_range"
+          },
+          {
+            "method": "trusted_scorer_restart",
+            "accepted": false,
+            "rejected": null
+          }
+        ]
+      }
+    ],
+    "restored_service": false,
+    "held": true,
+    "final_guardrail_error": 0.8962028861045838,
+    "final_canary_error": 0.0,
+    "final_decision_mismatches": 614
+  },
+  "scale_then_constant": {
+    "source_event_sha256": "22861d56b699a78f78af9636b67a11991852b90d8c9c061f225c88a2d1f948b5",
+    "source_summary_sha256": "d950e7539ae32fc574e205cf9a2870e1a6dc7930b1ae76950a734b2ada2d1c00",
+    "onsets": [
+      128,
+      320
+    ],
+    "causal_detection": [
+      {
+        "confirmation_delay": 15,
+        "confirmed_index": 143,
+        "fault_index": 128,
+        "response_index": 175
+      },
+      {
+        "confirmation_delay": 15,
+        "confirmed_index": 335,
+        "fault_index": 320,
+        "response_index": 367
+      }
+    ],
+    "responses": [
+      {
+        "index": 175,
+        "method": "paired_affine_correction",
+        "status": "applied",
+        "applied": true,
+        "attempts": [
+          {
+            "method": "paired_affine_correction",
+            "accepted": true,
+            "rejected": null
+          }
+        ]
+      },
+      {
+        "index": 367,
+        "method": "trusted_scorer_restart",
+        "status": "applied",
+        "applied": true,
+        "attempts": [
+          {
+            "method": "paired_affine_correction",
+            "accepted": null,
+            "rejected": "insufficient_probe_score_range"
+          },
+          {
+            "method": "trusted_scorer_restart",
+            "accepted": true,
+            "rejected": null
+          }
+        ]
+      }
+    ],
+    "restored_service": true,
+    "held": false,
+    "final_guardrail_error": 0.0,
+    "final_canary_error": 0.0,
+    "final_decision_mismatches": 0
+  }
+}

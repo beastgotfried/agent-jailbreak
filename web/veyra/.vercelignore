@@ -1,0 +1,7 @@
+.env*
+node_modules
+.git
+.vercel
+dist
+tests
+build_dark_visuals.py

@@ -24,6 +24,8 @@ cache/
 *.pt
 *.jsonl
 *.csv
+# Public chart tables contain only aggregate results and score traces, never request text.
+!presentation/tables/*.csv
 *.parquet
 catalog*.json
 *model-cards*.json
@@ -44,6 +46,12 @@ dist/
 .pytest_cache/
 .pi/
 .ipynb_checkpoints/
+
+# Web dependencies and deployment state
+node_modules/
+.next/
+.vercel/
+.vercel.env*
 
 # OS
 .DS_Store

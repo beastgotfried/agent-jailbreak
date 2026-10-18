@@ -5,9 +5,9 @@ import styles from "./workspace-header.module.css";
 export function WorkspaceHeader({ activePage }: { activePage: "dashboard" | "pipeline" }) {
   return (
     <header className={styles.header}>
-      <Link className={styles.brand} href="/" aria-label="Integrity Watch dashboard">
+      <Link className={styles.brand} href="/" aria-label="Veyra dashboard">
         <span className={styles.brandMark}><Icon name="shield" /></span>
-        <span><strong>Integrity Watch</strong><small>SAFETY MONITOR</small></span>
+        <span><strong>Veyra</strong><small>SAFETY MONITOR</small></span>
       </Link>
       <nav className={styles.navigation} aria-label="Workspace">
         <Link className={activePage === "dashboard" ? styles.active : ""} href="/" aria-current={activePage === "dashboard" ? "page" : undefined}>Dashboard</Link>

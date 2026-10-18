@@ -1,0 +1,80 @@
+# Veyra — Video Script (under 3 minutes)
+
+Spoken words: ~420. Total runtime target: 2:50. On-screen text in brackets.
+Every number shown is from the frozen native studies. Nothing staged that didn't run.
+
+---
+
+**[0:00–0:10] HOOK**
+
+*Screen: black. White text types on:* "Your AI guardrail changed 30 seconds ago. Nothing told you."
+
+**VO:** "Your AI guardrail screens thousands of requests. But what happens when the guardrail itself silently changes? Its score still looks like a valid number. Nobody gets paged. Nobody knows."
+
+---
+
+**[0:10–0:30] THE PROBLEM**
+
+*Screen: split view — one request, left score 0.7426, right score 0.1856 after a deployment fault. One fixed threshold line. The decision flips.*
+
+**VO:** "A wrapper update rescales your guardrail's output. The request is identical. The model is identical. But the decision flips. Existing tools watch the AI model. Almost nobody watches the safety control."
+
+**[ON SCREEN]** Same request. Same model. Changed decision.
+
+---
+
+**[0:30–1:00] THE SOLUTION**
+
+*Screen: architecture diagram animates in — guardrail, canary, runtime probes, verified response.*
+
+**VO:** "Veyra adds a control loop around your guardrail. A canary scores every request in parallel. Every sixteen requests, matched probes check both models against an approved baseline. If the runtime output changed, Veyra knows — in fifteen requests — not in tomorrow's report."
+
+**[ON SCREEN]** Guardrail decides. Canary observes. Probes verify.
+
+---
+
+**[1:00–1:45] THE DEMO**
+
+*Screen: live terminal on IBM LinuxONE. Show `safety-watch inspect` verifying frozen model hashes. Then the recovery chart: fault at 128, confirmation at 143, verified correction at 175.*
+
+**VO:** "Watch it work — natively on IBM LinuxONE, CPU only, no external API. At request 128, we inject a fault. At 143, matched probes confirm the change. At 175, a verified correction activates — after running the actual candidate and re-checking both models. And if no candidate passes verification?"
+
+*Screen: persistent-fault trace. Service state flips to HELD.*
+
+**VO:** "The service holds. Explicitly. We never call containment a recovery."
+
+**[ON SCREEN]** Fault 128 → Confirmed 143 → Verified recovery 175 · or HELD.
+
+---
+
+**[1:45–2:20] THE RESULTS**
+
+*Screen: outcome chart animates — 75.64% → 81.69%, harmful allows 29.9% → 3.76%, 55/55, 45/50, 0/10.*
+
+**VO:** "Across sixty paired episodes — thirty thousand requests — the monitored system lifts correct automatic decisions from seventy-five point six to eighty-one point seven percent, and cuts harmful allows by eighty-seven percent. It confirmed all fifty-five injected faults, restored forty-five fault episodes, held five, and produced zero false confirmations in healthy controls. Every request counts — holds included."
+
+**[ON SCREEN]** 30,720 requests · 55/55 confirmed · 45 restored · 5 held · 0 false alarms
+
+---
+
+**[2:20–2:50] WHY LINUXONE + CLOSE**
+
+*Screen: LinuxONE badge. Platform facts fade in: s390x · big-endian · CPU-only · 292 tests · fresh offline container · reproduction matches every decision.*
+
+**VO:** "All of it runs natively on IBM LinuxONE — s390x, big-endian, CPU-only. Training, inference, monitoring, recovery, audit. We reproduced the entire pipeline in a fresh container with networking disabled — every score, every decision, every metric matched. Enterprise AI runs on this platform. Now its safety controls have a watchdog here too."
+
+*Screen: tagline.*
+
+**VO:** "A guardrail needs a watcher. On LinuxONE, we made that watcher measurable — and every recovery verifiable."
+
+**[ON SCREEN]** Veyra — Observe change. Verify recovery. Keep control.
+
+---
+
+## Filming checklist
+
+- Record the terminal segments natively on LinuxONE (`s390x`). Show `platform.machine()` output for proof.
+- Use `scale` / seed 0 as the main trace; `persistent_restart_fault` / seed 0 for the hold.
+- Show request indices and hashes, never raw harmful prompt text.
+- If a live replay overruns, cut to the recorded hash-verified trace — label it "recorded native replay."
+- End cards: repo link + "IBM Z Datathon".

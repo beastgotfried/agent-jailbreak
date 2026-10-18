@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1152pt" height="648pt" viewBox="0 0 1152 648" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-18T07:19:30.572073</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.9.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 648 
+L 1152 648 
+L 1152 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 49.5936 602.92512 
+L 1102.4064 602.92512 
+Q 1122.1056 602.92512 1122.1056 594.06048 
+L 1122.1056 125.21952 
+Q 1122.1056 116.35488 1102.4064 116.35488 
+L 49.5936 116.35488 
+Q 29.8944 116.35488 29.8944 125.21952 
+L 29.8944 594.06048 
+Q 29.8944 602.92512 49.5936 602.92512 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #edf5ff; stroke: #0f62fe; stroke-width: 1.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 73.6704 293.64768 
+L 284.8896 293.64768 
+Q 298.0224 293.64768 298.0224 287.73792 
+L 298.0224 227.16288 
+Q 298.0224 221.25312 284.8896 221.25312 
+L 73.6704 221.25312 
+Q 60.5376 221.25312 60.5376 227.16288 
+L 60.5376 287.73792 
+Q 60.5376 293.64768 73.6704 293.64768 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #ffffff; stroke: #a6c8ff; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 336.3264 293.64768 
+L 547.5456 293.64768 
+Q 560.6784 293.64768 560.6784 287.73792 
+L 560.6784 227.16288 
+Q 560.6784 221.25312 547.5456 221.25312 
+L 336.3264 221.25312 
+Q 323.1936 221.25312 323.1936 227.16288 
+L 323.1936 287.73792 
+Q 323.1936 293.64768 336.3264 293.64768 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #ffffff; stroke: #a6c8ff; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 598.9824 293.64768 
+L 810.2016 293.64768 
+Q 823.3344 293.64768 823.3344 287.73792 
+L 823.3344 227.16288 
+Q 823.3344 221.25312 810.2016 221.25312 
+L 598.9824 221.25312 
+Q 585.8496 221.25312 585.8496 227.16288 
+L 585.8496 287.73792 
+Q 585.8496 293.64768 598.9824 293.64768 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #ffffff; stroke: #a6c8ff; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 861.6384 293.64768 
+L 1072.8576 293.64768 
+Q 1085.9904 293.64768 1085.9904 287.73792 
+L 1085.9904 227.16288 
+Q 1085.9904 221.25312 1072.8576 221.25312 
+L 861.6384 221.25312 
+Q 848.5056 221.25312 848.5056 227.16288 
+L 848.5056 287.73792 
+Q 848.5056 293.64768 861.6384 293.64768 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #ffffff; stroke: #a6c8ff; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 300.022699 257.69664 
+Q 309.513565 257.69664 316.99197 257.69664 
+" clip-path="url(#p0a571fae82)" style="fill: none; stroke: #0f62fe; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 311.39197 254.89664 
+L 316.99197 257.69664 
+L 311.39197 260.49664 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #0f62fe; stroke: #0f62fe; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 562.678699 257.69664 
+Q 572.169565 257.69664 579.64797 257.69664 
+" clip-path="url(#p0a571fae82)" style="fill: none; stroke: #0f62fe; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 574.04797 254.89664 
+L 579.64797 257.69664 
+L 574.04797 260.49664 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #0f62fe; stroke: #0f62fe; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 825.334699 257.69664 
+Q 834.825565 257.69664 842.30397 257.69664 
+" clip-path="url(#p0a571fae82)" style="fill: none; stroke: #0f62fe; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 836.70397 254.89664 
+L 842.30397 257.69664 
+L 836.70397 260.49664 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #0f62fe; stroke: #0f62fe; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 707.328 198.136799 
+Q 707.328 208.201543 707.328 216.253826 
+" clip-path="url(#p0a571fae82)" style="fill: none; stroke-dasharray: 6.66,2.88; stroke-dashoffset: 0; stroke: #0f62fe; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 710.128 210.653826 
+L 707.328 216.253826 
+L 704.528 210.653826 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #0f62fe; stroke-dasharray: 6.66,2.88; stroke-dashoffset: 0; stroke: #0f62fe; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 73.6704 429.07968 
+L 284.8896 429.07968 
+Q 298.0224 429.07968 298.0224 423.16992 
+L 298.0224 360.13248 
+Q 298.0224 354.22272 284.8896 354.22272 
+L 73.6704 354.22272 
+Q 60.5376 354.22272 60.5376 360.13248 
+L 60.5376 423.16992 
+Q 60.5376 429.07968 73.6704 429.07968 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #ffffff; stroke: #a6c8ff; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 336.3264 429.07968 
+L 547.5456 429.07968 
+Q 560.6784 429.07968 560.6784 423.16992 
+L 560.6784 360.13248 
+Q 560.6784 354.22272 547.5456 354.22272 
+L 336.3264 354.22272 
+Q 323.1936 354.22272 323.1936 360.13248 
+L 323.1936 423.16992 
+Q 323.1936 429.07968 336.3264 429.07968 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #ffffff; stroke: #a6c8ff; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 598.9824 429.07968 
+L 810.2016 429.07968 
+Q 823.3344 429.07968 823.3344 423.16992 
+L 823.3344 360.13248 
+Q 823.3344 354.22272 810.2016 354.22272 
+L 598.9824 354.22272 
+Q 585.8496 354.22272 585.8496 360.13248 
+L 585.8496 423.16992 
+Q 585.8496 429.07968 598.9824 429.07968 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #ffffff; stroke: #a6c8ff; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 861.6384 429.07968 
+L 1072.8576 429.07968 
+Q 1085.9904 429.07968 1085.9904 423.16992 
+L 1085.9904 360.13248 
+Q 1085.9904 354.22272 1072.8576 354.22272 
+L 861.6384 354.22272 
+Q 848.5056 354.22272 848.5056 360.13248 
+L 848.5056 423.16992 
+Q 848.5056 429.07968 861.6384 429.07968 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #d9fbfb; stroke: #007d79; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 300.022699 392.14368 
+Q 309.513565 392.14368 316.99197 392.14368 
+" clip-path="url(#p0a571fae82)" style="fill: none; stroke: #007d79; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 311.39197 389.34368 
+L 316.99197 392.14368 
+L 311.39197 394.94368 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #007d79; stroke: #007d79; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 562.678699 392.14368 
+Q 572.169565 392.14368 579.64797 392.14368 
+" clip-path="url(#p0a571fae82)" style="fill: none; stroke: #007d79; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 574.04797 389.34368 
+L 579.64797 392.14368 
+L 574.04797 394.94368 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #007d79; stroke: #007d79; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 825.334699 392.14368 
+Q 834.825565 392.14368 842.30397 392.14368 
+" clip-path="url(#p0a571fae82)" style="fill: none; stroke: #007d79; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 836.70397 389.34368 
+L 842.30397 392.14368 
+L 836.70397 394.94368 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #007d79; stroke: #007d79; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 707.328 352.713298 
+Q 707.328 325.163857 707.328 299.626877 
+" clip-path="url(#p0a571fae82)" style="fill: none; stroke: #007d79; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 704.528 305.226877 
+L 707.328 299.626877 
+L 710.128 305.226877 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #007d79; stroke: #007d79; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 180.9216 352.714801 
+Q 180.9216 341.171627 180.9216 331.640914 
+" clip-path="url(#p0a571fae82)" style="fill: none; stroke-dasharray: 6.66,2.88; stroke-dashoffset: 0; stroke: #0f62fe; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 178.1216 337.240914 
+L 180.9216 331.640914 
+L 183.7216 337.240914 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #0f62fe; stroke-dasharray: 6.66,2.88; stroke-dashoffset: 0; stroke: #0f62fe; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 182.921741 327.6288 
+Q 411.293642 327.6288 637.653081 327.6288 
+" clip-path="url(#p0a571fae82)" style="fill: none; stroke-dasharray: 6.66,2.88; stroke-dashoffset: 0; stroke: #0f62fe; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 632.053081 324.8288 
+L 637.653081 327.6288 
+L 632.053081 330.4288 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #0f62fe; stroke-dasharray: 6.66,2.88; stroke-dashoffset: 0; stroke: #0f62fe; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 641.664 325.632008 
+Q 641.664 311.623208 641.664 299.626869 
+" clip-path="url(#p0a571fae82)" style="fill: none; stroke-dasharray: 6.66,2.88; stroke-dashoffset: 0; stroke: #0f62fe; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 638.864 305.226869 
+L 641.664 299.626869 
+L 644.464 305.226869 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #0f62fe; stroke-dasharray: 6.66,2.88; stroke-dashoffset: 0; stroke: #0f62fe; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 73.6704 549.73728 
+L 547.5456 549.73728 
+Q 560.6784 549.73728 560.6784 543.82752 
+L 560.6784 480.79008 
+Q 560.6784 474.88032 547.5456 474.88032 
+L 73.6704 474.88032 
+Q 60.5376 474.88032 60.5376 480.79008 
+L 60.5376 543.82752 
+Q 60.5376 549.73728 73.6704 549.73728 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #f4f4f4; stroke: #c6c6c6; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 598.9824 549.73728 
+L 1072.8576 549.73728 
+Q 1085.9904 549.73728 1085.9904 543.82752 
+L 1085.9904 480.79008 
+Q 1085.9904 474.88032 1072.8576 474.88032 
+L 598.9824 474.88032 
+Q 585.8496 474.88032 585.8496 480.79008 
+L 585.8496 543.82752 
+Q 585.8496 549.73728 598.9824 549.73728 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #f4f4f4; stroke: #c6c6c6; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 707.328 433.05015 
+Q 707.328 451.980363 707.328 468.898114 
+" clip-path="url(#p0a571fae82)" style="fill: none; stroke-dasharray: 6.66,2.88; stroke-dashoffset: 0; stroke: #8d8d8d; stroke-width: 1.8; stroke-linecap: round"/>
+    <path d="M 710.128 463.298114 
+L 707.328 468.898114 
+L 704.528 463.298114 
+z
+" clip-path="url(#p0a571fae82)" style="fill: #8d8d8d; stroke-dasharray: 6.66,2.88; stroke-dashoffset: 0; stroke: #8d8d8d; stroke-width: 1.8; stroke-linecap: round"/>
+   </g>
+   <g id="text_1">
+    <text style="fill: #0f62fe; font: 600 16px 'IBM Plex Sans'; text-anchor: start" x="61.632" y="140.4864" transform="rotate(-0 61.632 140.4864)">IBM LINUXONE  /  LINUX s390x  /  CPU ONLY</text>
+   </g>
+   <g id="text_2">
+    <text style="fill: #393939; font: 13px 'IBM Plex Sans'; text-anchor: end" x="1090.368" y="140.4864" transform="rotate(-0 1090.368 140.4864)">Offline operator approval</text>
+   </g>
+   <g id="text_3">
+    <g id="patch_25">
+     <path d="M 400.807734 196.3796 
+L 751.192266 196.3796 
+L 751.192266 166.2196 
+L 400.807734 166.2196 
+z
+" style="fill: #ffffff; stroke: #a6c8ff; stroke-linejoin: miter"/>
+    </g>
+    <text style="fill: #161616; font: 13px 'IBM Plex Sans'; text-anchor: middle" x="576" y="184.8096" transform="rotate(-0 576 184.8096)">Veyra: frozen models, policy, and disjoint labelled probes</text>
+   </g>
+   <g id="text_4">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: middle" x="179.28" y="251.132832" transform="rotate(-0 179.28 251.132832)">Ordered requests</text>
+   </g>
+   <g id="text_5">
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'; text-anchor: middle" x="179.28" y="274.517208" transform="rotate(-0 179.28 274.517208)">CLI / Python replay</text>
+   </g>
+   <g id="text_6">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: middle" x="441.936" y="251.180332" transform="rotate(-0 441.936 251.180332)">Supervisor</text>
+   </g>
+   <g id="text_7">
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'; text-anchor: middle" x="441.936" y="274.517208" transform="rotate(-0 441.936 274.517208)">Gate + active backend</text>
+   </g>
+   <g id="text_8">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: middle" x="704.592" y="251.180332" transform="rotate(-0 704.592 251.180332)">Guardrail + canary</text>
+   </g>
+   <g id="text_9">
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'; text-anchor: middle" x="704.592" y="274.517208" transform="rotate(-0 704.592 274.517208)">Actual model inference</text>
+   </g>
+   <g id="text_10">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: middle" x="967.248" y="251.180332" transform="rotate(-0 967.248 251.180332)">Frozen policy</text>
+   </g>
+   <g id="text_11">
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'; text-anchor: middle" x="967.248" y="274.448028" transform="rotate(-0 967.248 274.448028)">Guardrail decision / agent stub</text>
+   </g>
+   <g id="text_12">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: middle" x="179.28" y="384.939648" transform="rotate(-0 179.28 384.939648)">RuntimeWatch</text>
+   </g>
+   <g id="text_13">
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'" transform="translate(132.40043 402.128112)">8 matched probes</text>
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'" transform="translate(132.899063 416.342112)">every 16 requests</text>
+   </g>
+   <g id="text_14">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: middle" x="441.936" y="384.747148" transform="rotate(-0 441.936 384.747148)">RecoveryManager</text>
+   </g>
+   <g id="text_15">
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'" transform="translate(396.166 402.128112)">Affine candidate /</text>
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'" transform="translate(381.974281 416.342112)">trusted backend reload</text>
+   </g>
+   <g id="text_16">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: middle" x="704.592" y="384.987148" transform="rotate(-0 704.592 384.987148)">Verify + activate</text>
+   </g>
+   <g id="text_17">
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'" transform="translate(635.926219 402.058932)">Both models + fresh check</text>
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'" transform="translate(635.907352 416.272932)">Approval + single-use plan</text>
+   </g>
+   <g id="text_18">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: middle" x="967.248" y="384.987148" transform="rotate(-0 967.248 384.987148)">Explicit hold</text>
+   </g>
+   <g id="text_19">
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'" transform="translate(905.174953 402.128112)">No verified replacement</text>
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'" transform="translate(902.471555 416.342112)">Full check before release</text>
+   </g>
+   <g id="text_20">
+    <text style="fill: #007d79; font: 10px 'IBM Plex Sans'; text-anchor: start" x="723.744" y="327.13632" transform="rotate(-0 723.744 327.13632)">Verified switch</text>
+   </g>
+   <g id="text_21">
+    <text style="fill: #0f62fe; font: 10px 'IBM Plex Sans'; text-anchor: middle" x="368.064" y="319.25664" transform="rotate(-0 368.064 319.25664)">Matched probe execution</text>
+   </g>
+   <g id="text_22">
+    <text style="fill: #161616; font: 600 15px 'IBM Plex Sans'; text-anchor: middle" x="310.608" y="505.371779" transform="rotate(-0 310.608 505.371779)">Separate traffic study</text>
+   </g>
+   <g id="text_23">
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'" transform="translate(168.153547 522.647353)">Source-bound score events → signed gap → KS warning</text>
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'" transform="translate(221.127219 536.999712)">Warning has no response authority</text>
+   </g>
+   <g id="text_24">
+    <text style="fill: #161616; font: 600 15px 'IBM Plex Sans'; text-anchor: middle" x="835.92" y="505.327248" transform="rotate(-0 835.92 505.327248)">Local evidence</text>
+   </g>
+   <g id="text_25">
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'" transform="translate(693.983047 522.785712)">JSON / JSONL events, receipts and SHA-256 manifests</text>
+    <text style="fill: #393939; font: 11.5px 'IBM Plex Sans'" transform="translate(691.127813 536.999712)">In-memory runtime state; no broker or database service</text>
+   </g>
+   <g id="text_26">
+    <text style="fill: #525252; font: 11px 'IBM Plex Sans'; text-anchor: start" x="67.104" y="578.7936" transform="rotate(-0 67.104 578.7936)">Current interfaces: CLI and Python API. Enterprise web console and connectors remain roadmap items.</text>
+   </g>
+  </g>
+  <g id="text_27">
+   <text style="fill: #161616; font: 600 29px 'IBM Plex Sans'; text-anchor: start" x="63.36" y="56.341641" transform="rotate(-0 63.36 56.341641)">Veyra: guardrail integrity, executed natively.</text>
+  </g>
+  <g id="text_28">
+   <text style="fill: #525252; font: 14px 'IBM Plex Sans'; text-anchor: start" x="63.36" y="84.78" transform="rotate(-0 63.36 84.78)">Implemented architecture · Selected runtime plus a separate traffic-study path</text>
+  </g>
+  <g id="text_29">
+   <text style="fill: #6f6f6f; font: 10px 'IBM Plex Sans'; text-anchor: start" x="63.36" y="631.8" transform="rotate(-0 63.36 631.8)">Source: release 8a86ce0 · SupervisedRuntime / RuntimeWatch / RecoveryManager / DisagreementMonitor</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p0a571fae82">
+   <rect x="28.8" y="113.4" width="1094.4" height="492.48"/>
+  </clipPath>
+ </defs>
+</svg>

@@ -18,7 +18,7 @@ export function DashboardScreen() {
         <main className={styles.content}>
           <section className={styles.pageIntro}>
             <div>
-              <div className={styles.overline}>INTEGRITY WATCH <span>·</span> RELEASE EVIDENCE</div>
+              <div className={styles.overline}>VEYRA <span>·</span> RELEASE EVIDENCE</div>
               <h1>Safety monitor baseline</h1>
               <p>Paired replay summary · {report.studyId}</p>
             </div>
