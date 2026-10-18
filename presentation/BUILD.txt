@@ -16,3 +16,11 @@ The IBM Plex font license appears in assets/FONT-LICENSE.txt.
 
 The original private source snapshots and study archives keep their historical names and hashes.
 The public source retains selected aggregate evidence only.
+
+Generate the four-diagram PDF and PNG images with:
+
+python3 build_architecture_diagrams.py
+
+This tool uses ReportLab, Pillow, pypdf, and Poppler pdftoppm.
+The exports appear in web/veyra/public/resources/ relative to the repository root.
+The tool does not fit a model or execute classifier inference.

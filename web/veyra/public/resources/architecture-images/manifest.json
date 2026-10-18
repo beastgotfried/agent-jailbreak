@@ -1,0 +1,55 @@
+{
+  "product": "Veyra",
+  "pdf": "Veyra-Architecture-and-Flowcharts.pdf",
+  "pdf_sha256": "46f7bcf06d81fd21749df101cc87c741b59365f3990cda0f07ead1e97081c8a5",
+  "pages": 4,
+  "release_id": "safety-watch-tfidf-20261017",
+  "scope": "Architecture documentation only. No model fit, inference, or qualification occurs.",
+  "source_text": "https://veyra-ibmz.vercel.app/resources/Veyra-Architecture-and-Flowcharts.txt",
+  "diagrams": [
+    {
+      "number": 1,
+      "slug": "01-system-overview",
+      "title": "System overview",
+      "node_count": 8,
+      "minimum_node_font_pt": 15.75,
+      "file": "01-system-overview.png",
+      "width": 2667,
+      "height": 1500,
+      "sha256": "c12cd7d48a646c57bb00c431b7e80a62cb7cf36a857fe6709d430a9b5be6da71"
+    },
+    {
+      "number": 2,
+      "slug": "02-request-flow",
+      "title": "Request decision flow",
+      "node_count": 9,
+      "minimum_node_font_pt": 17.0,
+      "file": "02-request-flow.png",
+      "width": 2667,
+      "height": 1500,
+      "sha256": "bacb1b7849cf5e09ecc5a046fcfb73cbd25ec11233d323daba0497f8e155952a"
+    },
+    {
+      "number": 3,
+      "slug": "03-activation-gate",
+      "title": "Fresh verification before activation",
+      "node_count": 6,
+      "minimum_node_font_pt": 16.0,
+      "file": "03-activation-gate.png",
+      "width": 2667,
+      "height": 1500,
+      "sha256": "e26960a5b39f682203096325b03cc718971ee01c7646ab9f53f62478296b3337"
+    },
+    {
+      "number": 4,
+      "slug": "04-data-model-lifecycle",
+      "title": "Data and model lifecycle",
+      "node_count": 7,
+      "minimum_node_font_pt": 16.0,
+      "file": "04-data-model-lifecycle.png",
+      "width": 2667,
+      "height": 1500,
+      "sha256": "ef2f2e9c63f1379f9974d2e07a8df48111161adbd922a058ad66a0b834bc0f0e"
+    }
+  ]
+}
