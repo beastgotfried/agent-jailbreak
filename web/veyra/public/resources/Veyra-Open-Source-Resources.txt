@@ -1,0 +1,398 @@
+Veyra - Open-source resources and attribution
+
+Project: https://github.com/beastgotfried/agent-jailbreak
+Website: https://veyra-ibmz.vercel.app/
+Date: 18 October 2026
+
+This list covers direct software, data, models, and research resources.
+It is not a complete list of transitive dependencies.
+Public datasets do not all have unrestricted reuse rights.
+The selected TF-IDF models use the project synthetic catalogue.
+External datasets below do not fit the selected frozen model weights.
+Archived comparisons and reference-only resources remain separate.
+
+Native runtime and development tools
+
+Python (3.12.15)
+Licence: PSF-2.0; component notices apply
+Use: Native study execution and the release CLI.
+https://www.python.org/
+
+NumPy (2.0.2)
+Licence: BSD-3-Clause; bundled notices apply
+Use: Numeric arrays, scores, and reproducible state checks.
+https://github.com/numpy/numpy
+
+SciPy (1.13.1)
+Licence: BSD-3-Clause
+Use: Scientific routines and independent KS statistic checks.
+https://github.com/scipy/scipy
+
+scikit-learn (1.9.0)
+Licence: BSD-3-Clause
+Use: TF-IDF features, logistic regression, and evaluation metrics.
+https://github.com/scikit-learn/scikit-learn
+
+pandas (3.0.6)
+Licence: BSD-3-Clause
+Use: Source tables and structured data preparation.
+https://github.com/pandas-dev/pandas
+
+joblib (1.6.0)
+Licence: BSD-3-Clause
+Use: Frozen estimator serialization and verified model load.
+https://github.com/joblib/joblib
+
+pytest (9.1.1)
+Licence: MIT
+Use: Native tests and neutral fixture tests.
+https://github.com/pytest-dev/pytest
+
+PyTorch (2.11.0+cpu)
+Licence: BSD-3-Clause
+Use: Separate neural and semantic-model experiments; not the selected TF-IDF runtime.
+https://github.com/pytorch/pytorch
+
+Transformers (5.19.0)
+Licence: Apache-2.0
+Use: BERT-family models in separate native experiments.
+https://github.com/huggingface/transformers
+
+Tokenizers (0.23.2)
+Licence: Apache-2.0
+Use: Text tokens for separate BERT-family experiments.
+https://github.com/huggingface/tokenizers
+
+Hugging Face Hub (1.33.0 native / 2.2.0 ASR)
+Licence: Apache-2.0
+Use: Dataset and pretrained-asset acquisition before offline execution.
+https://github.com/huggingface/huggingface_hub
+
+JupyterLab (4.6.4)
+Licence: BSD-3-Clause
+Use: Private native workspace; not a public product API.
+https://github.com/jupyterlab/jupyterlab
+
+Pretrained models
+
+BERT-tiny: google/bert_uncased_L-2_H-128_A-2
+Licence: Apache-2.0
+Use: Archived neural comparison. It does not replace the selected TF-IDF model.
+Recorded revision: 30b0a37ccaaa32f332884b96992754e246e48c5f
+https://huggingface.co/google/bert_uncased_L-2_H-128_A-2
+
+all-MiniLM-L6-v2
+Licence: Apache-2.0
+Use: Native cost screen and separate semantic-head development. It is not the selected release.
+Recorded revision: 1110a243fdf4706b3f48f1d95db1a4f5529b4d41
+https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
+
+OpenAI Whisper / faster-whisper-small.en (small.en)
+Licence: MIT
+Use: Final word-timed captions. OpenAI supplies the model; SYSTRAN supplies the CTranslate2
+conversion.
+Recorded revision: d1d751a5f8271d482d14ca55d9e2deeebbae577f
+https://huggingface.co/Systran/faster-whisper-small.en
+https://github.com/openai/whisper
+
+OpenAI Whisper / faster-whisper-base.en (base.en)
+Licence: MIT
+Use: Initial caption draft only. The final transcript uses small.en.
+Recorded revision: 3d3d5dee26484f91867d81cb899cfcf72b96be6c
+https://huggingface.co/Systran/faster-whisper-base.en
+https://github.com/openai/whisper
+
+Research references
+
+Cheap Canaries — Jun Wen Leong
+Licence: Code: MIT. Data, figures, and documentation: CC-BY-4.0.
+Use: Prior art for classifier/canary disagreement, KS, and conformal adaptation. Veyra does not
+claim the upstream results.
+Recorded revision: 90726d9d4d281373e6729a0319d50e9c32566c59
+https://github.com/junwenleong/safety-classifier-shift-monitor
+https://arxiv.org/abs/2606.11949
+
+Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift (Rabanser, Günnemann, and Lipton; NeurIPS 2019)
+Licence: Research citation; see the publication terms.
+Use: Reference for dataset-shift diagnosis and the limits of detector interpretation.
+https://arxiv.org/abs/1810.11953
+
+Detecting and Correcting for Label Shift with Black Box Predictors (Lipton, Wang, and Smola; ICML 2018)
+Licence: Research citation; see the publication terms.
+Use: Reference for label-shift assumptions. Veyra does not implement BBSE in the selected
+release.
+https://arxiv.org/abs/1802.03916
+
+SciPy ks_2samp reference (SciPy 1.13.1)
+Licence: BSD-3-Clause software; documentation terms apply.
+Use: Independent comparison for the implemented empirical KS statistic.
+https://docs.scipy.org/doc/scipy-1.13.1/reference/generated/scipy.stats.ks_2samp.html
+
+Public datasets and source records
+
+lmsys/toxic-chat
+Licence: CC-BY-NC-4.0
+Use: Original real-data classifier fit and source pools; exposed external regression for the
+selected release. Not selected-model fit data.
+Recorded revision: 29df8e4dba60e1f4af4b4075c0705c5b313548a8
+Noncommercial restriction. Public access does not grant unrestricted commercial reuse.
+https://huggingface.co/datasets/lmsys/toxic-chat
+
+Norrrrrrr/WAInjectBench
+Licence: Licence not verified at the recorded revision.
+Use: Original safe/attack-routing pools and reference-mixture diagnosis. Routing labels do not
+establish universal harm labels.
+Recorded revision: 001df8e431969089812df6694dfa607fe7be79e8
+This attribution list does not grant reuse or redistribution permission.
+https://huggingface.co/datasets/Norrrrrrr/WAInjectBench
+
+JailbreakBench/JBB-Behaviors
+Licence: MIT
+Use: Original prompt-pool construction, with official Goal requests rather than response
+targets. Not selected-model fit data.
+Recorded revision: 886acc352a31533ffbcf4ef22c744658688086fc
+https://huggingface.co/datasets/JailbreakBench/JBB-Behaviors
+
+walledai/JailbreakBench
+Licence: No licence recorded at the used revision.
+Use: Mirror and duplicate audit in the original pool workflow. Its duplicate rows add no
+independent requests.
+Recorded revision: 119a73e012e44035957c25a483f7f721bb348839
+This attribution list does not grant reuse or redistribution permission.
+https://huggingface.co/datasets/walledai/JailbreakBench
+
+AlignmentResearch/StrongREJECT
+Licence: No licence recorded at the used revision.
+Use: Original attack-routing prompt pool. Not selected-model fit data.
+Recorded revision: 9f4b3397bda985e1ac6dadb655e9ca3a17974144
+This attribution list does not grant reuse or redistribution permission.
+https://huggingface.co/datasets/AlignmentResearch/StrongREJECT
+
+centerforaisafety/HarmBench (GitHub)
+Licence: MIT
+Use: Eligible standard requests in the original attack-routing pool. Not selected-model fit
+data.
+Recorded revision: main@2026-10-16
+The record pins file bytes and the acquisition date, not an immutable Git commit.
+https://github.com/centerforaisafety/HarmBench
+
+XSTest
+Licence: CC-BY-4.0
+Use: Original recovery verification and evaluation; exposed external regression for the
+selected release.
+Recorded revision: d7bb5bd738c1fcbc36edd83d5e7d1b71a3e2d84d
+https://github.com/paul-rottger/xstest
+https://doi.org/10.18653/v1/2024.naacl-long.301
+
+Dolly 15k
+Licence: CC-BY-SA-3.0
+Use: Instruction-only, unlabelled traffic-profile study. It is not a labelled safety benchmark
+or selected-model fit source.
+Recorded revision: 5f9bfba300181fb35854d64c8bf1180ea75105f7
+The dataset uses CC-BY-SA-3.0. Do not substitute the repository code licence.
+https://github.com/databrickslabs/dolly
+
+OpenAssistant OASST1
+Licence: Apache-2.0
+Use: Acquired source data and schema checks only. The proposed second-profile qualification
+does not run.
+Recorded revision: fdf72ae0827c1cda404aff25b6603abec9e3399b
+https://huggingface.co/datasets/OpenAssistant/oasst1
+
+NVIDIA Aegis AI Content Safety Dataset 2.0
+Licence: CC-BY-4.0
+Use: Separate bounded development study with human prompt labels. It does not alter the
+selected release.
+Recorded revision: d86bb8bedff51d25ac834ab7838f1cc61acb7a2c
+https://huggingface.co/datasets/nvidia/Aegis-AI-Content-Safety-Dataset-2.0
+
+Website, dashboard, and fonts
+
+React (19.3.1 website / 19.2.8 dashboard)
+Licence: MIT
+Use: Public website and read-only evidence dashboard.
+https://github.com/facebook/react
+
+Vite (7.3.7)
+Licence: MIT
+Use: Website development server and production assets.
+https://github.com/vitejs/vite
+
+Next.js (16.3.8)
+Licence: MIT
+Use: Separate read-only dashboard; not live intake.
+https://github.com/vercel/next.js
+
+TypeScript (5.9.3)
+Licence: Apache-2.0
+Use: Dashboard source types and compiler checks.
+https://github.com/microsoft/TypeScript
+
+ESLint (9.39.5)
+Licence: MIT
+Use: Dashboard source checks; the audit records the development-only braces advisory.
+https://github.com/eslint/eslint
+
+Node.js (26.9.0 local)
+Licence: MIT; bundled notices apply
+Use: Local web toolchain. Hosted build environments can use a different Node version.
+https://github.com/nodejs/node
+
+npm CLI (11.19.1 local)
+Licence: Artistic-2.0
+Use: Package installation, lock files, and dependency audits.
+https://github.com/npm/cli
+
+IBM Plex Sans and IBM Plex Mono (Project-bundled font files)
+Licence: SIL Open Font License 1.1
+Use: Self-hosted website fonts, charts, and documents. Copyright 2017 IBM Corp.; reserved font
+name Plex.
+https://github.com/IBM/plex
+https://openfontlicense.org/open-font-license-official-text/
+
+Presentation, video, and audit tools
+
+NumPy (2.5.1 media / 2.5.4 ASR)
+Licence: BSD-3-Clause core; bundled notices apply
+Use: Local audio arrays and original generated music. Native model NumPy remains 2.0.2.
+https://github.com/numpy/numpy
+
+Pillow (11.0.0)
+Licence: MIT-CMU
+Use: Video frame composition and visual previews.
+https://github.com/python-pillow/Pillow
+
+Matplotlib (3.9.2)
+Licence: Matplotlib licence; PSF-derived
+Use: Evidence charts and exported numeric graphics.
+https://github.com/matplotlib/matplotlib
+
+ReportLab (4.2.5)
+Licence: BSD-style; see upstream licence
+Use: Pitch documents and this attribution PDF.
+https://www.reportlab.com/opensource/
+
+python-pptx (1.0.2)
+Licence: MIT
+Use: Generated presentation source and PowerPoint export tools.
+https://github.com/scanny/python-pptx
+
+pypdf (5.1.0)
+Licence: BSD-3-Clause
+Use: PDF page counts, text checks, and file validation.
+https://github.com/py-pdf/pypdf
+
+Python-Markdown (3.10.3)
+Licence: BSD-3-Clause
+Use: Presentation content to HTML.
+https://github.com/Python-Markdown/markdown
+
+lxml (6.1.1)
+Licence: BSD-3-Clause; dependency notices apply
+Use: PowerPoint XML repairs with preserved layout.
+https://github.com/lxml/lxml
+
+PyArrow (26.0.0)
+Licence: Apache-2.0
+Use: Local lossless Parquet conversion. The native optional converter tests skip without
+PyArrow.
+https://github.com/apache/arrow
+
+FFmpeg / ffprobe (9.0.2)
+Licence: GPL-3.0-or-later for the used build
+Use: Video, audio, codec metadata, and complete decode checks. The build enables GPL and
+version-3 features.
+https://ffmpeg.org/
+https://ffmpeg.org/legal.html
+
+LibreOffice (26.2.5.2)
+Licence: MPL-2.0; component notices apply
+Use: PowerPoint to PDF export.
+https://www.libreoffice.org/
+https://www.libreoffice.org/about-us/licenses/
+
+Poppler (26.08.0)
+Licence: GPL family; see component notices
+Use: pdftoppm and pdftotext for PDF previews and text inspection.
+https://poppler.freedesktop.org/
+
+Tesseract (5.5.3)
+Licence: Apache-2.0
+Use: OCR checks for rendered slide labels.
+https://github.com/tesseract-ocr/tesseract
+
+Playwright (1.64.1)
+Licence: Apache-2.0
+Use: Actual website captures and responsive browser checks.
+https://github.com/microsoft/playwright
+
+axe-core / axe-core Playwright (4.14.0)
+Licence: MPL-2.0
+Use: Automated accessibility checks. These checks do not establish certification.
+https://github.com/dequelabs/axe-core
+https://github.com/dequelabs/axe-core-npm
+
+Faster-Whisper (1.2.1)
+Licence: MIT
+Use: Local word-timed speech transcription.
+https://github.com/SYSTRAN/faster-whisper
+
+CTranslate2 (4.8.3)
+Licence: MIT
+Use: Local Whisper model execution for presentation audio.
+https://github.com/OpenNMT/CTranslate2
+
+PyAV (19.0.1)
+Licence: BSD-3-Clause; FFmpeg notices apply
+Use: ASR dependency. The final transcript uses PCM NumPy input.
+https://github.com/PyAV-Org/PyAV
+
+Additional references
+
+IBM Carbon Design System
+Licence: See upstream documentation and asset terms.
+Use: Colour and typography reference. The site does not claim use of the Carbon React component
+package.
+https://carbondesignsystem.com/guidelines/color/overview/
+
+Vercel Web Interface Guidelines
+Licence: MIT
+Use: Accessibility and interface review reference.
+https://github.com/vercel-labs/web-interface-guidelines
+
+WhyLabs LangKit pattern groups
+Licence: Apache-2.0
+Use: Pattern-source reference only; not a selected classifier or runtime dependency.
+https://github.com/whylabs/langkit
+
+Open-source execution infrastructure
+
+Ubuntu / GNU/Linux (24.04.5 native)
+Licence: Package-specific open-source licences
+Use: Native operating environment. LinuxONE hardware does not confer an open-source software
+licence.
+https://ubuntu.com/legal/open-source-licences
+
+Docker Engine / Moby (Version not pinned in the public receipt)
+Licence: Apache-2.0; component notices apply
+Use: Native containers and the isolated offline qualification environment. Docker Desktop is
+not a claimed dependency.
+https://github.com/moby/moby
+
+Scope and rights notes
+
+The selected guardrail runtime does not use an upstream language-model checkpoint.
+Whisper supports presentation captions only, not guardrail decisions.
+Veyra does not implement scan martingales, MMD, or BBSE in the selected release.
+Prior-art results belong to the cited authors, not Veyra.
+ToxicChat has a noncommercial restriction.
+Unverified dataset licences remain unverified.
+Follow each resource licence before reuse or redistribution.
+This attribution list does not establish commercial rights or IBM certification.
+
+IBM LinuxONE, GitHub, Vercel, and Google Chrome also support the project.
+They are hardware, hosted services, or proprietary products, not open-source software entries.
+Microsoft PowerPoint and the supplied slide deck also require their own rights.
+The video uses an original generated score, not a third-party music recording.
+
+This document contains no raw requests, model weights, credentials, or private server addresses.
