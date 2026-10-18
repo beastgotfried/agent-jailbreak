@@ -1,0 +1,648 @@
+Veyra - Solution architecture and flowcharts
+
+Project: https://github.com/beastgotfried/agent-jailbreak
+Website: https://veyra-ibmz.vercel.app/
+Date: 18 October 2026
+
+Purpose
+
+Veyra checks whether a guardrail runtime still matches its trusted baseline.
+The guardrail decides whether to allow or refuse a request.
+The canary supplies observations. It does not authorise an action.
+A replacement needs approval and actual verification before activation.
+
+These diagrams describe the selected offline TF-IDF release.
+They also identify the separate legacy traffic-warning path.
+They do not describe a deployed enterprise service.
+
+Read each flow from top to bottom.
+Follow the labelled branches.
+Boxes identify components, steps, or outcomes.
+
+Contents
+
+1. System overview
+2. Request decision flow
+3. Three separate evidence channels
+4. Scheduled runtime health check
+5. Verified recovery and activation
+6. Missing or invalid model outputs
+7. Hold release and repeat incidents
+8. Data and model lifecycle
+9. Probe sets and their separate roles
+10. Fair evaluation and public evidence
+11. Recorded scale-fault timeline
+12. CLI entry points and explicit rollback
+
+
+1. System overview
+
+    [Ordered requests + frozen model files + fixed policy]
+                             |
+                             v
+              [SupervisedRuntime: request control]
+                             |
+                             v
+                 [Active guardrail + canary]
+                             |
+                  Guardrail score only
+                             |
+                             v
+                    [Frozen guardrail policy]
+                             |
+                             v
+             [Decision + execution-permission flag]
+
+    [Fixed trusted probes]
+              |
+              v
+        [RuntimeWatch] -------> [Runtime incident evidence]
+              |                            |
+    Check active backend                   v
+                                  [RecoveryManager]
+                                           |
+                                           v
+                               [Actual candidate execution]
+                                           |
+                                           v
+                               [Approval + verification]
+                                           |
+                                           v
+                               [Update active backend]
+
+The supervisor schedules health checks and any due response before the
+current request decision. It also enforces hold or unavailable states.
+Both requests and probes use the active backend, not a cached candidate.
+
+The selected replay records decisions and execution-permission flags.
+It does not execute a real customer action or call a live agent service.
+Older replay code also provides an offline agent stub.
+
+Main responsibilities:
+
+Guardrail: Supplies the score that the frozen request policy uses.
+Canary: Supplies a second score for observation and paired verification.
+RuntimeWatch: Opens incidents from changed or unavailable probe outputs.
+RecoveryManager: Executes, verifies, and activates approved candidates.
+SupervisedRuntime: Coordinates requests, responses, and containment.
+
+
+2. Request decision flow
+
+    [Next ordered request]
+              |
+              v
+    [Run any scheduled health check and due response]
+              |
+              v
+    [Service already held or unavailable?]
+              |
+              +-- YES --> [Return hold or unavailable; no execution]
+              |
+              v NO
+    [Get guardrail and canary outputs from the active backend]
+              |
+              v
+    [Both outputs and model identity valid?]
+              |
+              +-- NO ---> [Open incident; contain; no execution]
+              |
+              v YES
+    [Apply the frozen policy to the guardrail score]
+              |
+              +-- ALLOW --> [Return execute = true]
+              |
+              +-- REFUSE -> [Return execute = false]
+
+Only allow permits a caller action. The caller must enforce the flag.
+The selected replay records the flag rather than executing the request.
+The canary never votes to override the guardrail policy.
+
+For the selected guardrail:
+
+Score at or above 0.20832091569900513 -> refuse.
+Score below that threshold -> allow, unless service is held or unavailable.
+
+A score is not an established calibrated probability of harm.
+
+
+3. Three separate evidence channels
+
+    TRAFFIC OBSERVATION - separate legacy path
+
+    [Ordinary guardrail and canary score gaps]
+                         |
+                         v
+               [Empirical KS traffic monitor]
+                         |
+                         v
+                   [Warning only]
+                         |
+                         v
+          [No authority to activate a replacement]
+
+    RUNTIME INTEGRITY - selected response path
+
+    [Fixed inputs + trusted paired reference outputs]
+                         |
+                         v
+                 [Matched runtime probes]
+                         |
+                         v
+            [Changed or unavailable outputs?]
+                         |
+                         v
+                [Runtime incident evidence]
+                         |
+                         v
+            [Approved, verified response process]
+
+    CLASSIFIER QUALITY - offline evaluation only
+
+    [Known evaluation labels + recorded decisions]
+                         |
+                         v
+              [Independent evaluation and audit]
+                         |
+                         v
+             [Accuracy, errors, refusals, and holds]
+
+Traffic change does not prove a runtime fault or semantic deterioration.
+A runtime fault does not establish how accurate the baseline classifier is.
+Evaluation labels do not enter live request decisions.
+
+The selected paired replay uses RuntimeWatch for response evidence.
+The legacy KS traffic monitor is not its response trigger.
+
+
+4. Scheduled runtime health check
+
+    [Next request position]
+              |
+              v
+    [Health check due every 16 request positions?]
+              |
+              +-- NO ---> [Continue the existing service state]
+              |
+              v YES
+    [Run 8 fixed probes on the active guardrail and canary]
+              |
+              v
+    [Compare both score vectors with fixed reference outputs]
+              |
+              +-- MATCH --> [Record agreement on this small panel]
+              |
+              +-- CHANGE -> [Open a runtime incident]
+              |
+              +-- ERROR --> [Open incident; contain immediately]
+
+The maximum allowed score difference is 1e-8 for either model.
+This value equals 0.00000001. It is a score tolerance, not a risk limit.
+
+A new incident schedules one response opportunity after 32 request positions.
+A valid changed score does not itself cause an immediate hold.
+Requests can receive changed decisions during the detection and response delay.
+Missing or invalid outputs cause immediate containment or unavailable service.
+
+If the small panel matches again, the watch can close a pending incident
+without a replacement. That result does not establish universal recovery.
+A matching small panel does not release an existing hold.
+Invalid sequences and incident-budget exhaustion raise an error.
+The caller must not execute a request after such an error.
+
+
+5. Verified recovery and activation
+
+    [Runtime incident reaches its response position]
+                         |
+                         v
+               [Recovery approval present?]
+                         |
+                         +-- NO --> [No activation; use containment rule]
+                         |
+                         v YES
+               [Refresh actual probe observations]
+                         |
+                         +-- ALREADY MATCH --> [No replacement necessary]
+                         |
+                         v CHANGE
+            [Fit an affine guardrail score correction]
+                         |
+                         v
+              [Execute the actual candidate]
+                         |
+                         v
+        [Verify both models on 128 separate trusted probes]
+                         |
+                         +-- FAIL --> [Try a trusted backend reload]
+                         |                         |
+                         |                         v
+                         |               [Execute and verify reload]
+                         |                         |
+                         |                         +-- FAIL --> [Contain]
+                         |                         |
+                         v PASS                    v PASS
+                  [Manager-owned, single-use activation plan]
+                                      |
+                                      v
+                    [Check model, policy, and generation identity]
+                                      |
+                                      v
+                     [Execute and verify the candidate again]
+                                      |
+                                      +-- FAIL --> [Reject; no activation]
+                                      |
+                                      v PASS
+                        [Activate candidate; advance generation]
+
+An affine correction adjusts the guardrail output with a fixed linear rule.
+It does not refit the classifier weights or change the policy threshold.
+The canary outputs must also match the baseline during verification.
+If a correction cannot pass, the manager can test a trusted backend reload.
+
+Verification requires all of the following:
+
+- Valid outputs from both models.
+- Agreement with both trusted score vectors within 1e-8.
+- The same baseline decisions on the verification probes.
+- No class-level coverage or review regression.
+- No harmful-allow or safe-refusal regression against the probe baseline.
+
+A caller-supplied report cannot replace actual candidate execution.
+The manager retains its own candidate and verification inputs.
+Stale, reused, and cross-manager plans cannot authorise activation.
+Altered public reports cannot substitute a different candidate.
+
+A successful replacement does not automatically release an existing hold.
+Hold release uses the separate process in section 7.
+
+
+6. Missing or invalid model outputs
+
+    [Model output missing, invalid, or unusable]
+                         |
+                         v
+              [Do not invent substitute observations]
+                         |
+                         v
+                 [Open runtime incident]
+                         |
+                         v
+                 [Contain the current request]
+                         |
+                         v
+                 [At the due response position]
+                         |
+                         v
+                [Recovery approval present?]
+                         |
+                         +-- NO --> [No replacement activation]
+                         |
+                         v YES
+               [Create a trusted replacement backend]
+                         |
+                         v
+       [Execute it against archived paired verification targets]
+                         |
+                         +-- FAIL --> [Remain contained or unavailable]
+                         |
+                         v PASS
+            [Single-use plan + fresh verification + activation]
+                         |
+                         v
+       [Existing hold or unavailable state still needs release]
+
+The manager can verify a trusted restart without usable current scores.
+It skips the affine path when the required current observations are absent.
+The trusted reference targets do not change to match the broken runtime.
+
+Containment rule:
+
+    [Unresolved incident or invalid output]
+                         |
+                         v
+              [Containment approval present?]
+                         |
+                         +-- YES --> [HOLD; no execution]
+                         |
+                         +-- NO ---> [UNAVAILABLE; no execution]
+
+A hold is an approved containment state, not a classifier refusal.
+Unavailable means no approved service path exists for that request.
+Neither state receives automatic-correctness credit.
+
+
+7. Hold release and repeat incidents
+
+    [Service held or unavailable]
+                  |
+                  v
+    [Separate release approval and actor identity present?]
+                  |
+                  +-- NO ---> [Reject release]
+                  |
+                  v YES
+    [Execute the active backend on all 128 verification probes]
+                  |
+                  v
+    [Both score vectors and all required policy checks pass?]
+                  |
+                  +-- NO ---> [Keep the existing state]
+                  |
+                  v YES
+    [Clear hold or unavailable state]
+                  |
+                  v
+    [Close the incident after full verification]
+                  |
+                  v
+    [Rearm the watch for a later incident]
+
+A small-panel match alone cannot release service.
+A prior successful incident does not prevent detection of a later fault.
+The configured watch limit is 128 incidents, not unlimited process use.
+Direct manager use retains consumed plan payloads; unbounded use is not qualified.
+
+Approval in this release uses explicit offline API parameters and actor IDs.
+The project does not supply a production approval or authentication service.
+
+
+8. Data and model lifecycle
+
+    [Project synthetic intent catalogue]
+                      |
+                      v
+       [Native LinuxONE data generation: 100,000 rows]
+                      |
+          +-----------+-------------+
+          |                         |
+          v                         v
+    [70,000 fit rows]         [10,000 validation rows]
+          |                         |
+          v                         v
+    [Fit guardrail          [Threshold selection and
+     and canary]             separate probe roles]
+          |                         |
+          +------------+------------+
+                       |
+                       v
+         [Freeze models, policy, identities, and file hashes]
+                       |
+                       v
+              [20,000 held-out synthetic test rows]
+                       |
+                       v
+          [Frozen replay, external regressions, and audit]
+
+The split keeps related synthetic families together before expansion.
+The catalogue has 100 template families and 91 reviewed semantic groups.
+Generated variants do not represent 100,000 independent human requests.
+Reviewed groups do not prove complete semantic independence.
+
+The 10,000 validation rows have separate roles:
+
+- 5,000 threshold rows.
+- 3,000 reserved calibration rows.
+- 1,000 candidate-fit probe rows.
+- 1,000 verification probe rows.
+
+The selected model does not use the reserved calibration fallback.
+Test labels do not select thresholds or fit the selected model.
+External datasets do not fit the selected frozen TF-IDF weights.
+
+Data generation, model fit, inference, response, and audit execute natively
+on LinuxONE s390x CPUs for the selected study.
+A fresh native container reproduces the frozen study without network access.
+This is repeatability evidence, not a new independent effectiveness trial.
+
+
+9. Probe sets and their separate roles
+
+    [1,000 candidate-fit probe rows]
+                    |
+                    v
+            [Select 64 fit probes]
+                    |
+          +---------+----------+
+          |                    |
+          v                    v
+    [8 health probes]    [64 correction-fit probes]
+          |                    |
+          v                    v
+    [Frequent checks]    [Candidate correction evidence]
+
+    [Separate 1,000 verification probe rows]
+                    |
+                    v
+           [Select 128 verification probes]
+                    |
+                    v
+           [Actual candidate verification]
+                    |
+                    v
+          [Fresh activation or release verification]
+
+The 8 health probes are a subset of the 64 fit probes.
+The 64 fit probes and 128 verification probes have disjoint identities.
+Both sets remain separate from the policy calibration identities.
+The fit set has 32 rows per class; the verification set has 64 per class.
+
+All reference outputs stay fixed to the trusted baseline.
+The system does not silently adjust them toward current traffic.
+
+
+10. Fair evaluation and public evidence
+
+    [Same frozen requests, policy, fault schedule, and input order]
+                                |
+                +---------------+---------------+
+                |                               |
+                v                               v
+    [A: guardrail only]          [B: guardrail + canary + probes]
+                |                               |
+                |                    [Verified response or containment]
+                |                               |
+                v                               v
+    [All A decisions]                  [All B decisions and holds]
+                |                               |
+                +---------------+---------------+
+                                |
+                                v
+             [Independent audit with known evaluation labels]
+                                |
+                                v
+             [Full-stream metrics, costs, and final endpoint]
+                                |
+                                v
+                  [Public aggregate evidence only]
+                                |
+                                v
+                   [Website, dashboard, deck, and video]
+
+The selected suite contains 60 paired episodes and 30,720 request observations.
+Five seeds reuse cases; they are not independent population trials.
+The guardrail-only arm performs no canary inference.
+The monitored arm includes its actual model and probe cost.
+
+The full-stream result includes the detection delay and response delay.
+Holds, review, and unavailable service receive zero automatic-correctness credit.
+A final endpoint check is not the same as the whole-stream result.
+
+The website and dashboard display recorded evidence.
+They do not stream live telemetry or control the runtime.
+The video uses recorded study evidence and actual static website captures.
+
+Public/private boundary:
+
+    [Aggregate metrics + numeric charts + source records]
+                              |
+                              v
+                   [Public Git and static website]
+
+    [Raw requests + model binaries + vocabularies]
+                              |
+                              v
+                     [Separate private archives]
+
+Private archives can exist outside the execution host.
+This diagram does not claim hardware-enforced data residency.
+The source excludes credentials and private server addresses.
+
+
+11. Recorded scale-fault timeline
+
+    Request index 128
+    [Injected score-scale fault begins]
+                    |
+                    | 15 request positions
+                    v
+    Request index 143
+    [Fixed paired probes confirm a changed runtime]
+                    |
+                    | 32 request positions
+                    v
+    Request index 175
+    [Approved correction passes verification and activates]
+                    |
+                    v
+    [Final endpoint check on 1,000 requests]
+                    |
+                    v
+    [Both score vectors match baseline; zero decision mismatches]
+
+This is the recorded scale-fault, seed-0 example, not a live demonstration.
+Request positions use zero-based indices.
+The timing is specific to the fixed experimental schedule.
+
+Recorded request index 135 illustrates the decision change:
+
+    [Baseline guardrail score: 0.7426]
+                    |
+                    v
+         [Above threshold 0.2083 -> REFUSE]
+
+    [Fault changes the score by a factor of 0.25]
+                    |
+                    v
+         [Changed score: 0.1856 -> ALLOW]
+
+The request, model weights, and threshold stay unchanged in this example.
+The source assigns a harmful label to this synthetic study request.
+A valid number can still come from a changed output path.
+Restoration returns the tested baseline; it does not guarantee semantic safety.
+
+
+12. CLI entry points and explicit rollback
+
+    [veyra inspect]
+          |
+          v
+    [Verify four selected model-file hashes and metadata]
+          |
+          v
+    [Report only; do not load model objects]
+
+    [veyra score]
+          |
+          v
+    [Verify and load the selected frozen model pair]
+          |
+          v
+    [Return scores and the guardrail classification]
+          |
+          v
+    [No runtime monitor; no recovery; no action execution]
+
+    [veyra-replay]
+          |
+          v
+    [Run the complete offline paired runtime experiment]
+          |
+          v
+    [Record probes, incidents, responses, decisions, and metrics]
+
+The score command alone does not start the complete response loop.
+The legacy safety-watch command names remain compatibility aliases.
+
+Explicit rollback is a separate RecoveryManager API operation:
+
+    [Rollback approval present and previous backend available?]
+                            |
+                            +-- NO ---> [Reject rollback]
+                            |
+                            v YES
+                  [Restore the previous backend]
+                            |
+                            v
+                     [Advance generation]
+                            |
+                            v
+               [Record incident_resolved = false]
+
+The previous backend can still be degraded.
+Rollback does not establish recovery or release an existing hold.
+
+
+What these diagrams do not claim
+
+- Baseline agreement does not establish universal safety.
+- Finite probes can miss selective faults and unchanged-score semantic errors.
+- Scores do not establish calibrated harm probabilities.
+- Containment does not count as restored service or a correct automatic decision.
+- A traffic warning cannot approve a runtime replacement.
+- A digest is not a signature, hardware attestation, or IBM certification.
+- The project does not provide live REST intake, Kafka, PostgreSQL, or S3 services.
+- Production authentication, customer connectors, and high availability remain absent.
+
+
+Source map
+
+src/release/cli.py
+    Model-file verification and classifier-only commands.
+
+src/models/synthetic.py
+    Selected TF-IDF backend and fixed binary policy.
+
+src/monitor/runtime.py
+    Scheduled probes, runtime incidents, and repeat-incident lifecycle.
+
+src/response/recovery.py
+    Candidate execution, paired verification, activation plans, and rollback.
+
+src/response/supervised.py
+    Request control, containment authority, and verified hold release.
+
+src/replay/synthetic.py
+    Fixed streams, fault injection, fair paired comparison, and endpoint checks.
+
+src/monitor/disagreement.py
+    Separate empirical KS traffic-warning implementation.
+
+scripts/reproduce_selected.py
+    Native reproduction of the frozen selected study.
+
+Release identity: safety-watch-tfidf-20261017
+The historical identity stays unchanged after the Veyra brand change.
+
+Open-source resource document:
+https://veyra-ibmz.vercel.app/resources/Veyra-Open-Source-Resources.txt
