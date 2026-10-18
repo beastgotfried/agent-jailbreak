@@ -1,0 +1,9 @@
+# Environment preparation only. No project application code.
+FROM registry.linuxone.cloud.marist.edu/l1cc/jupyterlab-image-s390x@sha256:d2da8a7b0c88c3b468e29014b2ada9ef8274f98c976ec456904c5e2bae5aa54c
+USER root
+# Preserve the base image's NumPy version for TensorFlow compatibility.
+# The bundled tifffile 2026.9.20 requires a newer NumPy version.
+RUN python3 -m pip install --no-cache-dir --only-binary=:all: \
+    'huggingface_hub<2' fastapi uvicorn plotly pytest 'tifffile==2025.6.11' \
+    && python3 -m pip check
+USER 1000:1000

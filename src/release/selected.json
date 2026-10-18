@@ -1,0 +1,50 @@
+{
+  "archived_challenger_freeze_sha256": "f8cfe6f218a14c77bac1bbcc747fc21b2f4708c838fc3fe7bdb332eb70882226",
+  "archived_challenger_study_id": "neural-upgrade-20261017-01",
+  "canary_threshold": 0.2771334648132324,
+  "catalog_sha256": "852370c8b0edca168aeaaf1be845813429595d1bb49550cfdd887b874f1d53eb",
+  "conformal_coverage_claim": false,
+  "data_manifest_sha256": "63db0f854b36ffe6d7f1e3053d70502ed644055509628cd302934db05e639597",
+  "external_regression_files": {
+    "toxic-chat_annotation_test.csv": {
+      "license": "CC-BY-NC-4.0",
+      "revision": "29df8e4dba60e1f4af4b4075c0705c5b313548a8",
+      "sha256": "3c2e49889626f7738dca0a29bface0ba0a0595b2ffdd17f0e02f19df7c3c4c9b",
+      "source": "https://huggingface.co/datasets/lmsys/toxic-chat"
+    },
+    "xstest_prompts.csv": {
+      "license": "CC-BY-4.0",
+      "revision": "d7bb5bd738c1fcbc36edd83d5e7d1b71a3e2d84d",
+      "sha256": "11783fb294ed017473ee53c207d71f2161c7672c8d0b037501e78387f801cb5a",
+      "source": "https://github.com/paul-rottger/xstest"
+    }
+  },
+  "guardrail_method": "tfidf_logistic_C4",
+  "guardrail_threshold": 0.20832091569900513,
+  "model_files": {
+    "attempts.json": "166815a699506396a1e65c1eceba43fa834a74197939f3607fbb5bb6f2cb9f0e",
+    "model-cards.json": "e1f56f6276a8cd63ae8876169f13561da78bc7d8a22cab3769e34dfebfb9eff3",
+    "models.joblib": "f0cc1c2daea3a9848e114abfbf4e95c96542958bea20a1103030363339148254",
+    "pre-evaluation-freeze.json": "c72117dad92134d46425d9a84fefe95e11d74c035279c5131a0144b5d89c76b3"
+  },
+  "model_pair_id": "adb5b660369f0a8b9024a3d725548aeca034d86eac72cbaa3e975a4a77fa2790",
+  "package_version": "0.1.0",
+  "private_artifacts_required": true,
+  "public_model_weights": false,
+  "qualified_architecture": "s390x",
+  "release_id": "safety-watch-tfidf-20261017",
+  "runtime_image_id": "sha256:85ec856d19102a0791fea7fbe2c36d7d2412093d3574af4f899cb692d95bccae",
+  "runtime_versions": {
+    "joblib": "1.6.0",
+    "numpy": "2.0.2",
+    "pandas": "3.0.6",
+    "python": "3.12.15",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.13.1"
+  },
+  "schema_version": 1,
+  "scope": "frozen_experimental_baseline_not_production_qualified",
+  "selected_study_id": "synthetic-100k-20261017-01",
+  "study_freeze_sha256": "0febddd1a30e14a607ebe2ca3ef1b0489be3c1ca00398f87a0cfcab841002a72",
+  "training_source_commit": "d86d384e2ee7d0f07f2f2fc5bf2b6dec64e13cac"
+}

@@ -1,0 +1,7 @@
+# Matplotlib emits SVG path coordinates with intentional line-end separators.
+*.svg -whitespace
+*.png binary
+*.ico binary
+*.ttf binary
+*.pdf binary
+*.pptx binary

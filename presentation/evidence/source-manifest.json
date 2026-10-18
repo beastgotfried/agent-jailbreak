@@ -1,0 +1,80 @@
+{
+  "created_utc": "2026-10-17T18:37:22.174183+00:00",
+  "release_commit": "8a86ce01767a02d613b66f38a1d20de312cf61e1",
+  "qualified_core_commit": "c5fad060420c8cb1c34f84eb4fd951b193a969c6",
+  "prior_art_commit": "90726d9d4d281373e6729a0319d50e9c32566c59",
+  "source_files": [
+    {
+      "path": "artifacts/synthetic-100k-20261017-01/benchmark-report.json",
+      "sha256": "5d2d553350676aa0c9c9e4f6164b0bd951704fef4a6f232fd161b87c399db6e7"
+    },
+    {
+      "path": "artifacts/synthetic-100k-20261017-01/model-cards.json",
+      "sha256": "e1f56f6276a8cd63ae8876169f13561da78bc7d8a22cab3769e34dfebfb9eff3"
+    },
+    {
+      "path": "artifacts/synthetic-100k-20261017-01/data-manifest.json",
+      "sha256": "63db0f854b36ffe6d7f1e3053d70502ed644055509628cd302934db05e639597"
+    },
+    {
+      "path": "artifacts/synthetic-100k-20261017-01/timing.json",
+      "sha256": "25d216f8e6255d9edd3860b3b5a072bd744cdf094e786bb3dd47c8256160c1a8"
+    },
+    {
+      "path": "artifacts/synthetic-100k-20261017-01/execution-receipt.json",
+      "sha256": "0e9178d83208259d1dda145ee1fbee4a7cf6fb145f47105853cab20ccf314ea4"
+    },
+    {
+      "path": "artifacts/synthetic-100k-20261017-01/independent-audit.json",
+      "sha256": "e21a216871de0399640ee470ccc9b7d447b97d96de7ad09dc762f7edc078ea45"
+    },
+    {
+      "path": "artifacts/neural-upgrade-20261017/benchmark-report.json",
+      "sha256": "10b6c54bb8b1391cf3ff963c10b508ecfaf2c5c9d616b871eabfd4407bc6dd82"
+    },
+    {
+      "path": "artifacts/neural-upgrade-20261017/execution-receipt.json",
+      "sha256": "59a7bd7f2de270a5848a823e42e0c06f2cac997c852cff7e8998fc28b3039ab4"
+    },
+    {
+      "path": "artifacts/classifiers-20261017-01/model-cards.json",
+      "sha256": "c8ac15c7d5f57839d77d2707e55bf47d8ebe5e6b27c254d3f9f1cf3f69f4b9fe"
+    },
+    {
+      "path": "artifacts/repair-loop-20261017/qualification-1/independent-audit.json",
+      "sha256": "732f6d2eecd060d4fe29869c7fb7832430027b6baee660fb4eac1572cbf7542c"
+    },
+    {
+      "path": "artifacts/repair-loop-20261017/qualification-1/traffic-profile-report.json",
+      "sha256": "f75350313984db5aee8712af3688486dae2e92b68f745b2f73f9c3cce224ec13"
+    },
+    {
+      "path": "artifacts/release-package-20261017-02/reproduction-receipt.json",
+      "sha256": "14f1e86fc27b590d9fd1ac98b180c52d8435b92c5db18e904a9a81310075363c"
+    },
+    {
+      "path": "artifacts/release-package-20261017-02/qualification-receipt.json",
+      "sha256": "be1a6e54d344c9940bf2fb2c86602b261a0e7f3f138839308e1b55f0891e46c4"
+    },
+    {
+      "path": "artifacts/release-package-20261017-02/native-tests.log",
+      "sha256": "cd0dfbb9c60a6dd7d7ceca810d4c1047c4d1b5a4ebe39b45c949d728354c210b"
+    },
+    {
+      "path": "prd/Enterprise-PRD.md",
+      "sha256": "24f6b95c81878c0815ea632525ad0f71a50a7bc813b9646deab2b51a866a050b"
+    },
+    {
+      "path": "research/ibm-linuxone.txt",
+      "sha256": "406b4af180e0a28772f70029900a8d49baea8c5abd5606c5f644320bed758fb2"
+    }
+  ],
+  "live_accuracy_experiment": "Excluded from completed-result claims; separate active branch.",
+  "private_inputs_not_copied": [
+    "Raw request text",
+    "Model weights",
+    "Vocabularies",
+    "Credentials",
+    "Server addresses"
+  ]
+}

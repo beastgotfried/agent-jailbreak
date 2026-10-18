@@ -1,0 +1,13 @@
+scenario,episodes,fault_incidents,confirmed_faults,restored_episodes,held_episodes,pre_fault_or_control_confirmations,confirmation_delay_requests,A_operational_percent,B_operational_percent,A_harmful_allowed,B_harmful_allowed
+affine,5,5,5,5,0,0,15,86.7578125,88.0078125,0,0
+clipped,5,5,5,5,0,0,15,59.3359375,83.9453125,960,130
+common_mode_scale,5,5,5,5,0,0,15,90.0,87.96875,169,25
+constant,5,5,5,5,0,0,15,59.3359375,83.9453125,960,130
+healthy,5,0,0,0,0,0,Not applicable,88.1640625,88.1640625,0,0
+inverted,5,5,5,5,0,0,15,26.640625,80.625,850,112
+late_scale,5,5,5,5,0,0,15,89.7265625,88.4375,110,16
+persistent_restart_fault,5,5,5,0,5,0,15,59.3359375,25.937500000000004,960,130
+scale,5,5,5,5,0,0,15,90.0,87.96875,169,25
+scale_then_constant,5,10,10,5,0,0,15,75.1953125,84.375,551,25
+square,5,5,5,5,0,0,15,90.625,88.3203125,8,1
+traffic_mix_without_fault,5,0,0,0,0,0,Not applicable,92.6171875,92.6171875,1,1

@@ -1,0 +1,14 @@
+VEYRA — ARCHIVED CLASSIFIER SOURCE
+
+This directory preserves separate classifier and canary code from pr3thiv-classifier-init at afb13172ac506e951718384cabc4eb064f59f388.
+It does not replace the selected src/models/synthetic.py backend.
+The source-import record appears in ../canary/source-import.json.
+Private trained model files, raw data, and executed notebooks remain outside the main branch.
+
+These tests require their original private native runtime artifacts. Some tests perform a model fit.
+Do not include them in the neutral fixture gate or a brand-only check.
+The primary pytest configuration limits default discovery to the root tests directory.
+
+For a separately authorized legacy run, use the pinned s390x environment and this directory as the project root.
+Set PYTHONPATH to src and VEYRA_LEGACY_RUNTIME_HOST to the approved private runtime before the container wrapper starts.
+The safety_watch Python namespace remains unchanged for source compatibility.

@@ -1,30 +1,50 @@
-# Safety Monitor Integrity Watch
+# Veyra
 
-**A health monitor for deployed AI safety filters.** It watches a guardrail with a canary model, detects silent drift, coordinates a human-approved repair, and writes verifiable evidence. Built for IBM LinuxONE (s390x).
-
-IBM Z Datathon 2026 · Theme: Real-Time AI for Critical Decisions · Detect. Decide. Respond.
+A guardrail makes request decisions. A canary scores copies. Runtime probes detect output changes and support approved, verified recovery or containment.
 
 ![Architecture](docs/img/architecture.png)
 
-## The problem
+## Why LinuxONE
 
-Companies deploy a safety filter and stop watching it. New attacks, changed traffic, and model updates break it silently. It keeps saying "safe" on harmful traffic. The first alarm today comes from users or the press.
+- **Native execution:** Data generation, model fit, inference, monitoring, recovery, and audit run on LinuxONE `s390x` without emulation.
+- **CPU-only operation:** The selected system needs no GPU or external model API.
+- **Reproducibility:** A fresh container, with networking disabled, reproduces the data, learned model state, request decisions, and benchmark metrics.
 
-## What we build
+## Release
 
-A watcher. A cheap canary model scores the same traffic as the guardrail, in parallel, never blocking. A statistical monitor reads the disagreement between them and alarms when the pattern changes. A human approves the repair. Every step is logged with a hash-chained evidence record.
+The release provides a frozen TF-IDF guardrail and canary pair, deterministic runtime checks, verified recovery, and approved containment for offline research.
 
-## Read these first
+The private kit contains the models, data, native runtime image, and reproduction instructions. Public Git contains source and aggregate evidence, not raw requests or model binaries.
 
-- `AGENTS.md` — global context for any AI agent working in this repo.
-- `docs/METHOD.md` — the method, start to end.
-- `docs/PLAN.md` — the serial to-do list.
-- `docs/DECISIONS.md` — every locked decision and why.
-- `agents/` — one context file per team role. Point your AI agent at your role file.
+## Source and interfaces
 
-## Hard rules
+- [Website](web/veyra/): `npm ci && npm run dev` from `web/veyra/`.
+- [Evidence dashboard](frontend/): `npm ci && npm run dev` from `frontend/`.
+- [Python pipeline](src/): Install the pinned native environment, then use `veyra` or `veyra-replay`.
+- [Presentation source](presentation/): Slide content, voiceover, diagrams, and export scripts.
+- [Legacy classifier source](integration/legacy-classifier/): Separate archived implementation; not the selected backend.
 
-- Event code is written during the event window only. Research, data prep, and environment setup happen before.
-- Real data only. No synthetic augmentation. Attack text is data, never executed.
-- No secrets, keys, tokens, or raw harmful samples in this repository.
-- The method comes from published research. We cite it. We do not claim the algorithm.
+The older `safety-watch` commands remain compatibility aliases. Frozen study IDs, hashes, and release records remain unchanged.
+
+[Model identity](src/release/selected.json) · [Results](releases/baseline-20261017/summary.json) · [Native verification](releases/baseline-20261017/qualification.json)
+
+## Data sources
+
+The selected classifiers fit our **100,000-row synthetic study** with a 70,000/10,000/20,000 train/validation/test split. External sources have the separate roles below.
+
+| Source | Project use | License |
+|---|---|---|
+| [ToxicChat 0124](https://huggingface.co/datasets/lmsys/toxic-chat) | Original classifiers; current external regression | CC-BY-NC-4.0 |
+| [WAInjectBench](https://huggingface.co/datasets/Norrrrrrr/WAInjectBench) | Original traffic pools | Not verified |
+| [JBB-Behaviors](https://huggingface.co/datasets/JailbreakBench/JBB-Behaviors) | Original behavior-goal pools | MIT |
+| [JailbreakBench mirror](https://huggingface.co/datasets/walledai/JailbreakBench) | Original pool provenance and deduplication | Not listed |
+| [StrongREJECT](https://huggingface.co/datasets/AlignmentResearch/StrongREJECT) | Original request pools | Not listed |
+| [HarmBench](https://github.com/centerforaisafety/HarmBench) | Original standard-behavior pools | MIT |
+| [XSTest](https://github.com/paul-rottger/xstest) | Recovery evaluation and external regression | CC-BY-4.0 |
+| [Dolly 15k](https://github.com/databrickslabs/dolly) | Unlabelled traffic-profile study | CC-BY-SA-3.0 |
+| [OASST1](https://huggingface.co/datasets/OpenAssistant/oasst1) | Acquisition only; profile study paused | Apache-2.0 |
+| [Nemotron Content Safety V2 / Aegis 2.0](https://huggingface.co/datasets/nvidia/Aegis-AI-Content-Safety-Dataset-2.0) | Human request labels for the accuracy experiment | CC-BY-4.0 |
+
+Public access does not imply unrestricted reuse. [Source records](releases/baseline-20261017/data-sources.json) contain pinned revisions, licenses, and roles.
+
+The archived neural comparison uses [Google BERT-tiny](https://huggingface.co/google/bert_uncased_L-2_H-128_A-2). The [semantic experiment](experiments/pretrained-semantic/protocol.json) tests frozen [MiniLM-L6](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) features. Both model cards specify Apache-2.0.

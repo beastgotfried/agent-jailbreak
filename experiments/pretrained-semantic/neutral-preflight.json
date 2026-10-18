@@ -1,0 +1,56 @@
+{
+  "architecture": "s390x",
+  "batch_adapter_embedding_error": 0.0,
+  "byteorder": "big",
+  "dtype": "float32 encoder; float64 classifier features",
+  "encoder_batch_size": 1,
+  "load_seconds": 0.39636615899871686,
+  "max_length": 256,
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "model_fit": false,
+  "model_output_cache": false,
+  "neutral_costs": [
+    {
+      "max_repeat_embedding_error": 0.0,
+      "max_seconds": 0.008702570998138981,
+      "mean_seconds": 0.00856549750051272,
+      "min_seconds": 0.008462161000352353,
+      "tokens": 8
+    },
+    {
+      "max_repeat_embedding_error": 0.0,
+      "max_seconds": 0.025515253997582477,
+      "mean_seconds": 0.02481025800034331,
+      "min_seconds": 0.02406676200189395,
+      "tokens": 32
+    },
+    {
+      "max_repeat_embedding_error": 0.0,
+      "max_seconds": 0.04840222900020308,
+      "mean_seconds": 0.047884448500553844,
+      "min_seconds": 0.04761486699862871,
+      "tokens": 64
+    },
+    {
+      "max_repeat_embedding_error": 0.0,
+      "max_seconds": 0.10176878899801522,
+      "mean_seconds": 0.0995572314996025,
+      "min_seconds": 0.09845140800098306,
+      "tokens": 128
+    },
+    {
+      "max_repeat_embedding_error": 0.0,
+      "max_seconds": 0.23040740999931586,
+      "mean_seconds": 0.2295771127496664,
+      "min_seconds": 0.22893264699814608,
+      "tokens": 256
+    }
+  ],
+  "padding": "none",
+  "parameters": 22713216,
+  "peak_rss_kib": 614540,
+  "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "scope": "Neutral cost screen, not task accuracy or production latency qualification.",
+  "status": "passed",
+  "study_rows_scored": 0
+}

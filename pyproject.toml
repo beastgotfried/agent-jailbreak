@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "veyra"
+version = "0.2.0"
+description = "Veyra: experimental guardrail runtime integrity checks and verified response"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "numpy==2.0.2",
+  "scipy==1.13.1",
+  "scikit-learn==1.9.0",
+  "pandas==3.0.6",
+  "joblib==1.6.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest==9.1.1"]
+neural = ["torch==2.11.0", "transformers==5.19.0"]
+
+[project.scripts]
+veyra = "src.release.cli:main"
+veyra-replay = "src.replay.synthetic:main"
+safety-watch = "src.release.cli:main"
+safety-watch-replay = "src.replay.synthetic:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src", "src.*"]
+namespaces = true
+
+[tool.setuptools.package-data]
+"src.release" = ["selected.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1152pt" height="648pt" viewBox="0 0 1152 648" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-18T07:19:30.736778</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.9.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 648 
+L 1152 648 
+L 1152 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 149.76 317.52 
+L 541.44 317.52 
+L 541.44 155.52 
+L 149.76 155.52 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 149.76 224.7075 
+L 409.658684 224.7075 
+L 409.658684 194.3325 
+L 149.76 194.3325 
+z
+" clip-path="url(#pf379028eee)" style="fill: #8d8d8d"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 149.76 292.2075 
+L 430.438947 292.2075 
+L 430.438947 261.8325 
+L 149.76 261.8325 
+z
+" clip-path="url(#pf379028eee)" style="fill: #0f62fe"/>
+   </g>
+   <g id="matplotlib.axis_1"/>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_1"/>
+     <g id="text_1">
+      <text style="fill: #525252; font: 12px 'IBM Plex Sans'; text-anchor: end" x="146.26" y="213.96" transform="rotate(-0 146.26 213.96)">Guardrail only</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_2"/>
+     <g id="text_2">
+      <text style="fill: #525252; font: 12px 'IBM Plex Sans'; text-anchor: end" x="146.26" y="281.46" transform="rotate(-0 146.26 281.46)">Monitored</text>
+     </g>
+    </g>
+   </g>
+   <g id="text_3">
+    <text style="fill: #161616; font: 600 19px 'IBM Plex Sans'; text-anchor: start" x="149.76" y="164.295" transform="rotate(-0 149.76 164.295)">Correct automatic decisions</text>
+   </g>
+   <g id="text_4">
+    <text style="fill: #6f6f6f; font: 11px 'IBM Plex Sans'; text-anchor: start" x="149.76" y="184.545" transform="rotate(-0 149.76 184.545)">All 30,720 observations</text>
+   </g>
+   <g id="text_5">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: start" x="416.530263" y="213.84" transform="rotate(-0 416.530263 213.84)">75.64%</text>
+   </g>
+   <g id="text_6">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: start" x="437.310526" y="281.34" transform="rotate(-0 437.310526 281.34)">81.69%</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_5">
+    <path d="M 702.72 317.52 
+L 1071.36 317.52 
+L 1071.36 155.52 
+L 702.72 155.52 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 702.72 224.7075 
+L 944.531802 224.7075 
+L 944.531802 194.3325 
+L 702.72 194.3325 
+z
+" clip-path="url(#p9606d50c64)" style="fill: #8d8d8d"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 702.72 292.2075 
+L 733.086826 292.2075 
+L 733.086826 261.8325 
+L 702.72 261.8325 
+z
+" clip-path="url(#p9606d50c64)" style="fill: #0f62fe"/>
+   </g>
+   <g id="matplotlib.axis_3"/>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_3">
+     <g id="line2d_3"/>
+     <g id="text_7">
+      <text style="fill: #525252; font: 12px 'IBM Plex Sans'; text-anchor: end" x="699.22" y="213.96" transform="rotate(-0 699.22 213.96)">Guardrail only</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_4"/>
+     <g id="text_8">
+      <text style="fill: #525252; font: 12px 'IBM Plex Sans'; text-anchor: end" x="699.22" y="281.46" transform="rotate(-0 699.22 281.46)">Monitored</text>
+     </g>
+    </g>
+   </g>
+   <g id="text_9">
+    <text style="fill: #161616; font: 600 19px 'IBM Plex Sans'; text-anchor: start" x="702.72" y="164.295" transform="rotate(-0 702.72 164.295)">Harmful allow rate</text>
+   </g>
+   <g id="text_10">
+    <text style="fill: #6f6f6f; font: 11px 'IBM Plex Sans'; text-anchor: start" x="702.72" y="184.545" transform="rotate(-0 702.72 184.545)">15,840 harmful-labelled observations</text>
+   </g>
+   <g id="text_11">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: start" x="950.999171" y="213.84" transform="rotate(-0 950.999171 213.84)">29.91%</text>
+   </g>
+   <g id="text_12">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: start" x="739.554195" y="281.34" transform="rotate(-0 739.554195 281.34)">3.76%</text>
+   </g>
+  </g>
+  <g id="axes_3">
+   <g id="patch_8">
+    <path d="M 149.76 537.84 
+L 541.44 537.84 
+L 541.44 375.84 
+L 149.76 375.84 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 149.76 445.0275 
+L 308.157284 445.0275 
+L 308.157284 414.6525 
+L 149.76 414.6525 
+z
+" clip-path="url(#p13f5a589ae)" style="fill: #8d8d8d"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 149.76 512.5275 
+L 342.792258 512.5275 
+L 342.792258 482.1525 
+L 149.76 482.1525 
+z
+" clip-path="url(#p13f5a589ae)" style="fill: #0f62fe"/>
+   </g>
+   <g id="matplotlib.axis_5"/>
+   <g id="matplotlib.axis_6">
+    <g id="ytick_5">
+     <g id="line2d_5"/>
+     <g id="text_13">
+      <text style="fill: #525252; font: 12px 'IBM Plex Sans'; text-anchor: end" x="146.26" y="434.28" transform="rotate(-0 146.26 434.28)">Guardrail only</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_6"/>
+     <g id="text_14">
+      <text style="fill: #525252; font: 12px 'IBM Plex Sans'; text-anchor: end" x="146.26" y="501.78" transform="rotate(-0 146.26 501.78)">Monitored</text>
+     </g>
+    </g>
+   </g>
+   <g id="text_15">
+    <text style="fill: #161616; font: 600 19px 'IBM Plex Sans'; text-anchor: start" x="149.76" y="384.615" transform="rotate(-0 149.76 384.615)">Safe refusal rate</text>
+   </g>
+   <g id="text_16">
+    <text style="fill: #6f6f6f; font: 11px 'IBM Plex Sans'; text-anchor: start" x="149.76" y="404.865" transform="rotate(-0 149.76 404.865)">14,880 safe-labelled observations</text>
+   </g>
+   <g id="text_17">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: start" x="315.028862" y="434.16" transform="rotate(-0 315.028862 434.16)">18.44%</text>
+   </g>
+   <g id="text_18">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: start" x="349.663837" y="501.66" transform="rotate(-0 349.663837 501.66)">22.47%</text>
+   </g>
+  </g>
+  <g id="axes_4">
+   <g id="patch_11">
+    <path d="M 702.72 537.84 
+L 1071.36 537.84 
+L 1071.36 375.84 
+L 702.72 375.84 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 702.72 445.0275 
+L 702.72 445.0275 
+L 702.72 414.6525 
+L 702.72 414.6525 
+z
+" clip-path="url(#p6c26e25b50)" style="fill: #8d8d8d"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 702.72 512.5275 
+L 820.965614 512.5275 
+L 820.965614 482.1525 
+L 702.72 482.1525 
+z
+" clip-path="url(#p6c26e25b50)" style="fill: #0f62fe"/>
+   </g>
+   <g id="matplotlib.axis_7"/>
+   <g id="matplotlib.axis_8">
+    <g id="ytick_7">
+     <g id="line2d_7"/>
+     <g id="text_19">
+      <text style="fill: #525252; font: 12px 'IBM Plex Sans'; text-anchor: end" x="699.22" y="434.28" transform="rotate(-0 699.22 434.28)">Guardrail only</text>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_8"/>
+     <g id="text_20">
+      <text style="fill: #525252; font: 12px 'IBM Plex Sans'; text-anchor: end" x="699.22" y="501.78" transform="rotate(-0 699.22 501.78)">Monitored</text>
+     </g>
+    </g>
+   </g>
+   <g id="text_21">
+    <text style="fill: #161616; font: 600 19px 'IBM Plex Sans'; text-anchor: start" x="702.72" y="384.615" transform="rotate(-0 702.72 384.615)">Hold rate</text>
+   </g>
+   <g id="text_22">
+    <text style="fill: #6f6f6f; font: 11px 'IBM Plex Sans'; text-anchor: start" x="702.72" y="404.865" transform="rotate(-0 702.72 404.865)">All 30,720 observations</text>
+   </g>
+   <g id="text_23">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: start" x="709.187368" y="434.16" transform="rotate(-0 709.187368 434.16)">0.00%</text>
+   </g>
+   <g id="text_24">
+    <text style="fill: #161616; font: 600 16px 'IBM Plex Sans'; text-anchor: start" x="827.432982" y="501.66" transform="rotate(-0 827.432982 501.66)">5.49%</text>
+   </g>
+  </g>
+  <g id="text_25">
+   <text style="fill: #161616; font: 600 29px 'IBM Plex Sans'; text-anchor: start" x="63.36" y="56.43" transform="rotate(-0 63.36 56.43)">Measured complete-stream effect</text>
+  </g>
+  <g id="text_26">
+   <text style="fill: #525252; font: 14px 'IBM Plex Sans'; text-anchor: start" x="63.36" y="84.78" transform="rotate(-0 63.36 84.78)">Same model and requests · 60 paired episodes · 30,720 synthetic request observations</text>
+  </g>
+  <g id="text_27">
+   <text style="fill: #525252; font: 12px 'IBM Plex Sans'; text-anchor: start" x="63.36" y="605.88" transform="rotate(-0 63.36 605.88)">Holds count as zero correct automatic decisions. More containment is not the same as restored service.</text>
+  </g>
+  <g id="text_28">
+   <text style="fill: #6f6f6f; font: 10px 'IBM Plex Sans'; text-anchor: start" x="63.36" y="628.56" transform="rotate(-0 63.36 628.56)">Source: synthetic-100k-20261017-01 / benchmark-report.json / overall. Timed and labelled scope remains experimental.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pf379028eee">
+   <rect x="149.76" y="155.52" width="391.68" height="162"/>
+  </clipPath>
+  <clipPath id="p9606d50c64">
+   <rect x="702.72" y="155.52" width="368.64" height="162"/>
+  </clipPath>
+  <clipPath id="p13f5a589ae">
+   <rect x="149.76" y="375.84" width="391.68" height="162"/>
+  </clipPath>
+  <clipPath id="p6c26e25b50">
+   <rect x="702.72" y="375.84" width="368.64" height="162"/>
+  </clipPath>
+ </defs>
+</svg>

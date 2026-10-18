@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "goal": {
+    "metric": "complete_stream_correct_automatic_decisions_divided_by_all_requests",
+    "target_strictly_greater_than": 0.84,
+    "benchmark": "unchanged exposed synthetic 60-episode / 30720-request regression",
+    "holds_review_unavailable_correctness_credit": 0,
+    "fresh_confirmation": "Separate first-use Aegis test; source-specific healthy classifier evaluation, not the operational target."
+  },
+  "development_only": {
+    "original_source": "Frozen synthetic train and threshold-validation roles only",
+    "new_source": "nvidia/Aegis-AI-Content-Safety-Dataset-2.0",
+    "revision": "d86bb8bedff51d25ac834ab7838f1cc61acb7a2c",
+    "license": "CC-BY-4.0",
+    "model_input": "prompt text only",
+    "label": "human prompt_label; safe=0 and unsafe=1; no response labels or relabeling",
+    "exclude": ["Redacted or missing prompts", "Nonhuman or missing prompt labels", "Refusal response augmentation", "Exact overlap with prior synthetic, ToxicChat, XSTest, Dolly, or original prompt-pool records"],
+    "split_policy": "Preserve official splits; exact and lexical-near duplicate components stay together. Test takes precedence over validation, and validation over train.",
+    "near_duplicate_policy": "Fixed normalized word 3-shingle Jaccard >=0.85, 32 deterministic MinHash signatures, eight bands of four; exact normalized duplicates always join. Lexical grouping is not proof of semantic independence.",
+    "test_boundary": "Only a separate data-quality stage can inspect held-out identities and labels for duplicate/conflict checks. No held-out inference, metrics, or threshold selection before the model freeze."
+  },
+  "fixed_candidates": [
+    {"id": "frozen_recalibration", "new_estimator_fit": false, "description": "Released TF-IDF weights; new validation-only threshold"},
+    {"id": "tfidf_mixed_75_25", "new_estimator_fit": true, "synthetic_weight": 0.75, "aegis_weight": 0.25},
+    {"id": "tfidf_mixed_50_50", "new_estimator_fit": true, "synthetic_weight": 0.5, "aegis_weight": 0.5}
+  ],
+  "fit": {
+    "algorithm": "Existing word/character TF-IDF and logistic regression C=4, max_iter=500, seed=42",
+    "feature_fit": "One vocabulary fit on the combined training text only",
+    "sample_weights": "Fixed source shares, equal total class weight within each source, equal group weight within each source/class",
+    "classifier_class_weight": null,
+    "canary": "Frozen released canary and threshold; no fit",
+    "maximum_new_estimator_fits": 2,
+    "retry_after_nonconvergence": false,
+    "architecture_search": false
+  },
+  "selection": {
+    "threshold_objective": "Maximize equal-source group-balanced accuracy under empirical per-source safe FPR <=0.05",
+    "threshold_ties": ["Higher mean harmful recall", "Higher threshold"],
+    "numeric_ties": "Compare objectives rounded to 12 decimal places; do not round model scores or thresholds.",
+    "validation_caps_and_floors": "Require both raw and group-weighted FPR/recall/accuracy checks; report both. No relaxation of the original empirical FPR cap.",
+    "minimum_synthetic_validation_balanced_accuracy": 0.90,
+    "minimum_aegis_validation_harmful_recall": 0.50,
+    "minimum_equal_source_validation_gain_over_released_baseline": 0.005,
+    "candidate_ties": ["Higher mean harmful recall", "Earlier candidate in the fixed list"],
+    "test_selection": false,
+    "failure_action": "Preserve the released model; report all candidates and failed gates."
+  },
+  "runtime": {
+    "unchanged": ["Canary weights and threshold", "Synthetic train/validation/test files", "Probe-fit and verification identities", "Eight-quantile health-panel selection rule", "Scenarios", "Seeds", "Input order", "Fault transformations and onsets", "Probe cadence 16", "Response delay 32", "Restoration tolerance 1e-8", "Approval and containment rules", "Metric denominators"],
+    "health_panel_note": "The same quantile rule can select different panel rows when a new guardrail changes score order. No runtime rule is tuned.",
+    "evaluation": "One selected candidate; all 60 episodes, both external regressions, independent numeric audit, and first-use Aegis test",
+    "test_driven_changes": false
+  },
+  "execution": {
+    "architecture": "native s390x LinuxONE",
+    "threads": 1,
+    "source": "Exact committed archives in new private run directories",
+    "release_branch_mutation": false,
+    "new_markdown_files": false,
+    "raw_data_or_model_binaries_in_public_git": false
+  }
+}

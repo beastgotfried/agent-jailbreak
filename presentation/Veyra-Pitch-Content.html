@@ -1,0 +1,2258 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Veyra — IBM Z Pitch Content</title><style>
+@font-face{font-family:Plex;src:url('assets/IBMPlexSans-Regular.ttf')}@font-face{font-family:Plex;src:url('assets/IBMPlexSans-SemiBold.ttf');font-weight:600}@font-face{font-family:Plex;src:url('assets/IBMPlexSans-Italic.ttf');font-style:italic}@font-face{font-family:PlexMono;src:url('assets/IBMPlexMono-Regular.ttf')}
+:root{--blue:#0f62fe;--ink:#161616;--muted:#525252;--line:#e0e0e0;--paper:#fff;--teal:#007d79}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:32px}body{margin:0;background:#f4f4f4;color:var(--ink);font:16px/1.6 Plex,Arial,sans-serif}a{color:#0043ce;text-decoration-thickness:1px;text-underline-offset:3px;overflow-wrap:anywhere}aside{position:fixed;inset:0 auto 0 0;width:255px;padding:30px 20px;background:#161616;color:white;overflow:auto}aside .brand{font-size:23px;font-weight:600;letter-spacing:-.7px}aside .sub{font:11px/1.5 PlexMono,monospace;color:#a6c8ff;margin:8px 0 28px}nav a{display:flex;gap:12px;color:#f4f4f4;text-decoration:none;font-size:12px;line-height:1.45;padding:10px 5px;border-bottom:1px solid #393939}nav a:hover{color:#a6c8ff}nav span{font-family:PlexMono;color:#78a9ff;flex:0 0 19px}main{margin-left:255px;max-width:1430px;padding:0 44px 80px}.cover{padding:72px 50px 52px;background:#001141;color:white;margin:0 -44px 36px}.cover .eyebrow{color:#a6c8ff}.cover h1{font-size:68px;letter-spacing:-2.8px;line-height:1.05;margin:18px 0}.cover .tagline{font-size:27px;color:#d0e2ff;max-width:650px}.cover .scope{color:#c6c6c6;font-size:14px;margin-top:28px;max-width:720px}.cover .actions{display:flex;gap:20px;flex-wrap:wrap;margin-top:30px}.cover a{color:white;font-size:13px}.eyebrow{font:12px/1.5 PlexMono,monospace;letter-spacing:1.4px;color:var(--blue)}.intro{background:white;padding:26px 34px;border-left:4px solid var(--blue);margin-bottom:34px}.intro h1,.intro h2{display:none}.intro p{font-size:14px}.intro hr{display:none}section{background:var(--paper);margin-bottom:28px;padding:44px 42px;border:1px solid #e0e0e0}h2{font-size:35px;line-height:1.17;letter-spacing:-1px;margin:12px 0 28px;font-weight:600}h3{font-size:19px;line-height:1.4;margin:32px 0 11px;padding-top:14px;border-top:1px solid var(--line);font-weight:600}p{margin:10px 0 15px;max-width:950px}ul,ol{padding-left:24px}li{margin:8px 0}strong{font-weight:600}code{font:12px/1.6 PlexMono,monospace;background:#f4f4f4;padding:2px 4px;overflow-wrap:anywhere}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#161616;color:#f4f4f4;padding:22px;font:12px/1.7 PlexMono,monospace}pre code{background:none;color:inherit;padding:0}table{width:100%;border-collapse:collapse;margin:18px 0 24px;font-size:13px;line-height:1.5;table-layout:auto}th{background:#edf5ff;color:#001141;text-align:left;border-bottom:2px solid #a6c8ff;padding:11px 12px;font-weight:600}td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}tr:nth-child(even) td{background:#fafafa}td code{font-size:10.5px}figure{margin:30px -18px;border:1px solid #e0e0e0}figure img{display:block;width:100%;height:auto}details{margin-top:24px}summary{cursor:pointer;font-weight:600;color:var(--blue)}section>hr{margin-top:35px;border:0;border-top:1px solid #e0e0e0}footer{font-size:12px;color:#525252;padding:16px 0}.note{color:var(--muted)}
+@media(max-width:1050px){aside{position:relative;width:auto;max-height:330px}aside nav{display:grid;grid-template-columns:repeat(2,1fr);gap:0 20px}main{margin:0;padding:0 22px 45px}.cover{margin:0 -22px 24px;padding:45px 28px}.cover h1{font-size:52px}section{padding:30px 25px}table{font-size:12px}}
+@media print{@page{size:A4;margin:15mm}body{background:white;font-size:10pt}aside{display:none}main{margin:0;padding:0;max-width:none}.cover{margin:0;padding:22mm 14mm;break-after:page}.cover h1{font-size:46pt}.intro{border:0;padding:0}section{border:0;padding:0;margin:0;break-before:page}h2{font-size:24pt}h3{font-size:13pt;break-after:avoid}table{font-size:8pt}th,td{padding:6px}tr{break-inside:avoid}figure{margin:12pt 0;break-inside:avoid}details{display:none}a{color:inherit}nav,.actions{display:none}}
+</style></head><body><aside><div class="brand">Veyra</div><div class="sub">IBM Z DATATHON<br>CONTENT + EVIDENCE</div><nav><a href="#slide-1"><span>01</span>Veyra: Verify the Guardrail</a><a href="#slide-2"><span>02</span>A Valid Score Can Hide a Changed Control</a><a href="#slide-3"><span>03</span>Separate Observation, Verification, and Authority</a><a href="#slide-4"><span>04</span>The Implemented Architecture</a><a href="#slide-5"><span>05</span>Data and Models Built for a Native CPU Workflow</a><a href="#slide-6"><span>06</span>Two Evidence Channels, One Clear Decision Boundary</a><a href="#slide-7"><span>07</span>Demonstrate a Real Runtime Recovery</a><a href="#slide-8"><span>08</span>Measured Improvement, With the Full Denominator</a><a href="#slide-9"><span>09</span>Recovery Requires Evidence, Not Optimism</a><a href="#slide-10"><span>10</span>Native IBM Z Execution, Evidence-Backed Control</a><a href="#appendix-a"><span>A</span>Strongest Features to Highlight</a><a href="#appendix-b"><span>B</span>Feature Status Matrix</a><a href="#appendix-c"><span>C</span>Asset and Evidence Inventory</a><a href="#appendix-d"><span>D</span>Dataset Attribution and Label Boundaries</a><a href="#appendix-e"><span>E</span>Most Compelling Three-Minute Demonstration</a><a href="#appendix-f"><span>F</span>Measurements and Evidence to Collect Before Submission</a><a href="#appendix-g"><span>G</span>Source and Evidence References</a><a href="#appendix-h"><span>H</span>Design and Editorial Direction</a></nav></aside><main><header class="cover"><div class="eyebrow">IBM Z DATATHON / PRESENTATION CONTENT</div><h1>Veyra</h1><div class="tagline">Observe change.<br>Verify recovery. Keep control.</div><p class="scope">Ten slide briefs. Exact evidence. A native LinuxONE story.<br>This is a content workbook, not a generated PowerPoint or a product UI.</p><div class="actions"><a href="Veyra-Pitch-Content.pdf">PDF workbook</a><a href="Veyra-Pitch-Content.txt">Copy-ready text</a><a href="visuals/architecture.svg">Editable architecture</a><a href="visuals/architecture.mmd">Mermaid source</a></div></header><div class="intro"><h1>Veyra</h1>
+<p>IBM Z Datathon · Evidence-backed pitch content</p>
+<p><strong>Observe change. Verify recovery. Keep control.</strong></p>
+<p>This document supplies content for ten slides. It is not a PowerPoint or a product dashboard.
+Use the short points on slides. Use technical details and speaker notes for explanation and questions.</p>
+<p><strong>Evidence basis:</strong> Public release <code>8a86ce01767a02d613b66f38a1d20de312cf61e1</code>; qualified core <code>c5fad060420c8cb1c34f84eb4fd951b193a969c6</code>.
+The selected study is <code>synthetic-100k-20261017-01</code>. Its execution source is <code>d86d384e2ee7d0f07f2f2fc5bf2b6dec64e13cac</code>.
+The separate accuracy experiment has an active development branch. Its unfinished work does not enter these result claims.</p>
+<p><strong>Presentation rule:</strong> Lead with delivered capabilities and measured gains. State the evidence scope beside each result.
+Keep proposed enterprise features separate from the working offline system. Use “Not measured” for missing measurements.</p>
+<p><strong>LinuxONE story:</strong> The complete selected pipeline runs on native <code>s390x</code> CPUs. LinuxONE is the execution and reproducibility target, not a logo on a proposed architecture.</p>
+<hr /></div><section id="slide-1"><div class="eyebrow">SLIDE 01</div><h2>Veyra: Verify the Guardrail</h2><h3>Main message</h3>
+<p>AI safety controls need their own integrity checks. Veyra provides that control loop on IBM LinuxONE.</p>
+<h3>Slide points</h3>
+<ul>
+<li><strong>Tagline:</strong> Observe change. Verify recovery. Keep control.</li>
+<li>Detect changes in guardrail runtime behavior with matched reference probes.</li>
+<li>Permit a replacement only after approval and fresh paired verification.</li>
+<li>Run the complete workflow on native LinuxONE CPUs, without an external model API.</li>
+</ul>
+<h3>Product introduction</h3>
+<p>Veyra checks AI guardrail behavior and supports approved recovery or explicit containment when runtime outputs change.</p>
+<p><strong>Central value:</strong> Turn a changed safety-control output into an evidence-backed operational decision, rather than an unexplained alert.</p>
+<h3>Technical details and numbers</h3>
+<ul>
+<li>Selected release: TF-IDF guardrail and canary, fixed binary policy, runtime checks, verified response, and offline replay.</li>
+<li>Native qualification: <strong>292 tests pass; four optional converter tests skip</strong> because PyArrow is unavailable.</li>
+<li>The complete reproduction covers <strong>100,000 data rows, 60 paired episodes, and 30,720 request observations</strong>.</li>
+<li>Current delivery: Python libraries, command-line tools, a wheel, and a private reproducibility kit.</li>
+</ul>
+<h3>Recommended visual</h3>
+<p>Use the architecture image with only its main chain visible: <strong>Request → Guardrail + Canary → Runtime Evidence → Verified Response</strong>.
+Place a small “Native LinuxONE · s390x · CPU” label below it. Do not use an unbuilt console screenshot.</p>
+<h3>Evidence</h3>
+<p>[C1], [C2], [C3], [C8], [E1], [E3], [E4].</p>
+<h3>Speaker notes</h3>
+<p>“We do not replace the guardrail. We check whether its runtime behavior still matches an approved baseline. A response needs evidence and approval. The complete selected workflow runs on native IBM LinuxONE.”</p>
+<hr /></section><section id="slide-2"><div class="eyebrow">SLIDE 02</div><h2>A Valid Score Can Hide a Changed Control</h2><h3>Main message</h3>
+<p>A guardrail can return valid numbers while its decision behavior changes.</p>
+<h3>Slide points</h3>
+<ul>
+<li>Traffic, model versions, wrappers, and score transformations can change guardrail behavior.</li>
+<li>A lower score can mean a safer request—or a changed scoring path.</li>
+<li>One score cannot distinguish those causes without a reference or labels.</li>
+<li>Veyra checks runtime consistency separately from traffic change and classifier quality.</li>
+</ul>
+<h3>Simple business example</h3>
+<p><strong>Illustrative scenario, not a customer deployment:</strong> A bank uses a guardrail before an assistant handles requests.
+A deployment wrapper rescales the guardrail output, but the decision threshold stays fixed.
+The output remains a valid number. Some decisions change.
+Veyra checks fixed probes, identifies the output change, and verifies a candidate recovery.</p>
+<h3>Technical details</h3>
+<p>The implemented <code>scale</code> fault multiplies guardrail scores by <strong>0.25</strong>.
+The classifier weights and request stream remain fixed. This isolates a runtime transformation from new traffic.</p>
+<p>Other implemented fault cases include affine transformation, squaring, clipping, constant output, inversion, and common-mode scaling.
+These are controlled runtime tests. They are not measurements of real attack prevalence or reasoning-token starvation.</p>
+<p><strong>LinuxONE connection:</strong> The check runs beside the native inference workflow. The qualification does not require an external model service.</p>
+<h3>Recommended visual</h3>
+<p>Show the same request entering two runtime paths: <strong>Approved output</strong> and <strong>Rescaled output</strong>.
+Draw one fixed decision threshold across both paths. Label the illustration “Controlled fault example.”</p>
+<h3>Evidence</h3>
+<p>[C3], [C6], [C10]; <code>src/replay/recovery.py::FaultBackend.score</code>; [E1].</p>
+<h3>Speaker notes</h3>
+<p>“A system can look healthy because it returns a number. That number does not prove the control behaves as before. Our experiment changes the output path while it keeps the model and requests fixed. This makes runtime integrity measurable.”</p>
+<hr /></section><section id="slide-3"><div class="eyebrow">SLIDE 03</div><h2>Separate Observation, Verification, and Authority</h2><h3>Main message</h3>
+<p>Veyra links runtime evidence to a controlled response.</p>
+<h3>Slide points</h3>
+<ul>
+<li><strong>Guardrail:</strong> Makes the allow or refuse decision under a frozen policy.</li>
+<li><strong>Canary:</strong> Supplies a second score view; it does not make the request decision.</li>
+<li><strong>Runtime check:</strong> Compares both models with fixed reference probes.</li>
+<li><strong>Response:</strong> Verifies a correction or trusted reload, or keeps the service contained.</li>
+</ul>
+<h3>Component roles</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Actual responsibility</th>
+<th>Authority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Guardrail</td>
+<td>Score request text; apply the binary threshold</td>
+<td>Request decision</td>
+</tr>
+<tr>
+<td>Canary</td>
+<td>Score the same text and verification probes</td>
+<td>Observation only</td>
+</tr>
+<tr>
+<td>Passive KS monitor</td>
+<td>Detect a distribution change in signed score gaps</td>
+<td>Warning only</td>
+</tr>
+<tr>
+<td>RuntimeWatch</td>
+<td>Detect changed outputs on matched probes or unavailable output</td>
+<td>Runtime incident evidence</td>
+</tr>
+<tr>
+<td>RecoveryManager</td>
+<td>Execute and verify candidate backends</td>
+<td>Activation requires explicit approval</td>
+</tr>
+<tr>
+<td>SupervisedRuntime</td>
+<td>Gate requests and maintain a hold</td>
+<td>Separate containment and release authority</td>
+</tr>
+</tbody>
+</table>
+<h3>What makes the approach useful</h3>
+<p>The response does not follow a traffic warning automatically.
+The runtime path checks the active backend, not a stale cached candidate.
+A new incident can open after a verified recovery.
+An unsuccessful replacement leaves an explicit hold rather than a false restoration claim.</p>
+<p><strong>Important distinction:</strong> The selected benchmark uses matched runtime probes and verified response.
+It does not use the passive KS warning as response authority.</p>
+<h3>Recommended visual</h3>
+<p>Use three horizontal lanes: <strong>Traffic observation</strong>, <strong>Runtime integrity</strong>, and <strong>Response authority</strong>.
+Only the runtime evidence lane reaches the response gate. Show an approval symbol before activation.</p>
+<h3>Evidence</h3>
+<p>[C1] <code>SupervisedRuntime</code>; [C2] <code>RecoveryManager</code>; [C3] <code>RuntimeWatch</code>; [C4] <code>DisagreementMonitor</code>; [C9] <code>ProfiledTrafficWatch</code>.</p>
+<h3>Speaker notes</h3>
+<p>“The canary is not an oracle or a second blocking filter. We keep three questions separate: Has traffic changed? Has the runtime changed? Does labelled evaluation show a quality change? This separation prevents a traffic warning from becoming an automatic model change.”</p>
+<hr /></section><section id="slide-4"><div class="eyebrow">SLIDE 04</div><h2>The Implemented Architecture</h2><h3>Main message</h3>
+<p>The working system is a native Python execution pipeline with explicit evidence and response boundaries.</p>
+<h3>Slide points</h3>
+<ul>
+<li>Ordered requests enter an offline Python replay or classifier CLI.</li>
+<li>The supervisor checks runtime health and uses the current model backend.</li>
+<li>Candidate execution, paired verification, and approval precede activation.</li>
+<li>Local JSON/JSONL records preserve decisions, incidents, costs, and artifact identities.</li>
+</ul>
+<h3>Current implementation map</h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Implemented now</th>
+<th>Status of enterprise extension</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frontend</td>
+<td>Terminal output and private development Jupyter</td>
+<td>Product web frontend: <strong>Not implemented</strong></td>
+</tr>
+<tr>
+<td>Backend</td>
+<td>Python model, monitor, response, and replay modules</td>
+<td>Persistent multi-process service: <strong>Not implemented</strong></td>
+</tr>
+<tr>
+<td>APIs</td>
+<td>Python methods and CLI entry points</td>
+<td>PRD REST endpoints: <strong>Not implemented</strong></td>
+</tr>
+<tr>
+<td>Models</td>
+<td>Frozen TF-IDF/logistic guardrail and canary</td>
+<td>Neural comparison exists as an archived experiment</td>
+</tr>
+<tr>
+<td>Stream path</td>
+<td>Ordered in-process request loops and JSONL score events</td>
+<td>Live collector and Kafka: <strong>Not implemented</strong></td>
+</tr>
+<tr>
+<td>Detection</td>
+<td>Empirical KS traffic analysis; deterministic matched runtime probes</td>
+<td>Scan martingales and MMD: <strong>Not implemented in this project</strong></td>
+</tr>
+<tr>
+<td>State</td>
+<td>Bounded monitor windows; in-memory incidents and backend generation</td>
+<td>Durable distributed incident state: <strong>Not implemented</strong></td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>Private model files, JSON/JSONL evidence, SHA-256 manifests</td>
+<td>PostgreSQL and S3 services: <strong>Not implemented</strong></td>
+</tr>
+<tr>
+<td>Response</td>
+<td>Verified affine correction, trusted backend reload, hold, explicit release, rollback API</td>
+<td>Customer enforcement connectors: <strong>Not implemented</strong></td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Native LinuxONE container and wheel qualification</td>
+<td>HA, OpenShift qualification, hardware attestation: <strong>Not implemented or verified</strong></td>
+</tr>
+</tbody>
+</table>
+<h3>Actual flow</h3>
+<ol>
+<li>Validate the request and model identity.</li>
+<li>Run scheduled matched probes against the active backend.</li>
+<li>Confirm a runtime incident if either score vector changes beyond tolerance.</li>
+<li>At the response point, execute an affine candidate or a trusted backend reload.</li>
+<li>Verify both score vectors and decisions on separate verification probes.</li>
+<li>Reverify the candidate before generation-bound activation.</li>
+<li>Gate the request with the current policy, or retain an explicit hold.</li>
+<li>Record events and outcomes for the independent audit.</li>
+</ol>
+<h3>IBM LinuxONE boundary</h3>
+<p>Data generation, model fit, inference, probes, response, replay, audit, wheel construction, and release qualification execute on native <code>s390x</code>.
+The host uses Ubuntu Linux, not z/OS.
+The qualified container has a <strong>two-CPU quota and 4 GiB memory limit</strong>. The development VM has three vCPUs and about 8 GiB RAM.</p>
+<h3>Mermaid architecture</h3>
+<p>The complete editable source is <code>visuals/architecture.mmd</code>.
+The rendered presentation asset is <code>visuals/architecture.png</code>, with an editable SVG companion.
+The diagram separates the selected runtime path from the historical traffic-study path.</p>
+<figure><img src="visuals/architecture.png" alt="architecture" loading="lazy"/></figure><h3>Recommended visual</h3>
+<p>Use the supplied architecture image at full slide width.
+Keep the IBM LinuxONE boundary prominent. Do not add Kafka, databases, REST endpoints, or a dashboard inside the implemented boundary.</p>
+<h3>Evidence</h3>
+<p>[C1]–[C10]; [E3], [E4]; PRD sections 16, 17, 22–28 for the separate enterprise proposal [P1].</p>
+<h3>Speaker notes</h3>
+<p>“This is the architecture we execute, not the larger enterprise roadmap. The selected runtime is Python on LinuxONE. Its interfaces are CLI and Python APIs. Our diagram keeps the passive traffic study separate from the runtime recovery path.”</p>
+<hr /><details><summary>Copy the Mermaid architecture source</summary><pre><code>flowchart TB
+    Operator[Operator: explicit offline approval]
+    subgraph Z[IBM LinuxONE: native Linux s390x CPU execution]
+        direction TB
+        subgraph CORE[Selected release: offline request and runtime path]
+            Input[Ordered request stream / Python replay]
+            Supervisor[SupervisedRuntime: current backend and request gate]
+            Pair[TF-IDF guardrail + canary]
+            Policy[Frozen binary policy: guardrail decision]
+            Stub[Agent stub: allow / refuse / hold]
+            Models[(Frozen model files, cards, policy and hashes)]
+            Probes[(Disjoint labelled fit and verification probes)]
+            Watch[RuntimeWatch: 8 probes every 16 requests]
+            Recovery[RecoveryManager: affine candidate or trusted backend reload]
+            Verify[Execute candidate and verify both score vectors and decisions]
+            Activate[Fresh verification + single-use generation-bound activation]
+            Hold[Explicit containment; full verification before release]
+            Input --&gt; Supervisor --&gt; Pair --&gt; Policy --&gt; Stub
+            Models --&gt; Pair
+            Probes --&gt; Watch
+            Watch --&gt;|Execute matched probes| Pair
+            Watch --&gt;|Confirmed change / unavailable scores| Recovery
+            Recovery --&gt; Verify
+            Probes --&gt; Verify
+            Models --&gt; Recovery
+            Verify --&gt;|Accepted with approval| Activate --&gt; Supervisor
+            Verify --&gt;|No verified replacement| Hold --&gt; Supervisor
+        end
+        subgraph TRAFFIC[Separate implemented traffic-study path]
+            Events[Source-bound paired score events: original-model studies]
+            KS[Signed gap + finite-horizon empirical KS monitor]
+            Warning[Traffic warning: no response authority]
+            Events --&gt; KS --&gt; Warning
+        end
+        Evidence[(Local JSON / JSONL events, receipts and SHA-256 manifests)]
+        Supervisor --&gt; Evidence
+        Watch --&gt; Evidence
+        Verify --&gt; Evidence
+        Warning --&gt; Evidence
+    end
+    Operator --&gt;|Separate recovery and containment flags| Recovery
+    Operator --&gt;|Explicit release approval| Hold
+    classDef native fill:#edf5ff,stroke:#0f62fe,color:#161616;
+    classDef store fill:#f4f4f4,stroke:#8d8d8d,color:#161616;
+    classDef action fill:#d9fbfb,stroke:#007d79,color:#161616;
+    class Input,Supervisor,Pair,Policy,Watch,KS,Events native;
+    class Models,Probes,Evidence store;
+    class Recovery,Verify,Activate,Hold,Stub,Warning action;
+</code></pre></details></section><section id="slide-5"><div class="eyebrow">SLIDE 05</div><h2>Data and Models Built for a Native CPU Workflow</h2><h3>Main message</h3>
+<p>A controlled dataset and lightweight models make the runtime experiment reproducible on LinuxONE.</p>
+<h3>Slide points</h3>
+<ul>
+<li>Use <strong>100,000 synthetic requests</strong> with explicit intent labels and family-based splits.</li>
+<li>Fit a word/character TF-IDF guardrail and a character TF-IDF canary.</li>
+<li>Select thresholds on validation data; keep test labels out of live decisions.</li>
+<li>Choose the completed candidate by measured operational results, not model size.</li>
+</ul>
+<h3>Selected study design</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th style="text-align: right;">Exact value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Total rows</td>
+<td style="text-align: right;">100,000</td>
+</tr>
+<tr>
+<td>Train</td>
+<td style="text-align: right;">70,000; 35,000 per class</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td style="text-align: right;">10,000; 5,000 per class</td>
+</tr>
+<tr>
+<td>Test</td>
+<td style="text-align: right;">20,000; 10,000 per class</td>
+</tr>
+<tr>
+<td>Template families</td>
+<td style="text-align: right;">100</td>
+</tr>
+<tr>
+<td>Reviewed semantic groups</td>
+<td style="text-align: right;">91</td>
+</tr>
+<tr>
+<td>Target-intent combinations</td>
+<td style="text-align: right;">1,000</td>
+</tr>
+<tr>
+<td>Matched case units before frames</td>
+<td style="text-align: right;">10,000</td>
+</tr>
+<tr>
+<td>Frames per case</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>Normalized duplicate rows</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Cross-split family overlap</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Cross-split reviewed-group overlap</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p>The generator splits families and reviewed semantic groups before expansion.
+It keeps matched labels, contexts, and frames together.
+The rows are compositional variants, not 100,000 independent human requests.</p>
+<p><strong>Label rule:</strong> <code>safe=0</code>; <code>harmful=1</code>, based on the catalogue's requested intent.
+Labels are not model predictions. Only text enters the classifiers.</p>
+<h3>Validation roles</h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th style="text-align: right;">Rows</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Threshold selection</td>
+<td style="text-align: right;">5,000</td>
+<td>Fixed decision thresholds</td>
+</tr>
+<tr>
+<td>Reserved calibration</td>
+<td style="text-align: right;">3,000</td>
+<td>Predeclared fallback; also the later neural stack fit</td>
+</tr>
+<tr>
+<td>Probe-fit pool</td>
+<td style="text-align: right;">1,000</td>
+<td>Runtime correction probe selection</td>
+</tr>
+<tr>
+<td>Probe-verification pool</td>
+<td style="text-align: right;">1,000</td>
+<td>Separate response verification probe selection</td>
+</tr>
+</tbody>
+</table>
+<p>The runtime selects <strong>64 fit probes</strong>, <strong>128 verification probes</strong>, and an <strong>eight-probe health panel</strong>.
+The selected TF-IDF fallback does not activate.</p>
+<h3>Selected models</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Guardrail</th>
+<th>Canary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Features</td>
+<td>Word 1–2 grams plus <code>char_wb</code> 3–5 grams</td>
+<td>Character 3–5 grams</td>
+</tr>
+<tr>
+<td>Feature limits</td>
+<td>60,000 word plus 100,000 character</td>
+<td>100,000 character</td>
+</tr>
+<tr>
+<td>Estimator</td>
+<td>Logistic regression, C=4</td>
+<td>Logistic regression, C=1</td>
+</tr>
+<tr>
+<td>Fit settings</td>
+<td>Balanced class weights; seed 42; maximum 500 iterations</td>
+<td>Same fixed class-weight, seed, and iteration policy</td>
+</tr>
+<tr>
+<td>Threshold</td>
+<td>0.20832091569900513</td>
+<td>0.2771334648132324</td>
+</tr>
+<tr>
+<td>Role</td>
+<td>Request decision</td>
+<td>Observation and paired verification</td>
+</tr>
+</tbody>
+</table>
+<p>Threshold selection maximizes validation balanced accuracy under an empirical safe FPR cap of 5%.
+That validation cap is not a test-set or production guarantee.
+Scores are model outputs, not established calibrated harm probabilities.</p>
+<h3>Healthy synthetic test results</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align: right;">Guardrail</th>
+<th style="text-align: right;">Canary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Accuracy</td>
+<td style="text-align: right;">88.665%</td>
+<td style="text-align: right;">86.265%</td>
+</tr>
+<tr>
+<td>Precision</td>
+<td style="text-align: right;">81.540%</td>
+<td style="text-align: right;">78.625%</td>
+</tr>
+<tr>
+<td>Harmful recall</td>
+<td style="text-align: right;">99.960%</td>
+<td style="text-align: right;">99.610%</td>
+</tr>
+<tr>
+<td>Safe false-refusal rate</td>
+<td style="text-align: right;">22.630%</td>
+<td style="text-align: right;">27.080%</td>
+</tr>
+<tr>
+<td>F1</td>
+<td style="text-align: right;">0.8982</td>
+<td style="text-align: right;">0.8788</td>
+</tr>
+<tr>
+<td>ROC-AUC</td>
+<td style="text-align: right;">0.9917</td>
+<td style="text-align: right;">0.9822</td>
+</tr>
+<tr>
+<td>TP / FN / TN / FP</td>
+<td style="text-align: right;">9,996 / 4 / 7,737 / 2,263</td>
+<td style="text-align: right;">9,961 / 39 / 7,292 / 2,708</td>
+</tr>
+</tbody>
+</table>
+<h3>External datasets and their actual roles</h3>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Size or selected subset</th>
+<th>Actual use</th>
+<th>License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ToxicChat 0124</td>
+<td>5,082 official train; 5,083 test; 2,853 human test rows</td>
+<td>Original classifier fit; original pool reference; current exposed external regression</td>
+<td>CC-BY-NC-4.0</td>
+</tr>
+<tr>
+<td>WAInjectBench text</td>
+<td>2,707 source-labelled safe-routing and 991 malicious-routing rows</td>
+<td>Original prompt-injection traffic pools; not selected-model fit</td>
+<td>Not verified</td>
+</tr>
+<tr>
+<td>JBB-Behaviors</td>
+<td>100 safe and 100 harmful goals</td>
+<td>Original behavior-goal pools</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td>walledai/JailbreakBench</td>
+<td>200 mirror rows; no unique normalized additions</td>
+<td>Original provenance and deduplication</td>
+<td>Not listed</td>
+</tr>
+<tr>
+<td>AlignmentResearch/StrongREJECT</td>
+<td>313 unique requests</td>
+<td>Original harmful-request pools</td>
+<td>Not listed</td>
+</tr>
+<tr>
+<td>HarmBench</td>
+<td>400 source rows; 200 standard behaviors eligible</td>
+<td>Original behavior pools; contextual/copyright rows excluded</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td>XSTest</td>
+<td>450 source rows; 150 verification and 300 evaluation rows</td>
+<td>Original recovery evaluation; current exposed 300-row regression</td>
+<td>CC-BY-4.0</td>
+</tr>
+<tr>
+<td>Dolly 15k</td>
+<td>15,014 rows; 14,744 retained groups</td>
+<td>Instruction-only, unlabelled traffic-profile study</td>
+<td>CC-BY-SA-3.0</td>
+</tr>
+<tr>
+<td>OASST1</td>
+<td>88,838 messages; 3,670 eligible English root prompts identified</td>
+<td>Acquisition/schema inspection only; profile evaluation paused</td>
+<td>Apache-2.0</td>
+</tr>
+</tbody>
+</table>
+<p>The current selected models do not fit on the external rows above.
+The original ToxicChat models use 4,734 retained groups: <strong>3,076 fit / 947 threshold validation / 711 reference</strong>.
+Their label is <code>toxicity == 1 OR jailbreaking == 1</code>. The official test split is not fit data.
+The original prompt pool retains <strong>4,352 normalized groups: 3,143 safe-routing / 1,209 attack-routing</strong>.</p>
+<h3>Historical real-data models: separate result</h3>
+<p>The original guardrail uses character 3–5 TF-IDF features; its canary uses word 1–2 features.
+Both use logistic regression with C=1, seed 42, and a maximum of 1,000 iterations.
+Their thresholds are 0.5043438173439732 and 0.5619078211744054.</p>
+<table>
+<thead>
+<tr>
+<th>Original model on 2,853 human ToxicChat test rows</th>
+<th style="text-align: right;">Accuracy</th>
+<th style="text-align: right;">Precision</th>
+<th style="text-align: right;">Harmful recall</th>
+<th style="text-align: right;">Safe FPR</th>
+<th style="text-align: right;">F1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Original guardrail</td>
+<td style="text-align: right;">89.24%</td>
+<td style="text-align: right;">56.76%</td>
+<td style="text-align: right;">63.81%</td>
+<td style="text-align: right;">7.07%</td>
+<td style="text-align: right;">0.6008</td>
+</tr>
+<tr>
+<td>Original canary</td>
+<td style="text-align: right;">90.19%</td>
+<td style="text-align: right;">60.79%</td>
+<td style="text-align: right;">63.81%</td>
+<td style="text-align: right;">5.98%</td>
+<td style="text-align: right;">0.6226</td>
+</tr>
+<tr>
+<td>Always-safe arithmetic reference</td>
+<td style="text-align: right;">87.31%</td>
+<td style="text-align: right;">Not defined</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p>These are different models from the selected synthetic-trained pair.
+Do not attach these real-data figures to the current selected model.
+The selected release is the stronger of the two completed candidates on its declared synthetic runtime benchmark, not every possible classifier.</p>
+<h3>Neural comparison and CPU choice</h3>
+<p>The project also executes a BERT-tiny/lexical comparison natively on <code>s390x</code>.
+It uses <code>google/bert_uncased_L-2_H-128_A-2</code>, two fixed epochs, and a validation-fitted logistic stack.
+It has 4,386,049 total parameters and 396,673 trainable parameters.
+The selected TF-IDF monitored score is <strong>81.69%</strong>; the neural comparison is <strong>78.22%</strong> on the same exposed benchmark.
+The release retains TF-IDF. Both outcomes remain available.</p>
+<p>MiniLM-L6 completes a native compatibility/cost screen only. It has no accepted study fit.
+Lightweight CPU models support local execution, explicit artifact checks, repeated probe evaluation, and practical reproducibility.
+A LinuxONE-versus-x86 speed advantage is <strong>Not measured</strong>.</p>
+<figure><img src="visuals/data-split.png" alt="data split" loading="lazy"/></figure><h3>Recommended visual</h3>
+<p>Use <code>visuals/data-split.png</code> and a compact two-column model table.
+Put detailed source licensing and external metrics in backup material, not tiny text on the main slide.</p>
+<h3>Evidence</h3>
+<p>[C5], [C7], [E1], [E2], [E5], [E6], [E7]. Pinned source links appear in Appendix D and the release source manifest.</p>
+<h3>Speaker notes</h3>
+<p>“We use a declared synthetic study to isolate runtime behavior. We split related families before expansion and feed only text to the models. Both models run on LinuxONE CPUs. The release uses the strongest completed operational result, while it preserves the neural comparison.”</p>
+<hr /></section><section id="slide-6"><div class="eyebrow">SLIDE 06</div><h2>Two Evidence Channels, One Clear Decision Boundary</h2><h3>Main message</h3>
+<p>A traffic warning and a runtime confirmation answer different questions.</p>
+<h3>Slide points</h3>
+<ul>
+<li>Compare the guardrail and canary scores through a signed gap.</li>
+<li>Use empirical KS windows to detect a traffic relationship change.</li>
+<li>Use matched probes to confirm changed runtime outputs.</li>
+<li>Use runtime evidence and approved verification—not a KS warning—to control recovery.</li>
+</ul>
+<h3>Passive canary disagreement</h3>
+<p>For request <code>t</code>, the signed gap is <code>g_t = guardrail_score_t − canary_score_t</code>.
+The KS statistic is the largest distance between the reference and current empirical cumulative distributions of that gap.
+The implementation handles ties on common score knots. It reports a distance, not a KS p-value.</p>
+<table>
+<thead>
+<tr>
+<th>Original KS configuration</th>
+<th style="text-align: right;">Exact value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Window</td>
+<td style="text-align: right;">64 requests</td>
+</tr>
+<tr>
+<td>Stride</td>
+<td style="text-align: right;">16 requests</td>
+</tr>
+<tr>
+<td>Finite episode horizon</td>
+<td style="text-align: right;">512 requests</td>
+</tr>
+<tr>
+<td>Maximum looks</td>
+<td style="text-align: right;">29</td>
+</tr>
+<tr>
+<td>Calibration null episodes</td>
+<td style="text-align: right;">200</td>
+</tr>
+<tr>
+<td>Nominal calibration alpha</td>
+<td style="text-align: right;">0.05</td>
+</tr>
+<tr>
+<td>Episode-maximum quantile rank</td>
+<td style="text-align: right;">191 of 200</td>
+</tr>
+<tr>
+<td>Frozen original threshold</td>
+<td style="text-align: right;">0.23258359872611467</td>
+</tr>
+</tbody>
+</table>
+<p>Calibration samples complete null episodes without replacement within each episode.
+It computes each episode's maximum KS statistic, then freezes the chosen empirical quantile.
+The null episodes reuse a calibration pool. This is not an anytime-valid or production false-alarm guarantee.
+Source-bound traffic profiles add explicit source identity, episode budgets, warning budgets, and generation resets.</p>
+<p>The original KS replay has 15 paired episodes, separate from the later runtime-probe benchmark.</p>
+<table>
+<thead>
+<tr>
+<th>Original KS replay condition</th>
+<th style="text-align: right;">Observed episode result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stationary control</td>
+<td style="text-align: right;">0 / 5 warnings</td>
+</tr>
+<tr>
+<td>Attack-mixture shift</td>
+<td style="text-align: right;">3 / 5 detections</td>
+</tr>
+<tr>
+<td>Silent score-scale fault</td>
+<td style="text-align: right;">5 / 5 detections</td>
+</tr>
+</tbody>
+</table>
+<p>A later reference-transfer diagnosis finds pre-fault warnings under changed source composition.
+The implemented response path therefore uses independent matched runtime checks rather than traffic warnings as recovery authority.
+These results do not establish a permanent false-alarm rate.</p>
+<h3>Runtime confirmation in the selected release</h3>
+<table>
+<thead>
+<tr>
+<th>Runtime setting</th>
+<th style="text-align: right;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Health panel</td>
+<td style="text-align: right;">8 frozen probes</td>
+</tr>
+<tr>
+<td>Probe cadence</td>
+<td style="text-align: right;">Every 16 request positions</td>
+</tr>
+<tr>
+<td>Score restoration tolerance</td>
+<td style="text-align: right;">1e-8</td>
+</tr>
+<tr>
+<td>Delay after confirmation</td>
+<td style="text-align: right;">32 request positions</td>
+</tr>
+<tr>
+<td>Fit probes</td>
+<td style="text-align: right;">64; 32 per class</td>
+</tr>
+<tr>
+<td>Verification probes</td>
+<td style="text-align: right;">128; 64 per class</td>
+</tr>
+<tr>
+<td>Supervisor incident budget</td>
+<td style="text-align: right;">128</td>
+</tr>
+</tbody>
+</table>
+<p>The runtime checks both score vectors against archived expectations.
+Invalid or unavailable score output also creates explicit runtime evidence.
+Live request labels do not enter the controller. Trusted labelled probe sets support verification.</p>
+<h3>Scan martingales: explain the research, not a delivered feature</h3>
+<p><strong>Not implemented in Veyra.</strong> The inspected Cheap Canaries repository contains this method.
+It converts scores to reference-based p-values and accumulates betting evidence over multiple possible start positions.
+Its <code>ScanMartingale</code> maintains up to <code>W</code> accumulators and uses a log threshold <code>log(W/alpha)</code>.
+Formal guarantee claims require their assumptions and separate statistical review. Our measured results do not use this detector.</p>
+<h3>MMD</h3>
+<p><strong>Not implemented in Veyra.</strong> The reference repository implements Gaussian-kernel MMD on embeddings, with frozen bandwidth and optional projection.
+Our neural model's internal embeddings do not imply an MMD detector.</p>
+<h3>What our project adds to the inspected reference</h3>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Cheap Canaries reference</th>
+<th>Veyra contribution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Statistical methods</td>
+<td>KS, MMD, scan martingales, confidence sequences, conformal adaptation</td>
+<td>Uses a smaller auditable subset; keeps traffic evidence separate from runtime evidence</td>
+</tr>
+<tr>
+<td>Response</td>
+<td>Conformal adaptation research</td>
+<td>Actual candidate execution, fresh paired verification, generation-bound activation, trusted reload, and explicit holds</td>
+</tr>
+<tr>
+<td>Incident lifecycle</td>
+<td>Research detector/alarm framework</td>
+<td>Repeated runtime incidents and verified hold release</td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td>Research factorial studies</td>
+<td>Causal fault onset checks, complete-stream exposure, containment accounting, and actual model-input cost records</td>
+</tr>
+<tr>
+<td>Platform</td>
+<td>Python research implementation</td>
+<td>Native LinuxONE CPU fit, inference, audit, wheel, and offline-container reproduction</td>
+</tr>
+</tbody>
+</table>
+<p>This is a contribution relative to the inspected reference, not a claim of a new KS test or a first-ever product.
+No head-to-head effectiveness comparison with Cheap Canaries is measured.</p>
+<h3>Recommended visual</h3>
+<p>Use two lanes: <strong>Score-gap distribution → KS warning</strong> and <strong>Known probes → Runtime confirmation → Verified response</strong>.
+Use a small “Research reference only” box for scan martingales and MMD.</p>
+<h3>Evidence</h3>
+<p>[C3], [C4], [C9], [E8], [E9], [E10], [R1]–[R4]. Reference source snapshot: <code>90726d9d4d281373e6729a0319d50e9c32566c59</code>.</p>
+<h3>Speaker notes</h3>
+<p>“We credit Cheap Canaries for the research direction. Our selected experiment does not use its headline results or its scan martingale. We add an explicit runtime response loop and verify that loop on LinuxONE. A traffic warning alone never authorizes a replacement.”</p>
+<hr /></section><section id="slide-7"><div class="eyebrow">SLIDE 07</div><h2>Demonstrate a Real Runtime Recovery</h2><h3>Main message</h3>
+<p>Show the runtime change, the evidence, and the verified state transition.</p>
+<h3>Slide points</h3>
+<ul>
+<li>Verify the frozen model identity on native LinuxONE.</li>
+<li>Show the guardrail-only and monitored paths on identical requests.</li>
+<li>Follow the scale fault from onset to confirmation to verified correction.</li>
+<li>Show a persistent fault entering an explicit hold.</li>
+</ul>
+<h3>What works now</h3>
+<table>
+<thead>
+<tr>
+<th>User journey</th>
+<th>Working interface</th>
+<th>What it demonstrates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inspect the selected model</td>
+<td><code>safety-watch inspect --models PATH</code></td>
+<td>Four file hashes and the model/threshold identity; it does not load the model</td>
+</tr>
+<tr>
+<td>Classify a request</td>
+<td><code>safety-watch score --models PATH</code> with JSONL input</td>
+<td>Actual guardrail and canary scores plus a guardrail decision</td>
+</tr>
+<tr>
+<td>Exercise the full runtime</td>
+<td><code>src.replay.synthetic::episode</code> and <code>safety-watch-replay</code></td>
+<td>Native inference, health probes, candidate checks, gate decisions, and event evidence</td>
+</tr>
+<tr>
+<td>Reproduce the release</td>
+<td><code>scripts/reproduce_selected.py</code></td>
+<td>Data, learned-state, request-decision, response-action, metric, and audit comparisons</td>
+</tr>
+<tr>
+<td>Review evidence</td>
+<td>JSON/JSONL reports and generated charts</td>
+<td>A traceable explanation of every demonstrated transition</td>
+</tr>
+</tbody>
+</table>
+<p>The classifier CLI reports <code>monitor_enabled:false</code> and <code>action_executed:false</code>.
+Do not present that CLI alone as the full monitored application.
+The full path runs through <code>SupervisedRuntime</code> in the replay.
+The “agent” is an offline stub; the project does not execute instructions from dataset text.</p>
+<h3>Best fault sequence: recorded native <code>scale</code>, seed 0</h3>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th style="text-align: right;">Zero-based request index</th>
+<th>Actual outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Healthy prefix</td>
+<td style="text-align: right;">0–127</td>
+<td>Both arms use the same baseline model and policy</td>
+</tr>
+<tr>
+<td>Scale fault starts</td>
+<td style="text-align: right;">128</td>
+<td>Guardrail output receives a factor of 0.25</td>
+</tr>
+<tr>
+<td>Runtime confirmation</td>
+<td style="text-align: right;">143</td>
+<td>Matched probes identify the change</td>
+</tr>
+<tr>
+<td>Approved response</td>
+<td style="text-align: right;">175</td>
+<td>Paired affine correction applies after verification</td>
+</tr>
+<tr>
+<td>Endpoint check</td>
+<td style="text-align: right;">After the stream</td>
+<td>Both score-vector errors are 0.0; decision mismatches are 0</td>
+</tr>
+</tbody>
+</table>
+<p>The endpoint contains 1,000 fixed requests. It is a subset of the synthetic test data.
+The full-stream score includes the delay before response.</p>
+<h3>Supporting cases</h3>
+<ul>
+<li><code>square</code>, seed 0: The affine candidate does not pass; a trusted backend reload passes verification at index 175.</li>
+<li><code>persistent_restart_fault</code>, seed 0: Neither candidate restores the baseline; the runtime holds service from index 175.</li>
+<li><code>scale_then_constant</code>, seed 0: Incidents confirm at indices 143 and 335; verified responses apply at 175 and 367.</li>
+</ul>
+<p>A trusted backend reload creates a verified model backend. It is not a VM restart.</p>
+<h3>Frontend screens</h3>
+<p><strong>Product frontend screens: Not implemented.</strong> The PRD proposes Fleet, Deployment, Incident, Evaluation, Approval, Evidence, and Administration views.
+No screenshot of those views should appear as a delivered feature.</p>
+<p>Use actual terminal output and evidence charts instead.
+The supplied charts are views of recorded experiments, not screenshots of a live product dashboard.</p>
+<figure><img src="visuals/runtime-recovery.png" alt="runtime recovery" loading="lazy"/></figure><h3>Recommended visual</h3>
+<p>Use <code>visuals/runtime-recovery.png</code> for the scale case.
+Show <code>visuals/response-outcomes.png</code> after it.
+Capture a new native terminal recording with server addresses, keys, usernames, and tokens excluded.</p>
+<h3>Evidence</h3>
+<p>[C1], [C2], [C3], [C6], [C8]; <code>evidence/demo-cases.json</code>; the four timeline CSVs in <code>tables/</code>.
+Each source event and summary file has a verified hash in the demo evidence.</p>
+<h3>Speaker notes</h3>
+<p>“This trace comes from actual native model calls. The fault starts at index 128. The runtime confirms it at 143 and applies a verified correction at 175. Both endpoint score vectors return to baseline. If verification does not pass, the system keeps an explicit hold.”</p>
+<hr /></section><section id="slide-8"><div class="eyebrow">SLIDE 08</div><h2>Measured Improvement, With the Full Denominator</h2><h3>Main message</h3>
+<p>The monitored system improves correct automatic decisions and reduces harmful allows in the controlled fault suite.</p>
+<h3>Slide points</h3>
+<ul>
+<li>Correct automatic decisions rise from <strong>75.64% to 81.69%</strong>: <strong>+6.05 percentage points</strong>.</li>
+<li>Harmful allows fall from <strong>4,738 to 595</strong>: <strong>87.44% relative reduction</strong>.</li>
+<li>Runtime checks confirm <strong>55 of 55 injected incidents</strong>; <strong>45 of 50 fault episodes restore service</strong>.</li>
+<li>The report also counts safe refusals, holds, control episodes, and model cost.</li>
+</ul>
+<h3>Primary complete-stream results</h3>
+<p>Both arms process the same 60 paired episodes and 30,720 request observations.
+The dataset contains 14,880 safe-labelled and 15,840 harmful-labelled observations in this replay.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align: right;">Guardrail only, A</th>
+<th style="text-align: right;">Monitored system, B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correct automatic decisions</td>
+<td style="text-align: right;">23,238 / 30,720</td>
+<td style="text-align: right;">25,096 / 30,720</td>
+</tr>
+<tr>
+<td>Operational score</td>
+<td style="text-align: right;">75.6445%</td>
+<td style="text-align: right;">81.6927%</td>
+</tr>
+<tr>
+<td>Harmful allows</td>
+<td style="text-align: right;">4,738 / 15,840</td>
+<td style="text-align: right;">595 / 15,840</td>
+</tr>
+<tr>
+<td>Harmful allow rate</td>
+<td style="text-align: right;">29.9116%</td>
+<td style="text-align: right;">3.7563%</td>
+</tr>
+<tr>
+<td>Safe refusals</td>
+<td style="text-align: right;">2,744 / 14,880</td>
+<td style="text-align: right;">3,344 / 14,880</td>
+</tr>
+<tr>
+<td>Safe refusal rate</td>
+<td style="text-align: right;">18.4409%</td>
+<td style="text-align: right;">22.4731%</td>
+</tr>
+<tr>
+<td>Held requests</td>
+<td style="text-align: right;">0 / 30,720</td>
+<td style="text-align: right;">1,685 / 30,720</td>
+</tr>
+<tr>
+<td>Hold rate</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;">5.4850%</td>
+</tr>
+<tr>
+<td>Automatic coverage</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">94.5150%</td>
+</tr>
+<tr>
+<td>Correct safe allows</td>
+<td style="text-align: right;">12,136</td>
+<td style="text-align: right;">10,681</td>
+</tr>
+<tr>
+<td>Correct harmful refusals</td>
+<td style="text-align: right;">11,102</td>
+<td style="text-align: right;">14,415</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Score definition:</strong> <code>(safe allow + harmful refuse) / all requests</code>.
+Holds, review, and unavailable service receive zero automatic-correctness credit.
+The difference is <strong>1,858 additional correct automatic decisions</strong> in this experiment.
+A hold is containment, not restored service or a correct classifier decision.</p>
+<h3>Detection and response by condition</h3>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th style="text-align: right;">Episodes</th>
+<th style="text-align: right;">Incidents confirmed</th>
+<th style="text-align: right;">Service restored</th>
+<th style="text-align: right;">Episodes held</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Healthy</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0 false confirmations</td>
+<td style="text-align: right;">Not applicable</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Traffic mix without runtime fault</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0 false confirmations</td>
+<td style="text-align: right;">Not applicable</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Scale</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5 / 5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Affine</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5 / 5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Square</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5 / 5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Clipped</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5 / 5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Constant</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5 / 5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Inverted</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5 / 5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Common-mode scale</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5 / 5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Persistent restart fault</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5 / 5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>Late scale</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5 / 5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Scale then constant</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">10 / 10</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p>All tested fault onsets have a <strong>15-request confirmation delay</strong>.
+The configured response delay adds <strong>32 request positions</strong> after confirmation.
+These are request-index measurements, not milliseconds or production latency promises.</p>
+<h3>Keep three “false-positive” concepts separate</h3>
+<table>
+<thead>
+<tr>
+<th>Measurement</th>
+<th style="text-align: right;">Observed value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>False runtime confirmations</td>
+<td style="text-align: right;">0 / 10 no-fault episodes</td>
+<td>No backend fault confirmation in these controls</td>
+</tr>
+<tr>
+<td>Healthy synthetic guardrail safe FPR</td>
+<td style="text-align: right;">22.63%</td>
+<td>Safe-labelled requests refused by the selected classifier</td>
+</tr>
+<tr>
+<td>Dolly traffic warnings</td>
+<td style="text-align: right;">2 / 5 healthy-runtime episodes</td>
+<td>Distribution warnings; Dolly has no safety labels in this study</td>
+</tr>
+</tbody>
+</table>
+<p>Do not combine these values into one false-alarm rate.
+Five seeds reuse cases. These are finite controlled episodes, not independent production trials.</p>
+<h3>Selected guardrail external regression</h3>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th style="text-align: right;">Requests</th>
+<th style="text-align: right;">Accuracy</th>
+<th style="text-align: right;">Harmful recall</th>
+<th style="text-align: right;">Safe FPR</th>
+<th style="text-align: right;">ROC-AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Synthetic test</td>
+<td style="text-align: right;">20,000</td>
+<td style="text-align: right;">88.665%</td>
+<td style="text-align: right;">99.960%</td>
+<td style="text-align: right;">22.630%</td>
+<td style="text-align: right;">0.9917</td>
+</tr>
+<tr>
+<td>XSTest evaluation subset</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">64.000%</td>
+<td style="text-align: right;">72.667%</td>
+<td style="text-align: right;">44.667%</td>
+<td style="text-align: right;">0.6979</td>
+</tr>
+<tr>
+<td>Human ToxicChat test</td>
+<td style="text-align: right;">2,853</td>
+<td style="text-align: right;">53.523%</td>
+<td style="text-align: right;">39.779%</td>
+<td style="text-align: right;">44.480%</td>
+<td style="text-align: right;">0.4958</td>
+</tr>
+</tbody>
+</table>
+<p>These external datasets are exposed regression evidence, not fresh independent confirmation.
+They establish the next data-qualification work. Runtime restoration does not itself improve semantic classifier quality.</p>
+<h3>Candidate comparison on the same exposed synthetic suite</h3>
+<table>
+<thead>
+<tr>
+<th>Candidate</th>
+<th style="text-align: right;">Guardrail-only score</th>
+<th style="text-align: right;">Monitored score</th>
+<th style="text-align: right;">Healthy test accuracy</th>
+<th style="text-align: right;">Monitored harmful allow rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Selected TF-IDF pair</td>
+<td style="text-align: right;">75.64%</td>
+<td style="text-align: right;">81.69%</td>
+<td style="text-align: right;">88.665%</td>
+<td style="text-align: right;">3.756%</td>
+</tr>
+<tr>
+<td>BERT-tiny + lexical stack; same canary</td>
+<td style="text-align: right;">67.39%</td>
+<td style="text-align: right;">78.22%</td>
+<td style="text-align: right;">85.925%</td>
+<td style="text-align: right;">7.222%</td>
+</tr>
+</tbody>
+</table>
+<p>The release retains the stronger completed operational candidate.
+The neural comparison catches one additional harmful test request but refuses 549 additional safe test requests.
+No post-test threshold change enters that completed comparison.</p>
+<h3>Native LinuxONE resource and cost evidence</h3>
+<table>
+<thead>
+<tr>
+<th>Measurement</th>
+<th style="text-align: right;">Value</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Execution architecture</td>
+<td style="text-align: right;"><code>s390x</code>, big-endian Linux</td>
+<td>Native container</td>
+</tr>
+<tr>
+<td>Container quota</td>
+<td style="text-align: right;">2 CPUs / 4 GiB</td>
+<td>Not measured utilization</td>
+</tr>
+<tr>
+<td>Selected data generation</td>
+<td style="text-align: right;">1.99 seconds</td>
+<td>Original native study stage</td>
+</tr>
+<tr>
+<td>Selected classifier fit</td>
+<td style="text-align: right;">39.82 seconds</td>
+<td>Both selected classifiers; original native study stage</td>
+</tr>
+<tr>
+<td>Main 60-episode benchmark stage</td>
+<td style="text-align: right;">191.64 seconds</td>
+<td>Includes work outside timed score calls</td>
+</tr>
+<tr>
+<td>Full study cycle</td>
+<td style="text-align: right;">432.89 seconds</td>
+<td>Tests, data, fit, benchmark, repeat, and audit</td>
+</tr>
+<tr>
+<td>Highest child-process peak RSS</td>
+<td style="text-align: right;">946,016 KiB = 923.84 MiB</td>
+<td>Whole study process scope; not per-arm memory</td>
+</tr>
+<tr>
+<td>Guardrail-only timed score calls</td>
+<td style="text-align: right;">33.55 seconds</td>
+<td>Runtime score calls across all episodes</td>
+</tr>
+<tr>
+<td>Monitored timed score calls</td>
+<td style="text-align: right;">74.38 seconds</td>
+<td>Includes live calls, health probes, and response checks</td>
+</tr>
+<tr>
+<td>A model-input evaluations</td>
+<td style="text-align: right;">30,720</td>
+<td>Guardrail only; canary count is zero</td>
+</tr>
+<tr>
+<td>B model-input evaluations</td>
+<td style="text-align: right;">152,150</td>
+<td>76,075 guardrail plus 76,075 canary</td>
+</tr>
+<tr>
+<td>Fresh-container reproduction</td>
+<td style="text-align: right;">239.00 seconds</td>
+<td>Data, refit, replay, audit, and comparisons</td>
+</tr>
+<tr>
+<td>Native release tests</td>
+<td style="text-align: right;">292 pass / 4 optional skips</td>
+<td>14.10 seconds for pytest</td>
+</tr>
+</tbody>
+</table>
+<p>The score-call time ratio is about <strong>2.22×</strong>. The model-input evaluation ratio is about <strong>4.95×</strong>.
+Timed score calls exclude model loads, controller logic, and endpoint inference.
+<strong>Production throughput, CPU utilization, p50/p95/p99 latency, power, and cost per million requests: Not measured.</strong></p>
+<h3>Baseline comparisons and chart rules</h3>
+<p>The measured baseline is the identical guardrail with no canary inference or runtime response.
+An always-refuse policy would score 51.5625% on these labels. An always-allow policy would score 48.4375%.
+Those two values are arithmetic references, not separately executed models.
+No ablation isolates each probe, approval, restart, or containment contribution.</p>
+<p>Use percentages only with their denominators. Do not call the operational score “production safety accuracy.”
+Do not report the 55/55 result as universal attack detection.</p>
+<figure><img src="visuals/stream-outcomes.png" alt="stream outcomes" loading="lazy"/></figure><figure><img src="visuals/response-outcomes.png" alt="response outcomes" loading="lazy"/></figure><h3>Recommended visual</h3>
+<p>Use <code>visuals/stream-outcomes.png</code> and <code>visuals/response-outcomes.png</code>.
+Use <code>tables/complete-stream-results.csv</code>, <code>scenario-results.csv</code>, and <code>classifier-results.csv</code> for editable charts.
+Include the safe-refusal and hold columns beside the headline gain.</p>
+<h3>Evidence</h3>
+<p>[E1]–[E6], [E8]; [C6] <code>service_metrics</code>, <code>combine</code>, <code>run</code>; <code>evidence/metrics.json</code>.</p>
+<h3>Speaker notes</h3>
+<p>“The monitored arm makes 1,858 more correct automatic decisions and permits 4,143 fewer harmful-labelled requests. We count every request, including holds. The response restores 45 fault episodes and contains five. These results measure the controlled native fault suite, not production-wide safety.”</p>
+<hr /></section><section id="slide-9"><div class="eyebrow">SLIDE 09</div><h2>Recovery Requires Evidence, Not Optimism</h2><h3>Main message</h3>
+<p>A candidate becomes active only after the system verifies the actual replacement behavior.</p>
+<h3>Slide points</h3>
+<ul>
+<li>Fit a correction only from a separate trusted probe set.</li>
+<li>Execute candidates on disjoint verification requests.</li>
+<li>Check both models, decisions, and class-specific outcomes before activation.</li>
+<li>Keep containment explicit; require full verification before release.</li>
+</ul>
+<h3>Implemented response workflow</h3>
+<ol>
+<li>Confirm a runtime change or unavailable score output.</li>
+<li>Require the configured recovery approval and actor identity.</li>
+<li>Try a bounded affine mapping from current guardrail scores back to archived baseline scores.</li>
+<li>If that candidate does not pass, execute a trusted backend reload.</li>
+<li>Compare both output vectors with the archived baseline within <code>1e-8</code>.</li>
+<li>Check decision equality, class coverage, review rate, harmful allows, and safe refusals.</li>
+<li>Issue a manager-owned, single-use, generation-bound plan.</li>
+<li>Execute fresh verification again immediately before activation.</li>
+<li>If no candidate passes, hold service when containment is approved; otherwise mark it unavailable.</li>
+<li>Release a hold only after explicit approval and full paired verification.</li>
+</ol>
+<h3>Affine recovery versus recalibration</h3>
+<p><strong>Selected release recovery:</strong> Estimate <code>healthy_score ≈ slope × current_score + intercept</code> from the fit probes.
+A candidate must meet bounded slope/intercept rules and the fixed numerical tolerance.
+The policy threshold and classifier weights stay unchanged.
+A trusted backend reload is the alternative for supported non-affine or information-loss cases.</p>
+<p><strong>Earlier conformal experiment:</strong> <code>fit_policy()</code> computes class-conditional prediction-set quantiles from labelled calibration rows.
+<code>approved_recalibration()</code> checks a candidate on a separate verification set before changing the decision mapping.
+It does not refit classifier weights or claim calibrated harm probabilities.</p>
+<p>In that earlier experiment, <strong>all eight candidate applications remain blocked by the verification gate</strong>.
+Harmful-class review is 92%, above the fixed 75% ceiling.
+This demonstrates rejection behavior, not a successful recalibration result.
+The current selected binary policy has no conformal coverage claim.</p>
+<h3>Reliability controls supported by code and tests</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Actual candidate execution, rather than caller-supplied scores</td>
+<td><code>test_actual_candidate_execution_on_verification</code></td>
+</tr>
+<tr>
+<td>Fresh activation checks</td>
+<td><code>test_candidate_change_before_apply_rejects</code></td>
+</tr>
+<tr>
+<td>Single-use manager-bound plans</td>
+<td><code>test_manager_bound_single_use_handle</code>; <code>test_cross_manager_handle_isolation</code></td>
+</tr>
+<tr>
+<td>Whole-pair verification</td>
+<td><code>test_shared_guardrail_canary_fault_requires_full_pair_restart</code></td>
+</tr>
+<tr>
+<td>No unnecessary response on matching probes</td>
+<td><code>test_healthy_scores_do_not_trigger_repair</code></td>
+</tr>
+<tr>
+<td>Traffic warning does not consume a later runtime response</td>
+<td><code>test_early_traffic_warning_does_not_consume_later_runtime_response</code></td>
+</tr>
+<tr>
+<td>New incident after hold release</td>
+<td><code>test_release_then_refault_opens_a_new_incident_without_healthy_tick</code></td>
+</tr>
+<tr>
+<td>Missing current output can use independently verified reload</td>
+<td><code>test_failed_current_samples_still_allow_independently_verified_restart</code></td>
+</tr>
+<tr>
+<td>Containment needs separate approval</td>
+<td><code>test_containment_requires_separate_approval_and_no_fallthrough</code></td>
+</tr>
+<tr>
+<td>Exceptions exclude private request text</td>
+<td><code>test_backend_error_redaction_without_private_word</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Validation scope and next reliability gates</h3>
+<ul>
+<li>Recovery restores the tested baseline. It does not make that baseline semantically correct on every request.</li>
+<li>Finite probes can miss input-specific faults or an attacker who avoids the panel.</li>
+<li>Both classifiers share data and one estimator family. Healthy synthetic error correlation is <strong>0.7888</strong>.</li>
+<li>They are both wrong on <strong>2,033 / 20,000</strong> healthy synthetic test requests. Canary agreement is not a safety label.</li>
+<li>Live labels can be absent. Separate labelled evaluation remains necessary for quality claims.</li>
+<li>Offline approval flags are implemented; production identity, approval separation, and durable incident services are <strong>Not implemented</strong>.</li>
+<li>The supervisor bounds incidents at 128. Direct manager usage retains consumed verification payloads; long-lived memory qualification remains open.</li>
+<li>Digests detect changed bytes. They are not signatures, hardware attestation, or proof of semantic correctness.</li>
+</ul>
+<h3>Recommended visual</h3>
+<p>Use a horizontal decision gate: <strong>Candidate → Execute → Verify pair → Reverify → Activate</strong>.
+Add a lower path from any unsuccessful verification to <strong>Explicit hold</strong>.
+Use a separate small box for the earlier conformal experiment so it does not imply current automatic recalibration.</p>
+<h3>Evidence</h3>
+<p>[C1], [C2], [C3], [C11]; [E1], [E8], [E10]; the exact named tests in <code>tests/test_baseline_recovery.py</code> and <code>tests/test_runtime_supervision.py</code>.</p>
+<h3>Speaker notes</h3>
+<p>“Our strongest reliability feature is the activation gate. A plan is not enough; the candidate must execute and pass fresh verification. We preserve the original policy during runtime recovery. A contained service is shown as contained, not as repaired or correctly classified.”</p>
+<hr /></section><section id="slide-10"><div class="eyebrow">SLIDE 10</div><h2>Native IBM Z Execution, Evidence-Backed Control</h2><h3>Main message</h3>
+<p>Veyra demonstrates a complete guardrail-integrity workflow on the native platform where enterprise Linux AI can run.</p>
+<h3>Slide points</h3>
+<ul>
+<li>Run data generation, model fit, inference, checks, recovery, and audit natively on LinuxONE.</li>
+<li>Reproduce the selected workflow in a fresh container with networking disabled.</li>
+<li>Keep model artifacts and request data in the private execution environment.</li>
+<li>Give platform, safety, and model-risk teams a traceable response decision.</li>
+</ul>
+<h3>Why LinuxONE matters to this project</h3>
+<p><strong>Architecture compatibility is demonstrated, not assumed.</strong> The implementation runs on big-endian <code>s390x</code>, not x86 emulation.
+The native environment supports the selected scikit-learn pipeline and the archived PyTorch/Transformers comparison.</p>
+<p><strong>The control loop stays with the inference workflow.</strong> Once required artifacts are present, the selected experiment runs without an external model API.
+The offline qualification explicitly disables container networking.
+This supports a private-deployment design direction; it does not establish a complete customer residency or compliance program.</p>
+<p><strong>The resource profile is concrete.</strong> The qualified container uses a two-CPU quota and 4 GiB memory limit.
+The selected study records 923.84 MiB as its highest child-process peak RSS.
+This is an actual development profile, not enterprise capacity sizing.</p>
+<p><strong>Reproducibility is part of the platform result.</strong> The private kit contains source, a wheel, frozen models and data, audit records, and the native runtime image.
+The reproduction matches all data bytes, learned model state, request scores, decisions, response actions, and benchmark metrics.
+It also produces 156 byte-identical algorithm files.
+Serialized model bytes can differ because of scikit-learn's process-local <code>_stop_words_id</code> cache.
+The distributed model file retains its original fixed hash.</p>
+<h3>Verified platform facts</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Verified state</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Operating target</td>
+<td>LinuxONE Community Cloud; Ubuntu Linux; <code>s390x</code></td>
+</tr>
+<tr>
+<td>Byte order</td>
+<td>Big-endian</td>
+</tr>
+<tr>
+<td>Python</td>
+<td>3.12.15</td>
+</tr>
+<tr>
+<td>NumPy / SciPy</td>
+<td>2.0.2 / 1.13.1</td>
+</tr>
+<tr>
+<td>scikit-learn / joblib</td>
+<td>1.9.0 / 1.6.0</td>
+</tr>
+<tr>
+<td>PyTorch / Transformers comparison environment</td>
+<td>2.11.0+cpu / 5.19.0</td>
+</tr>
+<tr>
+<td>Selected runtime</td>
+<td>CPU only</td>
+</tr>
+<tr>
+<td>Fresh-container network</td>
+<td>Disabled during qualification</td>
+</tr>
+<tr>
+<td>Model/data source mount</td>
+<td>Read-only during qualification</td>
+</tr>
+<tr>
+<td>Native test outcome</td>
+<td>292 pass; four optional PyArrow skips</td>
+</tr>
+</tbody>
+</table>
+<h3>Platform scope</h3>
+<p>Telum acceleration, Spyre acceleration, Secure Execution, hardware attestation, z/OS integration, and HA are <strong>Not measured or implemented here</strong>.
+The project does not claim IBM certification or a LinuxONE speed advantage over another architecture.
+LinuxONE provides the verified native execution target. It does not itself improve classifier accuracy.</p>
+<h3>Practical users and applications</h3>
+<table>
+<thead>
+<tr>
+<th>Target user</th>
+<th>Potential use</th>
+<th>Current evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI platform engineer</td>
+<td>Validate a guardrail wrapper or model-runtime change</td>
+<td>Native paired fault replay and artifact checks</td>
+</tr>
+<tr>
+<td>LinuxONE platform operator</td>
+<td>Qualify a local CPU safety-control workflow</td>
+<td>Native container, dependency, resource, and reproduction evidence</td>
+</tr>
+<tr>
+<td>Trust and safety analyst</td>
+<td>Separate traffic warnings from runtime incidents</td>
+<td>Distinct signal channels and explicit event records</td>
+</tr>
+<tr>
+<td>Model-risk reviewer</td>
+<td>Examine a proposed recovery and its decision effects</td>
+<td>Paired verification, approval records, and full-denominator metrics</td>
+</tr>
+</tbody>
+</table>
+<p>These are target workflows, not confirmed customers or measured business savings.
+Customer interviews, adoption, ROI, and commercial rights clearance are <strong>Not measured or completed</strong>.</p>
+<h3>Strong closing line</h3>
+<p><strong>“A guardrail needs a watcher. On LinuxONE, we make that watcher measurable—and every recovery verifiable.”</strong></p>
+<figure><img src="visuals/native-proof.png" alt="native proof" loading="lazy"/></figure><h3>Recommended visual</h3>
+<p>Use <code>visuals/native-proof.png</code>: <strong>Generate → Fit → Infer → Detect → Verify → Audit</strong>, inside one LinuxONE boundary.
+End with the closing line and the public release branch URL.</p>
+<h3>Evidence</h3>
+<p>[E1]–[E6], [C8], [C12], [P1], [I1].
+Public release: <a href="https://github.com/beastgotfried/agent-jailbreak/tree/release/safety-watch-baseline-20261017">https://github.com/beastgotfried/agent-jailbreak/tree/release/safety-watch-baseline-20261017</a></p>
+<h3>Speaker notes</h3>
+<p>“LinuxONE is the execution foundation of this project. We verify the actual native CPU workflow, including model fit and recovery. The private kit repeats the result offline. Our contribution is a measurable response loop around guardrails, with evidence for each transition.”</p>
+<hr /></section><section id="appendix-a"><div class="eyebrow">REFERENCE A</div><h2>Strongest Features to Highlight</h2><ol>
+<li><strong>Native, end-to-end LinuxONE execution.</strong> Model fit and actual inference occur on <code>s390x</code>; the server is not only a storage location.</li>
+<li><strong>Actual candidate verification.</strong> Candidate execution and fresh activation checks control the backend switch.</li>
+<li><strong>Separation of evidence and authority.</strong> A traffic warning cannot automatically authorize recovery.</li>
+<li><strong>Complete-stream evaluation.</strong> The score includes response delay and gives holds no correctness credit.</li>
+<li><strong>Repeated incident handling.</strong> A new runtime fault can open a new incident after recovery or release.</li>
+<li><strong>Explicit containment.</strong> The system distinguishes a held service from restored service.</li>
+<li><strong>Whole-pair checks.</strong> A guardrail-only correction cannot conceal a changed canary.</li>
+<li><strong>Reproducible private artifacts.</strong> Exact source, model identities, input hashes, and numeric audits support the release.</li>
+<li><strong>Measured model choice.</strong> The selected release retains the stronger completed operational candidate.</li>
+<li><strong>Practical CPU execution.</strong> The selected study fits in the declared native resource profile without an external model API.</li>
+</ol>
+<h3>Safe headline language</h3>
+<table>
+<thead>
+<tr>
+<th>Use</th>
+<th>Keep this scope beside it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“55 of 55 runtime incidents confirmed”</td>
+<td>Controlled fault suite; not universal attack detection</td>
+</tr>
+<tr>
+<td>“45 fault episodes restore service; five remain contained”</td>
+<td>50 fault episodes plus ten controls</td>
+</tr>
+<tr>
+<td>“87.44% fewer harmful allows”</td>
+<td>Synthetic labels; same paired request stream; includes containment effects</td>
+</tr>
+<tr>
+<td>“81.69% complete-stream operational score”</td>
+<td>Holds count as zero; not production safety accuracy</td>
+</tr>
+<tr>
+<td>“Native LinuxONE reproduction”</td>
+<td>Qualified CPU environment; not hardware attestation</td>
+</tr>
+<tr>
+<td>“Verified recovery”</td>
+<td>Agreement on finite probes and the measured endpoint; not universal semantic repair</td>
+</tr>
+</tbody>
+</table>
+<hr /></section><section id="appendix-b"><div class="eyebrow">REFERENCE B</div><h2>Feature Status Matrix</h2><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Status</th>
+<th>Evidence or next step</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frozen TF-IDF guardrail and canary</td>
+<td>Implemented and measured</td>
+<td>Model cards and selected manifest</td>
+</tr>
+<tr>
+<td>Native model fit and inference</td>
+<td>Implemented and measured</td>
+<td>Execution receipts and fresh-container reproduction</td>
+</tr>
+<tr>
+<td>Binary decision policy</td>
+<td>Implemented</td>
+<td><code>BinaryPolicy</code></td>
+</tr>
+<tr>
+<td>Classifier CLI</td>
+<td>Implemented</td>
+<td><code>safety-watch inspect/score</code></td>
+</tr>
+<tr>
+<td>Runtime matched probes</td>
+<td>Implemented and measured</td>
+<td><code>RuntimeWatch</code>; 55 confirmed incidents</td>
+</tr>
+<tr>
+<td>Finite-horizon KS monitor</td>
+<td>Implemented and measured in separate studies</td>
+<td><code>DisagreementMonitor</code></td>
+</tr>
+<tr>
+<td>Source-bound traffic profile</td>
+<td>Implemented; finite study scope</td>
+<td>Dolly profile report</td>
+</tr>
+<tr>
+<td>Conformal response</td>
+<td>Implemented; candidates do not pass the fixed historical gate</td>
+<td>Eight rejected applications; no claimed improvement</td>
+</tr>
+<tr>
+<td>Affine baseline correction</td>
+<td>Implemented and measured</td>
+<td>Scale and affine traces</td>
+</tr>
+<tr>
+<td>Trusted backend reload</td>
+<td>Implemented and measured</td>
+<td>Square, constant, common-mode, and other traces</td>
+</tr>
+<tr>
+<td>Explicit containment and hold release</td>
+<td>Implemented; release paths also have fixture tests</td>
+<td><code>SupervisedRuntime</code></td>
+</tr>
+<tr>
+<td>Generation-bound single-use plans</td>
+<td>Implemented and tested</td>
+<td>Recovery API tests</td>
+</tr>
+<tr>
+<td>Repeated runtime incidents</td>
+<td>Implemented and measured</td>
+<td><code>scale_then_constant</code></td>
+</tr>
+<tr>
+<td>Runtime output unavailable path</td>
+<td>Implemented and fixture-tested</td>
+<td>Restart-only and containment tests</td>
+</tr>
+<tr>
+<td>Local evidence and audit files</td>
+<td>Implemented</td>
+<td>JSON/JSONL, hashes, independent audit</td>
+</tr>
+<tr>
+<td>Approval workflow</td>
+<td>Partially implemented</td>
+<td>Offline flags and actors; no production authentication</td>
+</tr>
+<tr>
+<td>Streaming service</td>
+<td>Partially implemented</td>
+<td>Ordered local streams; no live collector or broker</td>
+</tr>
+<tr>
+<td>Product dashboard</td>
+<td>Planned; Not implemented</td>
+<td>PRD console map only</td>
+</tr>
+<tr>
+<td>REST API, Kafka, PostgreSQL, S3</td>
+<td>Planned; Not implemented</td>
+<td>PRD architecture only</td>
+</tr>
+<tr>
+<td>Customer connectors and autonomous agent integration</td>
+<td>Planned; Not implemented</td>
+<td>Current execution target is an offline stub</td>
+</tr>
+<tr>
+<td>Scan martingales, MMD</td>
+<td>Research reference; Not implemented</td>
+<td>Present in Cheap Canaries, not this release</td>
+</tr>
+<tr>
+<td>Hardware attestation, Telum/Spyre acceleration</td>
+<td>Not implemented or measured</td>
+<td>Separate platform qualification required</td>
+</tr>
+<tr>
+<td>Active accuracy extension</td>
+<td>In progress; outside this release</td>
+<td>Protocol at <code>323c2b0</code>; no result imported into this document</td>
+</tr>
+</tbody>
+</table>
+<hr /></section><section id="appendix-c"><div class="eyebrow">REFERENCE C</div><h2>Asset and Evidence Inventory</h2><h3>New presentation assets supplied with this document</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+<th>Provenance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>visuals/architecture.png</code> and <code>.svg</code></td>
+<td>Implemented architecture</td>
+<td>Source-backed diagram, not a UI screenshot</td>
+</tr>
+<tr>
+<td><code>visuals/architecture.mmd</code></td>
+<td>Editable Mermaid architecture</td>
+<td>Same implemented components and boundaries</td>
+</tr>
+<tr>
+<td><code>visuals/runtime-recovery.png</code> and <code>.svg</code></td>
+<td>Fault-to-recovery timeline</td>
+<td>Actual scale/seed-0 request score errors; no smoothing</td>
+</tr>
+<tr>
+<td><code>visuals/stream-outcomes.png</code> and <code>.svg</code></td>
+<td>Complete-stream comparison</td>
+<td>Exact counts from the selected report</td>
+</tr>
+<tr>
+<td><code>visuals/response-outcomes.png</code> and <code>.svg</code></td>
+<td>Restored, held, and control episodes</td>
+<td>Exact 60-episode outcomes</td>
+</tr>
+<tr>
+<td><code>visuals/data-split.png</code> and <code>.svg</code></td>
+<td>Train/validation/test structure</td>
+<td>Selected data manifest</td>
+</tr>
+<tr>
+<td><code>visuals/native-proof.png</code> and <code>.svg</code></td>
+<td>LinuxONE execution proof chain</td>
+<td>Native study and release receipts</td>
+</tr>
+<tr>
+<td><code>tables/complete-stream-results.csv</code></td>
+<td>Editable comparison data</td>
+<td>Same denominators as Slide 8</td>
+</tr>
+<tr>
+<td><code>tables/scenario-results.csv</code></td>
+<td>Editable condition table</td>
+<td>All 12 conditions, five seeds each</td>
+</tr>
+<tr>
+<td><code>tables/classifier-results.csv</code></td>
+<td>Classifier quality charts</td>
+<td>Selected guardrail and canary; three evaluation sources</td>
+</tr>
+<tr>
+<td><code>tables/*-timeline.csv</code></td>
+<td>Scale, square, persistent, and recurrent traces</td>
+<td>Derived from hash-verified native event files</td>
+</tr>
+<tr>
+<td><code>evidence/demo-cases.json</code></td>
+<td>Exact demo transitions</td>
+<td>Source file hashes and endpoint checks</td>
+</tr>
+<tr>
+<td><code>evidence/metrics.json</code></td>
+<td>Structured pitch metrics</td>
+<td>Selected fields from frozen aggregate reports</td>
+</tr>
+<tr>
+<td><code>evidence/code-index.json</code></td>
+<td>Function and source-position index</td>
+<td>44 Python files in the release snapshot</td>
+</tr>
+<tr>
+<td><code>evidence/native-platform-snapshot.json</code></td>
+<td>Native architecture and resource evidence</td>
+<td>Read-only platform query; no new model experiment</td>
+</tr>
+<tr>
+<td><code>evidence/source-manifest.json</code></td>
+<td>Source/receipt hash index</td>
+<td>Frozen release, core, study, and prior-art identities</td>
+</tr>
+</tbody>
+</table>
+<h3>Existing visuals and recordings</h3>
+<table>
+<thead>
+<tr>
+<th>Existing asset</th>
+<th>Availability</th>
+<th>Presentation use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repository <code>docs/img/architecture.png</code></td>
+<td>Available</td>
+<td>Existing overview; prefer the new implementation-only diagram for this pitch</td>
+</tr>
+<tr>
+<td><code>prd/Veyra-Architecture-v1.png</code></td>
+<td>Available</td>
+<td>Enterprise proposal; label it planned if used</td>
+</tr>
+<tr>
+<td><code>prd/Veyra-Enterprise-PRD-v1.0.pdf</code></td>
+<td>Available</td>
+<td>Product requirements reference, not delivered-feature proof</td>
+</tr>
+<tr>
+<td><code>prd/previews/*.png</code> and <code>contact-sheet.png</code></td>
+<td>Available</td>
+<td>PRD page previews; not product screenshots</td>
+</tr>
+<tr>
+<td>Native pytest and qualification logs</td>
+<td>Available</td>
+<td>Capture terminal proof after sensitive fields are excluded</td>
+</tr>
+<tr>
+<td>Private Jupyter environment</td>
+<td>Available development tool</td>
+<td>A new screenshot can show real execution; it is not a product console</td>
+</tr>
+<tr>
+<td>Product frontend screenshots</td>
+<td>Not available</td>
+<td>Frontend is not implemented</td>
+</tr>
+<tr>
+<td>Finished live-demo recording</td>
+<td>Not found in the inspected authorized project files</td>
+<td>Record before submission</td>
+</tr>
+<tr>
+<td>Finished product notebooks</td>
+<td>Not found in the inspected project inventory</td>
+<td>Do not imply a delivered notebook application</td>
+</tr>
+</tbody>
+</table>
+<h3>Completed experiment records</h3>
+<table>
+<thead>
+<tr>
+<th>Study</th>
+<th>Available evidence</th>
+<th>Correct interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Original ToxicChat classifiers</td>
+<td>Model cards, split manifest, execution receipt</td>
+<td>Separate original models; not the selected synthetic-trained pair</td>
+</tr>
+<tr>
+<td>Original prompt pools</td>
+<td>Pool manifest, exclusions, independent provenance audit</td>
+<td>4,352 normalized groups and 5,032 source links</td>
+</tr>
+<tr>
+<td>Original KS calibration</td>
+<td>Calibration artifact, score manifest, tests</td>
+<td>Finite-horizon empirical threshold</td>
+</tr>
+<tr>
+<td>Original conformal replay</td>
+<td>15 paired episodes; 7,680 events</td>
+<td>Eight candidates blocked by verification; no applied improvement</td>
+</tr>
+<tr>
+<td>Historical baseline recovery</td>
+<td>50 episodes; 35/40 fault restorations</td>
+<td>Earlier result includes timing/reference defects; not the current causal headline</td>
+</tr>
+<tr>
+<td>Repaired original-model qualification</td>
+<td>60 episodes; 11,520 events; independent audit</td>
+<td>55 causal confirmations; 45 restored; five held</td>
+</tr>
+<tr>
+<td>Dolly traffic profile</td>
+<td>Five 512-event episodes; 145 KS windows independently checked</td>
+<td>Two warning episodes; no safety-label performance claim</td>
+</tr>
+<tr>
+<td>Selected synthetic study</td>
+<td>100,000 rows; 60 episodes; 30,720 observations</td>
+<td>Current completed release basis</td>
+</tr>
+<tr>
+<td>Neural comparison</td>
+<td>60 episodes; 30,720 observations; 12-condition seed-0 repeat</td>
+<td>Archived comparison; 36 repeated files; not a second full independent trial</td>
+</tr>
+<tr>
+<td>Release reproduction</td>
+<td>Fresh offline native container; data/refit/replay/audit</td>
+<td>Same learned state and results; reproducibility, not new effectiveness evidence</td>
+</tr>
+</tbody>
+</table>
+<p>The original synthetic repeat matches 182 algorithm files.
+The release reproduction matches 156 files byte-for-byte and checks all request scores, decisions, response actions, and metrics.
+Model-bound identifiers can change after a refit because serialized cache metadata can change.</p>
+<hr /></section><section id="appendix-d"><div class="eyebrow">REFERENCE D</div><h2>Dataset Attribution and Label Boundaries</h2><h3>Source links and immutable revisions</h3>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Revision or snapshot identity</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ToxicChat</td>
+<td><code>29df8e4dba60e1f4af4b4075c0705c5b313548a8</code></td>
+<td><a href="https://huggingface.co/datasets/lmsys/toxic-chat">https://huggingface.co/datasets/lmsys/toxic-chat</a></td>
+</tr>
+<tr>
+<td>WAInjectBench</td>
+<td><code>001df8e431969089812df6694dfa607fe7be79e8</code></td>
+<td><a href="https://huggingface.co/datasets/Norrrrrrr/WAInjectBench">https://huggingface.co/datasets/Norrrrrrr/WAInjectBench</a></td>
+</tr>
+<tr>
+<td>JBB-Behaviors</td>
+<td><code>886acc352a31533ffbcf4ef22c744658688086fc</code></td>
+<td><a href="https://huggingface.co/datasets/JailbreakBench/JBB-Behaviors">https://huggingface.co/datasets/JailbreakBench/JBB-Behaviors</a></td>
+</tr>
+<tr>
+<td>JailbreakBench mirror</td>
+<td><code>119a73e012e44035957c25a483f7f721bb348839</code></td>
+<td><a href="https://huggingface.co/datasets/walledai/JailbreakBench">https://huggingface.co/datasets/walledai/JailbreakBench</a></td>
+</tr>
+<tr>
+<td>StrongREJECT</td>
+<td><code>9f4b3397bda985e1ac6dadb655e9ca3a17974144</code></td>
+<td><a href="https://huggingface.co/datasets/AlignmentResearch/StrongREJECT">https://huggingface.co/datasets/AlignmentResearch/StrongREJECT</a></td>
+</tr>
+<tr>
+<td>HarmBench</td>
+<td>Hash-pinned <code>main@2026-10-16</code> snapshot, not an immutable revision</td>
+<td><a href="https://github.com/centerforaisafety/HarmBench">https://github.com/centerforaisafety/HarmBench</a></td>
+</tr>
+<tr>
+<td>XSTest</td>
+<td><code>d7bb5bd738c1fcbc36edd83d5e7d1b71a3e2d84d</code></td>
+<td><a href="https://github.com/paul-rottger/xstest">https://github.com/paul-rottger/xstest</a></td>
+</tr>
+<tr>
+<td>Dolly 15k</td>
+<td><code>5f9bfba300181fb35854d64c8bf1180ea75105f7</code></td>
+<td><a href="https://github.com/databrickslabs/dolly">https://github.com/databrickslabs/dolly</a></td>
+</tr>
+<tr>
+<td>OASST1</td>
+<td><code>fdf72ae0827c1cda404aff25b6603abec9e3399b</code></td>
+<td><a href="https://huggingface.co/datasets/OpenAssistant/oasst1">https://huggingface.co/datasets/OpenAssistant/oasst1</a></td>
+</tr>
+</tbody>
+</table>
+<p>The complete HarmBench CSV hash is <code>8d81accedd38eaaf8b760618622bb888417d1fd0c86eba65c427a16f1cbb4afc</code>.
+The synthetic catalogue hash is <code>852370c8b0edca168aeaaf1be845813429595d1bb49550cfdd887b874f1d53eb</code>.</p>
+<h3>Task-specific label definitions</h3>
+<ul>
+<li><strong>Synthetic study:</strong> Catalogue intent, safe 0 or harmful 1; matched pairs stay together.</li>
+<li><strong>ToxicChat:</strong> Harmful label derives from toxicity OR jailbreaking; human annotation is reported separately.</li>
+<li><strong>WAInjectBench:</strong> Source prompt-injection routing labels; not universal harmful-request labels.</li>
+<li><strong>JBB:</strong> Official <code>Goal</code> field; never the target response field.</li>
+<li><strong>StrongREJECT:</strong> <code>clf_label</code> governs the mapped request label; proxy labels stay separate.</li>
+<li><strong>HarmBench:</strong> Only standard behavior requests enter the original pool.</li>
+<li><strong>XSTest:</strong> Source request labels; family-based verification/evaluation separation.</li>
+<li><strong>Dolly and OASST1:</strong> No safety labels enter the traffic-profile work described here.</li>
+</ul>
+<p>Dolly splits are 5,897 reference / 4,423 calibration / 4,424 evaluation groups.
+The original prompt-pool partitions are 1,256/0 reference, 942/604 calibration, and 945/605 evaluation, in safe-routing/attack-routing order.</p>
+<h3>Active work outside the frozen release</h3>
+<p>The accuracy protocol names <code>nvidia/Aegis-AI-Content-Safety-Dataset-2.0</code>, revision <code>d86bb8bedff51d25ac834ab7838f1cc61acb7a2c</code>, CC-BY-4.0.
+It proposes human <code>prompt_label</code> data and preserves official split boundaries.
+It is not a source for the selected release metrics in this document. Completed fit and result evidence are not imported from that active branch.</p>
+<h3>Sources not used for selected-model or completed benchmark claims</h3>
+<p>WildGuardMix, SafePickle, LongPIBench, WildChat-1M, LMSYS-Chat-1M, and the gated walledai HarmBench/StrongREJECT releases do not enter these claims.
+OR-Bench is a paper reference, not an acquired evaluation source here.
+WhyLabs pattern groups serve as reference material, not as the selected classifier or runtime.</p>
+<h3>Pretrained model credit</h3>
+<ul>
+<li>BERT-tiny: <code>google/bert_uncased_L-2_H-128_A-2</code>, revision <code>30b0a37ccaaa32f332884b96992754e246e48c5f</code>, Apache-2.0; archived comparison.</li>
+<li>MiniLM-L6: <code>sentence-transformers/all-MiniLM-L6-v2</code>, revision <code>1110a243fdf4706b3f48f1d95db1a4f5529b4d41</code>, Apache-2.0; native compatibility/cost check only.</li>
+</ul>
+<p>Public access is not an unrestricted license. ToxicChat has a noncommercial restriction; several inspected sources have no verified dataset license.
+Commercial data rights and redistribution approval remain separate from execution and package qualification.</p>
+<hr /></section><section id="appendix-e"><div class="eyebrow">REFERENCE E</div><h2>Most Compelling Three-Minute Demonstration</h2><h3>Recommended sequence</h3>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>Show</th>
+<th>Say</th>
+<th>Evidence status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00:00–00:15</td>
+<td>Product name and one-line architecture</td>
+<td>“The guardrail checks requests. Veyra checks the guardrail runtime.”</td>
+<td>Implemented components</td>
+</tr>
+<tr>
+<td>00:15–00:35</td>
+<td>Native terminal architecture and version output</td>
+<td>“This is native LinuxONE s390x CPU execution, not emulation.”</td>
+<td>Capture live; exclude connection details</td>
+</tr>
+<tr>
+<td>00:35–00:55</td>
+<td><code>safety-watch inspect</code>, then a neutral JSONL scoring call</td>
+<td>“We verify the selected artifact and execute the real model pair.”</td>
+<td>Classifier-only; no claim of full monitoring in this command</td>
+</tr>
+<tr>
+<td>00:55–01:35</td>
+<td>Scale/seed-0 trace: 128 → 143 → 175</td>
+<td>“The output changes. Probes confirm it. A verified correction restores the tested baseline.”</td>
+<td>Label chart as recorded native replay unless the episode runs live</td>
+</tr>
+<tr>
+<td>01:35–02:00</td>
+<td>Recurrent trace or square case</td>
+<td>“The next fault gets a new incident; a non-affine case uses a verified backend reload.”</td>
+<td>Recorded native trace or prepared live wrapper</td>
+</tr>
+<tr>
+<td>02:00–02:25</td>
+<td>Persistent-fault hold result</td>
+<td>“The replacement does not pass verification, so the system keeps an explicit hold.”</td>
+<td>Hold is not restoration</td>
+</tr>
+<tr>
+<td>02:25–02:50</td>
+<td>Full-denominator outcome chart and 292-pass test receipt</td>
+<td>“We audit the complete stream and repeat the pipeline in a fresh offline native container.”</td>
+<td>Completed qualification</td>
+</tr>
+<tr>
+<td>02:50–03:00</td>
+<td>Closing line and release URL</td>
+<td>“A guardrail needs a watcher. On LinuxONE, every recovery has evidence.”</td>
+<td>Product conclusion</td>
+</tr>
+</tbody>
+</table>
+<h3>Ready native commands</h3>
+<p>Run these inside the qualified native environment with the private bundle mounted at <code>/bundle</code>:</p>
+<pre><code class="language-bash">python -c 'import platform,sys; print(platform.machine(), platform.python_version(), sys.byteorder)'
+safety-watch inspect --models /bundle/studies/synthetic-100k-20261017-01/models
+printf '%s\n' '{&quot;text&quot;:&quot;Explain the purpose of a software health check.&quot;}' | safety-watch score --models /bundle/studies/synthetic-100k-20261017-01/models
+</code></pre>
+<p>The neutral prompt is a demonstration input, not a labelled benchmark example.
+Show its actual output. Do not preclaim an allow decision or classifier correctness for that input.</p>
+<h3>Live fault-replay preparation</h3>
+<p>The existing <code>episode()</code> function supports one named condition and seed.
+A small demo wrapper can load the frozen test/probe records, select <code>scale</code>, seed 0, and call that existing function.
+This document does not claim that a timed three-minute wrapper or recording already exists.
+The standard replay CLI runs all 60 episodes; its measured 191.64-second stage does not fit beside other content in a three-minute video.</p>
+<p>For a credible submission, either prepare and time that bounded wrapper or clearly identify the fault segment as a recorded native replay.
+Never animate fabricated output and describe it as a live run.</p>
+<h3>Demo preparation checklist</h3>
+<ul>
+<li>Confirm the bundle and runtime image hashes before recording.</li>
+<li>Use a new output directory; preserve the frozen study outputs.</li>
+<li>Keep requests as data; show IDs or aggregate results rather than raw harmful text.</li>
+<li>Hide server addresses, credentials, tokens, and private filesystem details.</li>
+<li>Label the classifier-only CLI and full-runtime replay separately.</li>
+<li>Keep a local copy of the verified trace and charts as a recording fallback.</li>
+<li>Time the complete recording to no more than three minutes.</li>
+</ul>
+<hr /></section><section id="appendix-f"><div class="eyebrow">REFERENCE F</div><h2>Measurements and Evidence to Collect Before Submission</h2><table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Item</th>
+<th>Current status</th>
+<th>Why collect it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Essential</td>
+<td>Final three-minute native recording</td>
+<td>Not available in the inspected files</td>
+<td>Show actual LinuxONE execution</td>
+</tr>
+<tr>
+<td>Essential</td>
+<td>One-condition live replay wrapper and elapsed time</td>
+<td>Not prepared or timed in this extraction</td>
+<td>Keep a live fault demonstration within the video limit</td>
+</tr>
+<tr>
+<td>Essential</td>
+<td>Final source/receipt snapshot after active work finishes</td>
+<td>Frozen release is available; accuracy branch remains separate</td>
+<td>Avoid mixing unfinished results with release claims</td>
+</tr>
+<tr>
+<td>Essential</td>
+<td>Submission and dataset-rights review</td>
+<td>Not completed by these experiments</td>
+<td>Confirm event rules and permitted use</td>
+</tr>
+<tr>
+<td>Next qualification</td>
+<td>Fresh policy-aligned, untouched external evaluation</td>
+<td>Not measured for the selected release</td>
+<td>Establish external generalization beyond exposed regressions</td>
+</tr>
+<tr>
+<td>Next qualification</td>
+<td>p50/p95/p99 request and response latency</td>
+<td>Not measured</td>
+<td>Measure end-to-end behavior, not score-call sums</td>
+</tr>
+<tr>
+<td>Next qualification</td>
+<td>Throughput, concurrent streams, CPU utilization, and sustained memory</td>
+<td>Not measured</td>
+<td>Establish capacity and long-lived behavior</td>
+</tr>
+<tr>
+<td>Next qualification</td>
+<td>Runtime false confirmations per hour under representative traffic</td>
+<td>Not measured</td>
+<td>Episode controls do not establish production false-page rates</td>
+</tr>
+<tr>
+<td>Next qualification</td>
+<td>Selective faults outside the probe panel and probe-aware attacks</td>
+<td>Fixture counterexample exists; broad rate not measured</td>
+<td>Quantify probe coverage</td>
+</tr>
+<tr>
+<td>Next qualification</td>
+<td>Shared semantic-error coverage and delayed-label workflow</td>
+<td>Correlation measured; operational label workflow not implemented</td>
+<td>Separate integrity from correctness</td>
+</tr>
+<tr>
+<td>Next qualification</td>
+<td>Long-lived issuance-store retention</td>
+<td>Known retained consumed payloads; sustained profile not measured</td>
+<td>Qualify direct manager use beyond bounded episodes</td>
+</tr>
+<tr>
+<td>Enterprise roadmap</td>
+<td>Product UI, authenticated API, durable collector, database, broker</td>
+<td>Not implemented</td>
+<td>Support a deployed operator workflow</td>
+</tr>
+<tr>
+<td>Enterprise roadmap</td>
+<td>Customer enforcement connector and agent integration</td>
+<td>Not implemented</td>
+<td>Move beyond the offline stub</td>
+</tr>
+<tr>
+<td>Enterprise roadmap</td>
+<td>HA, disaster recovery, tenant isolation, security review</td>
+<td>Not measured or implemented</td>
+<td>Qualify enterprise operation</td>
+</tr>
+<tr>
+<td>Optional platform study</td>
+<td>LinuxONE versus x86 performance, energy, or cost</td>
+<td>Not measured</td>
+<td>Support comparative hardware claims</td>
+</tr>
+<tr>
+<td>Optional platform study</td>
+<td>Telum/Spyre or Secure Execution integration</td>
+<td>Not implemented or measured</td>
+<td>Add processor-specific capability evidence</td>
+</tr>
+<tr>
+<td>Product discovery</td>
+<td>Interviews, design partners, adoption, ROI</td>
+<td>Not measured</td>
+<td>Validate demand and commercial value</td>
+</tr>
+</tbody>
+</table>
+<hr /></section><section id="appendix-g"><div class="eyebrow">REFERENCE G</div><h2>Source and Evidence References</h2><h3>Code references</h3>
+<p>All release code links use commit <code>8a86ce01767a02d613b66f38a1d20de312cf61e1</code>.
+Function line positions also appear in <code>evidence/code-index.json</code>.</p>
+<ul>
+<li><strong>[C1] Supervised runtime:</strong> <code>src/response/supervised.py</code>; <code>SupervisedRuntime._respond</code>, <code>step</code>, <code>release_hold</code>. <a href="https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/response/supervised.py">https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/response/supervised.py</a></li>
+<li><strong>[C2] Recovery authority and verification:</strong> <code>src/response/recovery.py</code>; <code>fit_affine</code>, <code>verify_outputs</code>, <code>RecoveryManager.propose</code>, <code>propose_restart</code>, <code>apply</code>, <code>rollback</code>. <a href="https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/response/recovery.py">https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/response/recovery.py</a></li>
+<li><strong>[C3] Runtime checks:</strong> <code>src/monitor/runtime.py</code>; <code>checked_scores</code>, <code>HealthProbe</code>, <code>RuntimeWatch.tick</code>, <code>verified_release</code>. <a href="https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/monitor/runtime.py">https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/monitor/runtime.py</a></li>
+<li><strong>[C4] Passive KS monitor:</strong> <code>src/monitor/disagreement.py</code>; <code>ScorePair.gap</code>, <code>ks_statistic</code>, <code>calibrate</code>, <code>DisagreementMonitor.update</code>. <a href="https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/monitor/disagreement.py">https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/monitor/disagreement.py</a></li>
+<li><strong>[C5] Selected models and thresholds:</strong> <code>src/models/synthetic.py</code>; <code>guard_features</code>, <code>train</code>, <code>select_threshold</code>, <code>BinaryPolicy</code>, <code>SyntheticBackend</code>. <a href="https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/models/synthetic.py">https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/models/synthetic.py</a></li>
+<li><strong>[C6] Full paired benchmark:</strong> <code>src/replay/synthetic.py</code>; <code>episode</code>, <code>service_metrics</code>, <code>combine</code>, <code>external_scores</code>, <code>run</code>. <a href="https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/replay/synthetic.py">https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/replay/synthetic.py</a></li>
+<li><strong>[C7] Data generation and splits:</strong> <code>src/data/synthetic.py</code>; <code>family_splits</code>, <code>validation_roles</code>, <code>expand</code>, <code>generate</code>. <a href="https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/data/synthetic.py">https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/data/synthetic.py</a></li>
+<li><strong>[C8] Selected release interface:</strong> <code>src/release/cli.py</code>; <code>verify_selected</code>, <code>score_lines</code>, <code>main</code>; identity in <code>src/release/selected.json</code>. <a href="https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/release/cli.py">https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/release/cli.py</a></li>
+<li><strong>[C9] Source-bound traffic profiles:</strong> <code>src/monitor/profiles.py</code> and <code>src/monitor/qualify_profile.py</code>. <a href="https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/monitor/profiles.py">https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/monitor/profiles.py</a></li>
+<li><strong>[C10] Fault transforms and earlier causal replay:</strong> <code>src/replay/recovery.py::FaultBackend</code>; <code>src/replay/continuous.py::run_episode</code>. <a href="https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/replay/recovery.py">https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/replay/recovery.py</a></li>
+<li><strong>[C11] Historical conformal response:</strong> <code>src/response/conformal.py</code>; <code>fit_policy</code>, <code>verify_candidate</code>, <code>approved_recalibration</code>. <a href="https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/response/conformal.py">https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/src/response/conformal.py</a></li>
+<li><strong>[C12] Reproduction and release identity:</strong> <code>scripts/reproduce_selected.py</code>, <code>scripts/package_private.py</code>, <code>src/release/state.py</code>. <a href="https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/scripts/reproduce_selected.py">https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/scripts/reproduce_selected.py</a></li>
+</ul>
+<h3>Experiment references</h3>
+<p>Paths below are relative to the authorized <code>ibm-z</code> project root. They are private evidence locations, not public downloads.
+Their hashes appear in <code>evidence/source-manifest.json</code>.</p>
+<ul>
+<li><strong>[E1] Selected benchmark:</strong> <code>artifacts/synthetic-100k-20261017-01/benchmark-report.json</code>; fields <code>overall</code>, <code>aggregate</code>, <code>healthy_test</code>, <code>external_regression</code>, <code>runtime_model_inputs</code>, <code>error_correlation</code>.</li>
+<li><strong>[E2] Data and selected models:</strong> <code>artifacts/synthetic-100k-20261017-01/data-manifest.json</code> and <code>model-cards.json</code>.</li>
+<li><strong>[E3] Selected native resource evidence:</strong> <code>artifacts/synthetic-100k-20261017-01/execution-receipt.json</code> and <code>timing.json</code>.</li>
+<li><strong>[E4] Release qualification:</strong> <code>artifacts/release-package-20261017-02/qualification-receipt.json</code>, <code>reproduction-receipt.json</code>, <code>native-tests.log</code>, <code>independent-audit.json</code>; read-only environment data in <code>evidence/native-platform-snapshot.json</code>.</li>
+<li><strong>[E5] Neural comparison:</strong> <code>artifacts/neural-upgrade-20261017/benchmark-report.json</code>, <code>model-cards.json</code>, <code>execution-receipt.json</code>, <code>baseline-comparison.json</code>, <code>repeatability.json</code>.</li>
+<li><strong>[E6] Original real-data models:</strong> <code>artifacts/classifiers-20261017-01/model-cards.json</code>, <code>split-manifest.json</code>, <code>execution-receipt.json</code>.</li>
+<li><strong>[E7] Original pools and source records:</strong> <code>artifacts/prompt-pools-20261017-01/pool-manifest.json</code>; <code>preparation/prompt-pools-20261017/source-download-manifest.json</code>; public <code>releases/baseline-20261017/data-sources.json</code>.</li>
+<li><strong>[E8] Repaired runtime and Dolly study:</strong> <code>artifacts/repair-loop-20261017/qualification-1/independent-audit.json</code>, <code>continuous-report.json</code>, <code>traffic-profile-report.json</code>, <code>repeatability.json</code>.</li>
+<li><strong>[E9] KS and reference diagnostics:</strong> <code>artifacts/monitor-20261017-01/score-manifest.json</code>; <code>artifacts/monitor-diagnostic-20261017-01/investigation.json</code>; original calibration and source commit <code>f7ce7c8129b80c9f37edfa7a903769b0238cbfaa</code>.</li>
+<li><strong>[E10] Original conformal gate:</strong> <code>artifacts/replay-20261017-01/response-verification-summary.json</code> and <code>scorecard.md</code>; exact historical source remains in Git history/private evidence.</li>
+</ul>
+<p>Public aggregate results: <a href="https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/releases/baseline-20261017/summary.json">https://github.com/beastgotfried/agent-jailbreak/blob/8a86ce01767a02d613b66f38a1d20de312cf61e1/releases/baseline-20261017/summary.json</a></p>
+<h3>Prior art</h3>
+<p>The source review pins Cheap Canaries to commit <code>90726d9d4d281373e6729a0319d50e9c32566c59</code>.
+The repository and paper results belong to their authors. This extraction does not rerun or certify their experiments.</p>
+<ul>
+<li><strong>[R1] Paper and repository:</strong> <em>Cheap Canaries / Online Shift Detection and Conformal Adaptation for Deployed Safety Classifiers</em>. <a href="https://arxiv.org/abs/2606.11949">https://arxiv.org/abs/2606.11949</a> ; <a href="https://github.com/junwenleong/safety-classifier-shift-monitor">https://github.com/junwenleong/safety-classifier-shift-monitor</a></li>
+<li><strong>[R2] Reference KS:</strong> <code>shift_detection_monitor/detection/ks_detector.py::KSDetector</code>. <a href="https://github.com/junwenleong/safety-classifier-shift-monitor/blob/90726d9d4d281373e6729a0319d50e9c32566c59/shift_detection_monitor/detection/ks_detector.py">https://github.com/junwenleong/safety-classifier-shift-monitor/blob/90726d9d4d281373e6729a0319d50e9c32566c59/shift_detection_monitor/detection/ks_detector.py</a></li>
+<li><strong>[R3] Reference scan martingale:</strong> <code>shift_detection_monitor/detection/conformal_martingale.py::ScanMartingale</code>, <code>_conformal_p_two_sided</code>, <code>_bet_log_increment</code>. <a href="https://github.com/junwenleong/safety-classifier-shift-monitor/blob/90726d9d4d281373e6729a0319d50e9c32566c59/shift_detection_monitor/detection/conformal_martingale.py">https://github.com/junwenleong/safety-classifier-shift-monitor/blob/90726d9d4d281373e6729a0319d50e9c32566c59/shift_detection_monitor/detection/conformal_martingale.py</a></li>
+<li><strong>[R4] Reference MMD and adaptation:</strong> <code>detection/mmd_detector.py</code>, <code>adaptation/conformal.py</code>, <code>adaptation/density_ratio.py</code>. <a href="https://github.com/junwenleong/safety-classifier-shift-monitor/tree/90726d9d4d281373e6729a0319d50e9c32566c59/shift_detection_monitor">https://github.com/junwenleong/safety-classifier-shift-monitor/tree/90726d9d4d281373e6729a0319d50e9c32566c59/shift_detection_monitor</a></li>
+</ul>
+<p>The reference also contains CUSUM/EWMA and other research detectors. Do not claim our smaller method set exceeds its statistical scope.
+A broader product-level originality or market-first claim requires a separate competitive review.</p>
+<h3>Product and IBM references</h3>
+<ul>
+<li><strong>[P1] Product proposal:</strong> <code>prd/Enterprise-PRD.md</code>, version 1.0, 16 October 2026. It describes enterprise requirements, not delivered features. Its initial environment-only status predates the completed studies.</li>
+<li><strong>[I1] IBM platform context:</strong> <a href="https://www.ibm.com/products/linuxone">https://www.ibm.com/products/linuxone</a> ; <a href="https://github.com/linuxone-community-cloud/jupyter-lab-ml">https://github.com/linuxone-community-cloud/jupyter-lab-ml</a> ; <a href="https://community.ibm.com/zsystems/l1cc/">https://community.ibm.com/zsystems/l1cc/</a></li>
+</ul>
+<p>IBM product capabilities provide context. Only the native CPU workflow and recorded environment checks support this project's implementation claims.</p>
+<hr /></section><section id="appendix-h"><div class="eyebrow">REFERENCE H</div><h2>Design and Editorial Direction</h2><h3>Visual system</h3>
+<ul>
+<li>Use IBM Plex Sans for titles and body text.</li>
+<li>Use IBM Plex Mono for source commits, event indices, and native platform output.</li>
+<li>Use dark ink, white space, IBM blue, and a restrained teal accent.</li>
+<li>Use one main diagram or chart per slide.</li>
+<li>Keep main-slide text to the four supplied points.</li>
+<li>Put units, denominators, and evidence scope directly below each chart.</li>
+<li>Use labels as well as color for restored, held, and control states.</li>
+<li>Use actual evidence charts rather than stock cybersecurity imagery or fictional dashboards.</li>
+</ul>
+<h3>Suggested main-slide asset order</h3>
+<ol>
+<li>Product title and simplified architecture.</li>
+<li>Same request, changed score path illustration.</li>
+<li>Three evidence/authority lanes.</li>
+<li>Implemented native architecture.</li>
+<li>Dataset split and model pair.</li>
+<li>Separate KS and matched-probe flows.</li>
+<li>Actual scale-fault timeline.</li>
+<li>Complete-stream outcomes and fault-episode counts.</li>
+<li>Candidate verification gate.</li>
+<li>Native proof chain and closing line.</li>
+</ol>
+<h3>Final editorial check</h3>
+<p>Positive presentation comes from demonstrated capabilities, not omitted denominators.
+Keep the PRD roadmap, research methods, model quality, runtime restoration, and hardware scope distinct.
+The strongest pitch is the one the code and receipts can reproduce.</p></section><footer>Evidence cutoff: public release 8a86ce0 / qualified core c5fad06. Charts derive from frozen native evidence. No raw requests, weights, credentials, or server addresses are included.</footer></main></body></html>

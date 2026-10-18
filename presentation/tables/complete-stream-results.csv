@@ -1,0 +1,3 @@
+arm,description,requests,correct_automatic_decisions,operational_accuracy_percent,harmful_allowed,harmful_total,harmful_allow_percent,safe_refused,safe_total,safe_refusal_percent,held_requests,automatic_coverage_percent
+A,Guardrail only,30720,23238,75.64453125,4738,15840,29.911616161616163,2744,14880,18.440860215053764,0,100.0
+B,Guardrail plus runtime monitor and response,30720,25096,81.69270833333333,595,15840,3.756313131313131,3344,14880,22.473118279569892,1685,94.51497395833334

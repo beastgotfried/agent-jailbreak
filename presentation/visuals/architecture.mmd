@@ -1,0 +1,48 @@
+flowchart TB
+    Operator[Operator: explicit offline approval]
+    subgraph Z[IBM LinuxONE: native Linux s390x CPU execution]
+        direction TB
+        subgraph CORE[Selected release: offline request and runtime path]
+            Input[Ordered request stream / Python replay]
+            Supervisor[SupervisedRuntime: current backend and request gate]
+            Pair[TF-IDF guardrail + canary]
+            Policy[Frozen binary policy: guardrail decision]
+            Stub[Agent stub: allow / refuse / hold]
+            Models[(Frozen model files, cards, policy and hashes)]
+            Probes[(Disjoint labelled fit and verification probes)]
+            Watch[RuntimeWatch: 8 probes every 16 requests]
+            Recovery[RecoveryManager: affine candidate or trusted backend reload]
+            Verify[Execute candidate and verify both score vectors and decisions]
+            Activate[Fresh verification + single-use generation-bound activation]
+            Hold[Explicit containment; full verification before release]
+            Input --> Supervisor --> Pair --> Policy --> Stub
+            Models --> Pair
+            Probes --> Watch
+            Watch -->|Execute matched probes| Pair
+            Watch -->|Confirmed change / unavailable scores| Recovery
+            Recovery --> Verify
+            Probes --> Verify
+            Models --> Recovery
+            Verify -->|Accepted with approval| Activate --> Supervisor
+            Verify -->|No verified replacement| Hold --> Supervisor
+        end
+        subgraph TRAFFIC[Separate implemented traffic-study path]
+            Events[Source-bound paired score events: original-model studies]
+            KS[Signed gap + finite-horizon empirical KS monitor]
+            Warning[Traffic warning: no response authority]
+            Events --> KS --> Warning
+        end
+        Evidence[(Local JSON / JSONL events, receipts and SHA-256 manifests)]
+        Supervisor --> Evidence
+        Watch --> Evidence
+        Verify --> Evidence
+        Warning --> Evidence
+    end
+    Operator -->|Separate recovery and containment flags| Recovery
+    Operator -->|Explicit release approval| Hold
+    classDef native fill:#edf5ff,stroke:#0f62fe,color:#161616;
+    classDef store fill:#f4f4f4,stroke:#8d8d8d,color:#161616;
+    classDef action fill:#d9fbfb,stroke:#007d79,color:#161616;
+    class Input,Supervisor,Pair,Policy,Watch,KS,Events native;
+    class Models,Probes,Evidence store;
+    class Recovery,Verify,Activate,Hold,Stub,Warning action;

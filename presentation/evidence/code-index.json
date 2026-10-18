@@ -1,0 +1,3606 @@
+[
+  {
+    "path": "scripts/package_private.py",
+    "definitions": [
+      {
+        "name": "sha",
+        "line": 14,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "dump",
+        "line": 22,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "verify_tree",
+        "line": 28,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "assemble",
+        "line": 43,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "seal",
+        "line": 98,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 136,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "scripts/reproduce_selected.py",
+    "definitions": [
+      {
+        "name": "sha",
+        "line": 19,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "dump",
+        "line": 27,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 33,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "stage",
+        "line": 65,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/data/build_prompt_pools.py",
+    "definitions": [
+      {
+        "name": "_is_hex_sha256",
+        "line": 22,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_require_resolved_within",
+        "line": 25,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "normalize_prompt",
+        "line": 35,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "sha256_text",
+        "line": 40,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "sha256_bytes",
+        "line": 43,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "sha256_file",
+        "line": 46,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "is_safe_relative",
+        "line": 53,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "revision_strength",
+        "line": 69,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "load_download_manifest",
+        "line": 79,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "load_model_split_manifest",
+        "line": 85,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "build_prefix_mapping",
+        "line": 91,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "validate_raw_hashes",
+        "line": 134,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "validate_converted_hashes",
+        "line": 194,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "read_csv_literal",
+        "line": 266,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "read_jsonl_literal",
+        "line": 298,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "build_toxic_candidates",
+        "line": 326,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "build_wainject_candidates",
+        "line": 628,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "build_jbb_behaviors_candidates",
+        "line": 741,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "build_jbb_attacks_candidates",
+        "line": 816,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "build_strongreject_candidates",
+        "line": 895,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "build_harmbench_candidates",
+        "line": 1014,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "global_dedup_and_partition",
+        "line": 1110,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "build_prompt_pools",
+        "line": 1264,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 1542,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "row_norm_hash",
+        "line": 410,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_is_valid_toxicity",
+        "line": 494,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_is_valid_human",
+        "line": 496,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "record_key",
+        "line": 1363,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "write_pool",
+        "line": 1376,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "file_info",
+        "line": 1438,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "prov_key",
+        "line": 1173,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "item_key",
+        "line": 1182,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "seed_key",
+        "line": 1217,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/data/convert_parquet.py",
+    "definitions": [
+      {
+        "name": "sha256_file",
+        "line": 19,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_load_download_manifest",
+        "line": 27,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_is_safe_relative",
+        "line": 54,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_require_resolved_within",
+        "line": 70,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "convert_parquet",
+        "line": 77,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 251,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/data/synthetic.py",
+    "definitions": [
+      {
+        "name": "digest",
+        "line": 30,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "text_id",
+        "line": 34,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "file_hash",
+        "line": 38,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "write_json",
+        "line": 46,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "native_only",
+        "line": 52,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "SyntheticRow",
+        "line": 58,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "validate_catalog",
+        "line": 73,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "family_splits",
+        "line": 114,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "validation_roles",
+        "line": 132,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "expand",
+        "line": 139,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "prototype_similarity",
+        "line": 158,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "generate",
+        "line": 177,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "load_rows",
+        "line": 232,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 237,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/data/traffic_profile.py",
+    "definitions": [
+      {
+        "name": "TrafficRequest",
+        "line": 18,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "load_instructions",
+        "line": 25,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/models/neural.py",
+    "definitions": [
+      {
+        "name": "native_cpu",
+        "line": 37,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "configure_cpu",
+        "line": 42,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "versions",
+        "line": 52,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "epoch_rows",
+        "line": 57,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "stack_features",
+        "line": 76,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "ensemble_improves",
+        "line": 87,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "TinyGuard",
+        "line": 93,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "trainable_parameters",
+        "line": 106,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "tokens",
+        "line": 119,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "logits_for",
+        "line": 124,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "sigmoid",
+        "line": 137,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "save_weights",
+        "line": 141,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "load_weights",
+        "line": 146,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "truncation_counts",
+        "line": 152,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "verify_files",
+        "line": 162,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "TextFeatures",
+        "line": 172,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "NeuralEstimator",
+        "line": 177,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "NeuralBackend",
+        "line": 193,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "train",
+        "line": 228,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 366,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 94,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "forward",
+        "line": 99,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "transform",
+        "line": 173,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 180,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "predict_proba",
+        "line": 183,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 194,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 218,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/models/score.py",
+    "definitions": [
+      {
+        "name": "FrozenScorer",
+        "line": 38,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "load_scorer",
+        "line": 128,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 132,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 41,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 99,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/models/synthetic.py",
+    "definitions": [
+      {
+        "name": "BinaryPolicy",
+        "line": 32,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "metrics",
+        "line": 64,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "select_threshold",
+        "line": 73,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "guard_features",
+        "line": 92,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "probabilities",
+        "line": 100,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "logistic_candidate",
+        "line": 107,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "train",
+        "line": 123,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "SyntheticBackend",
+        "line": 207,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "main",
+        "line": 231,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__post_init__",
+        "line": 37,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "policy_id",
+        "line": 46,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "prediction_set",
+        "line": 50,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "decision",
+        "line": 55,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "to_dict",
+        "line": 58,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 208,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 221,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/models/train_classifiers.py",
+    "definitions": [
+      {
+        "name": "normalize_prompt",
+        "line": 98,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "sha256_file",
+        "line": 108,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "sha256_text",
+        "line": 116,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_binary_values",
+        "line": 120,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "compute_labels",
+        "line": 138,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "human_annotation_mask",
+        "line": 145,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "dedupe_against_test",
+        "line": 150,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "group_within_train",
+        "line": 165,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "partition_roles",
+        "line": 210,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "build_vectorizer",
+        "line": 240,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "build_classifier",
+        "line": 248,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "fit_model",
+        "line": 259,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "positive_proba",
+        "line": 280,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "choose_threshold",
+        "line": 285,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "binary_metrics",
+        "line": 339,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "error_correlation",
+        "line": 367,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_json_default",
+        "line": 392,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_utc_now",
+        "line": 402,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_training_command",
+        "line": 406,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_load_csv",
+        "line": 420,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_prompt_texts",
+        "line": 443,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "run_training",
+        "line": 447,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 764,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/monitor/cli.py",
+    "definitions": [
+      {
+        "name": "rows",
+        "line": 19,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "events",
+        "line": 27,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "new_output",
+        "line": 32,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "write_new_json",
+        "line": 40,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "atomic_checkpoint",
+        "line": 45,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_run",
+        "line": 61,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 100,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/monitor/disagreement.py",
+    "definitions": [
+      {
+        "name": "MonitorError",
+        "line": 22,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "canonical",
+        "line": 26,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "digest",
+        "line": 30,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_hex",
+        "line": 34,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_identifier",
+        "line": 38,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_number",
+        "line": 42,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "strict_json",
+        "line": 46,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "ScorePair",
+        "line": 65,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "pair_streams",
+        "line": 103,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "ks_statistic",
+        "line": 126,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "Calibration",
+        "line": 145,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "_validated_sample",
+        "line": 217,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "calibrate",
+        "line": 229,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "DisagreementMonitor",
+        "line": 270,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "pairs",
+        "line": 47,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "constant",
+        "line": 55,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__post_init__",
+        "line": 74,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "gap",
+        "line": 87,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "to_dict",
+        "line": 90,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "from_dict",
+        "line": 94,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__post_init__",
+        "line": 161,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "max_looks",
+        "line": 186,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "payload",
+        "line": 189,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "calibration_id",
+        "line": 193,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "to_dict",
+        "line": 196,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "from_dict",
+        "line": 200,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 276,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "accepted_count",
+        "line": 286,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "alarm",
+        "line": 290,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "exhausted",
+        "line": 294,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "update",
+        "line": 297,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "checkpoint",
+        "line": 348,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "restore",
+        "line": 353,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/monitor/prepare_scores.py",
+    "definitions": [
+      {
+        "name": "file_sha",
+        "line": 18,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "model_binding",
+        "line": 22,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "prepare_scores",
+        "line": 36,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 119,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/monitor/profiles.py",
+    "definitions": [
+      {
+        "name": "TrafficProfile",
+        "line": 17,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "ProfiledTrafficWatch",
+        "line": 43,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "__post_init__",
+        "line": 23,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "profile_id",
+        "line": 33,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "to_dict",
+        "line": 37,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 44,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "update",
+        "line": 56,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/monitor/qualify_profile.py",
+    "definitions": [
+      {
+        "name": "score_role",
+        "line": 29,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "events",
+        "line": 38,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "run",
+        "line": 43,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 130,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/monitor/runtime.py",
+    "definitions": [
+      {
+        "name": "RuntimeCheckError",
+        "line": 15,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "checked_scores",
+        "line": 19,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "HealthProbe",
+        "line": 41,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "RuntimeWatch",
+        "line": 55,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "__post_init__",
+        "line": 48,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 58,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "incidents",
+        "line": 79,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "active",
+        "line": 83,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "state",
+        "line": 87,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_open",
+        "line": 90,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "tick",
+        "line": 102,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "runtime_error",
+        "line": 136,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "verified_release",
+        "line": 141,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "begin_response",
+        "line": 152,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "finish_response",
+        "line": 159,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/release/__init__.py",
+    "definitions": []
+  },
+  {
+    "path": "src/release/cli.py",
+    "definitions": [
+      {
+        "name": "ReleaseError",
+        "line": 22,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "selected_release",
+        "line": 26,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "verify_selected",
+        "line": 30,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "load_selected",
+        "line": 46,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score_lines",
+        "line": 52,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 75,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/release/state.py",
+    "definitions": [
+      {
+        "name": "canonical",
+        "line": 16,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "learned_state_sha256",
+        "line": 55,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/replay/cli.py",
+    "definitions": [
+      {
+        "name": "run_benchmark",
+        "line": 19,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 96,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/replay/continuous.py",
+    "definitions": [
+      {
+        "name": "CostLedger",
+        "line": 45,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "CountedBackend",
+        "line": 66,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "decision_metrics",
+        "line": 78,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "binary_metrics",
+        "line": 97,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "episode_stream",
+        "line": 113,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "run_episode",
+        "line": 124,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "run",
+        "line": 219,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 302,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 46,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "phase",
+        "line": 51,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "record",
+        "line": 58,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "to_dict",
+        "line": 62,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 67,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 73,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "wrapped",
+        "line": 134,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "factory",
+        "line": 230,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/replay/data.py",
+    "definitions": [
+      {
+        "name": "ReplayError",
+        "line": 14,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "Prompt",
+        "line": 19,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "file_sha",
+        "line": 35,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "mapped_label",
+        "line": 39,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "load_pools",
+        "line": 75,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "split_label_roles",
+        "line": 106,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "regime_for",
+        "line": 123,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "transformed",
+        "line": 127,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "labelled_scores",
+        "line": 133,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score_cache",
+        "line": 145,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__post_init__",
+        "line": 26,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/replay/harness.py",
+    "definitions": [
+      {
+        "name": "ReplaySpec",
+        "line": 19,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "AgentStub",
+        "line": 35,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "build_stream",
+        "line": 46,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "input_digest",
+        "line": 72,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "event_metrics",
+        "line": 78,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "coverage_floor_met",
+        "line": 100,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "initial_policy",
+        "line": 104,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "run_arm",
+        "line": 109,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "compare_arms",
+        "line": 185,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "aggregate",
+        "line": 212,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__post_init__",
+        "line": 26,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "respond",
+        "line": 40,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/replay/neural.py",
+    "definitions": [
+      {
+        "name": "main",
+        "line": 10,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/replay/recovery.py",
+    "definitions": [
+      {
+        "name": "BoundBackend",
+        "line": 43,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "FaultBackend",
+        "line": 53,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "load_initial",
+        "line": 93,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score_records",
+        "line": 103,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "labelled_metrics",
+        "line": 117,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "make_stream",
+        "line": 123,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "build_probes",
+        "line": 142,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "run_episode",
+        "line": 148,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "run",
+        "line": 230,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 314,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 44,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 49,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 55,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 63,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "factory",
+        "line": 240,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "restart",
+        "line": 161,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/replay/recovery_data.py",
+    "definitions": [
+      {
+        "name": "RecoveryPrompt",
+        "line": 20,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "family_for",
+        "line": 28,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "prior_prompt_ids",
+        "line": 39,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "load_xstest",
+        "line": 54,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/replay/scorecard.py",
+    "definitions": [
+      {
+        "name": "scorecard",
+        "line": 14,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_percent",
+        "line": 32,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "markdown",
+        "line": 36,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "write_scorecard",
+        "line": 70,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 93,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/replay/synthetic.py",
+    "definitions": [
+      {
+        "name": "TimedBackend",
+        "line": 32,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "GuardrailView",
+        "line": 45,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "score_rows",
+        "line": 59,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "select_probes",
+        "line": 71,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "grouped_cases",
+        "line": 76,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "build_stream",
+        "line": 90,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "endpoint_rows",
+        "line": 108,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "service_metrics",
+        "line": 118,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "episode",
+        "line": 128,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "combine",
+        "line": 204,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "external_scores",
+        "line": 216,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "run",
+        "line": 235,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "main",
+        "line": 342,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 33,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 37,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 47,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 53,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "wrapped",
+        "line": 138,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/response/conformal.py",
+    "definitions": [
+      {
+        "name": "ResponseError",
+        "line": 16,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "identity",
+        "line": 20,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "valid_score",
+        "line": 24,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "valid_hash",
+        "line": 28,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "LabelledScore",
+        "line": 33,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "ConformalPolicy",
+        "line": 49,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "fit_policy",
+        "line": 90,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "measure",
+        "line": 109,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "verify_candidate",
+        "line": 142,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "approved_recalibration",
+        "line": 164,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__post_init__",
+        "line": 39,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__post_init__",
+        "line": 60,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "policy_id",
+        "line": 73,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "prediction_set",
+        "line": 76,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "decision",
+        "line": 81,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "to_dict",
+        "line": 85,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/response/recovery.py",
+    "definitions": [
+      {
+        "name": "RecoveryError",
+        "line": 20,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "Backend",
+        "line": 24,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "Probe",
+        "line": 32,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "AffineCorrection",
+        "line": 54,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "validate_batch",
+        "line": 77,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "fit_affine",
+        "line": 88,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "metrics",
+        "line": 111,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "verify_outputs",
+        "line": 116,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_validate_score_batch",
+        "line": 158,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_safe_reject_code",
+        "line": 206,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "CorrectedBackend",
+        "line": 213,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "RecoveryPlan",
+        "line": 245,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "RecoveryManager",
+        "line": 254,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "identity_text",
+        "line": 589,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 27,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__post_init__",
+        "line": 41,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "apply",
+        "line": 62,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "correction_id",
+        "line": 71,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 214,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 222,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 257,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "backend",
+        "line": 271,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "policy",
+        "line": 275,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "generation",
+        "line": 279,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "previous_backend",
+        "line": 283,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_next_handle",
+        "line": 286,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "propose",
+        "line": 293,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "propose_restart",
+        "line": 465,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "apply",
+        "line": 519,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_apply_locked",
+        "line": 523,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "rollback",
+        "line": 576,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_rollback_locked",
+        "line": 580,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "make_plan",
+        "line": 301,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "src/response/supervised.py",
+    "definitions": [
+      {
+        "name": "SupervisedRuntime",
+        "line": 17,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "__init__",
+        "line": 18,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "held",
+        "line": 53,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "unavailable",
+        "line": 57,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_contain",
+        "line": 60,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_sample",
+        "line": 68,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_respond",
+        "line": 73,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "step",
+        "line": 100,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "release_hold",
+        "line": 137,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "tests/test_baseline_recovery.py",
+    "definitions": [
+      {
+        "name": "healthy",
+        "line": 22,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "StubBackend",
+        "line": 27,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "CountingBackend",
+        "line": 37,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "batch",
+        "line": 49,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "proposal",
+        "line": 56,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_probe_fit_recovers_unknown_affine_parameters",
+        "line": 69,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_non_affine_and_information_loss_faults_use_verified_restart",
+        "line": 83,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_failed_restart_is_rejected_without_changing_runtime",
+        "line": 91,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_no_approval_does_not_run_probe_or_restart_work",
+        "line": 100,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_healthy_scores_do_not_trigger_repair",
+        "line": 108,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_verification_separates_score_match_from_set_match",
+        "line": 114,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_mismatched_probe_text_and_label_role_reject",
+        "line": 122,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_second_activation_of_same_plan_rejects_and_rollback_is_explicit",
+        "line": 137,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_invalid_restart_binding_and_private_error_redaction",
+        "line": 151,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_invalid_probe_scores_are_rejected",
+        "line": 165,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_final_requests_cannot_enter_fit_or_verification",
+        "line": 170,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_affine_only_mode_retains_rejection_for_nonlinear_fault",
+        "line": 175,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_correction_does_not_silently_clip_invalid_future_scores",
+        "line": 180,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_new_method_end_to_end_and_unrecoverable_controls",
+        "line": 187,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_shared_guardrail_canary_fault_requires_full_pair_restart",
+        "line": 225,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_canary_only_corruption_does_not_count_as_no_degradation",
+        "line": 244,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_corrected_binary_flag_matches_corrected_score",
+        "line": 258,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_fault_outside_probes_remains_unresolved_not_claimed_repaired",
+        "line": 274,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_source_family_separation_and_unknown_values_fail",
+        "line": 288,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_missing_canary_evidence_rejects",
+        "line": 299,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_stale_complete_probes_detected",
+        "line": 315,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_actual_candidate_execution_on_verification",
+        "line": 340,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_unregistered_plan_rejects",
+        "line": 362,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_modified_plan_backend_ignored",
+        "line": 374,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_cross_manager_plan_rejects",
+        "line": 395,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_repeated_activation_rejects",
+        "line": 406,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_candidate_change_before_apply_rejects",
+        "line": 420,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_malformed_candidate_outputs_rejected",
+        "line": 443,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_runtime_error_candidate_before_activation_rejected",
+        "line": 471,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_binary_flag_consistency_validated",
+        "line": 503,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_whole_runtime_batch_validation",
+        "line": 527,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_record_defensive_copy",
+        "line": 544,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_manager_bound_single_use_handle",
+        "line": 566,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_cross_manager_handle_isolation",
+        "line": 604,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_canary_flag_retained_threshold",
+        "line": 623,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_backend_error_redaction_without_private_word",
+        "line": 674,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 30,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 33,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 38,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 43,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "prohibited",
+        "line": 102,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "bad_restart",
+        "line": 152,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "private_restart",
+        "line": 158,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "records",
+        "line": 191,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "SharedFaultBackend",
+        "line": 230,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "CanaryBrokenBackend",
+        "line": 249,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "FlagBackend",
+        "line": 259,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "SelectiveBackend",
+        "line": 275,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "BrokenBackend",
+        "line": 318,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "MutableBackend",
+        "line": 421,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "BadLengthBackend",
+        "line": 444,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "BadScoreBackend",
+        "line": 457,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "RaisesBackend",
+        "line": 463,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "FlakyBackend",
+        "line": 473,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "FlagBackend",
+        "line": 504,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "MissingFlagBackend",
+        "line": 517,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "MissingFieldBackend",
+        "line": 528,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "BadScoreBackend",
+        "line": 537,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "BackendA",
+        "line": 571,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "BackendB",
+        "line": 574,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "ThresholdBackend",
+        "line": 625,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "NoThresholdBackend",
+        "line": 643,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "ProposeBackend",
+        "line": 651,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "LeakyBackend",
+        "line": 679,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "leaky_factory",
+        "line": 687,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "bad_binding",
+        "line": 692,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 231,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 250,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 261,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 276,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 319,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 321,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 422,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 425,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 445,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 458,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 464,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 474,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 477,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 506,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 518,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 529,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 538,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 572,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 575,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 628,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 644,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 654,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 657,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 680,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "tests/test_conformal_response.py",
+    "definitions": [
+      {
+        "name": "batch",
+        "line": 20,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "fitted",
+        "line": 25,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_class_conditional_quantile_and_decision_sets",
+        "line": 29,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_insufficient_class_labels_and_invalid_roles_fail",
+        "line": 43,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_positive_control_recalibration_requires_separate_verification",
+        "line": 54,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_no_approval_does_not_fit_or_apply_a_candidate",
+        "line": 69,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_all_review_is_not_a_successful_repair",
+        "line": 76,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_label_leakage_and_model_changes_reject",
+        "line": 91,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_invalid_scores_do_not_echo_values",
+        "line": 107,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_measure_empty_and_class_counts_are_explicit",
+        "line": 113,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "tests/test_continuous_replay.py",
+    "definitions": [
+      {
+        "name": "Backend",
+        "line": 16,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "records",
+        "line": 26,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_paired_full_loop_preserves_inputs_and_explicit_containment",
+        "line": 37,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 18,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "tests/test_disagreement_monitor.py",
+    "definitions": [
+      {
+        "name": "sample",
+        "line": 26,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "config",
+        "line": 31,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "write_events",
+        "line": 36,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_ks_distance_matches_scipy_statistic_only",
+        "line": 44,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_invalid_scores_reject_without_value_echo",
+        "line": 50,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_pair_schema_rejects_raw_content_and_bool_sequences",
+        "line": 56,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_strict_json_rejects_ambiguous_or_nonfinite_payload",
+        "line": 68,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_stationary_stream_has_warmup_and_finite_budget",
+        "line": 73,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_shift_latches_one_change_alarm_without_action_authority",
+        "line": 88,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_common_mode_score_change_is_an_explicit_blind_spot",
+        "line": 104,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_same_absolute_gap_but_reversed_direction_is_visible",
+        "line": 111,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_harmless_distribution_change_cannot_be_called_harm",
+        "line": 119,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_telemetry_faults_do_not_mutate_monitor",
+        "line": 134,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_checkpoint_restore_reproduces_state_and_alarms",
+        "line": 144,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_calibration_round_trip_and_determinism",
+        "line": 165,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_calibration_rejects_invalid_budget_or_insufficient_data",
+        "line": 181,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_empirical_threshold_uses_full_episode_maxima_not_individual_p_values",
+        "line": 188,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_evaluation_and_overlapping_ids_cannot_calibrate",
+        "line": 206,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "side",
+        "line": 218,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_two_stream_join_checks_identity_not_arrival_position",
+        "line": 224,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_cli_calibration_stream_and_checkpoint",
+        "line": 237,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_cli_fault_does_not_echo_rejected_source",
+        "line": 256,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_score_preparation_never_scores_evaluation_and_binds_models",
+        "line": 268,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "FakeScorer",
+        "line": 289,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "__init__",
+        "line": 290,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 291,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "tests/test_neural.py",
+    "definitions": [
+      {
+        "name": "neutral_rows",
+        "line": 14,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "tiny_model",
+        "line": 20,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "NeutralTokenizer",
+        "line": 28,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "test_epoch_selection_preserves_case_labels_and_only_train",
+        "line": 39,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_stack_features_are_finite_and_do_not_change_inputs",
+        "line": 56,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_ensemble_needs_gain_without_safety_or_refusal_regression",
+        "line": 67,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_only_last_two_encoder_blocks_and_head_are_trainable",
+        "line": 75,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_weight_round_trip_native_byte_order_and_batch_invariance",
+        "line": 85,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_artifact_verification_rejects_mutation_and_traversal",
+        "line": 100,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_native_gate_has_no_local_override",
+        "line": 112,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_guardrail_view_does_not_run_canary",
+        "line": 119,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__call__",
+        "line": 29,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "Estimator",
+        "line": 123,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "predict_proba",
+        "line": 126,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "tests/test_prompt_pools.py",
+    "definitions": [
+      {
+        "name": "sha256_file",
+        "line": 35,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "sha256_text",
+        "line": 43,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "normalize",
+        "line": 47,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "make_download_manifest",
+        "line": 55,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "write_csv",
+        "line": 66,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "write_jsonl",
+        "line": 76,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "build_synthetic_environment",
+        "line": 83,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_converter_preserves_nested_and_exact",
+        "line": 443,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_converter_rejects_escaping_input_symlinks",
+        "line": 543,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_converter_rejects_hash_mismatch_and_nonempty",
+        "line": 578,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_build_pools_success_and_provenance",
+        "line": 613,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_blocked_manifest_and_hash_validation",
+        "line": 783,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_model_manifest_hash_and_unsafe_paths",
+        "line": 827,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_no_pyarrow_dependency_for_builder",
+        "line": 848,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_source_id_and_provenance_retention",
+        "line": 863,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_converter_lazy_import",
+        "line": 897,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_load_manifest",
+        "line": 907,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_write_manifest",
+        "line": 911,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_rejects_missing_and_malformed_dataset_hashes",
+        "line": 915,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_rejects_contradictory_model_roles",
+        "line": 958,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_rejects_unlisted_wainject_file",
+        "line": 984,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_rejects_invalid_wainject_id_and_empty_text",
+        "line": 1008,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_rejects_source_hash_mismatch",
+        "line": 1063,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_rejects_duplicate_source_ids_across_groups",
+        "line": 1076,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_rejects_duplicate_canonical_entries",
+        "line": 1100,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_rejects_duplicate_conv_id_in_csv",
+        "line": 1116,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_valid_multi_member_reference_eligibility",
+        "line": 1151,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_malformed_flag_diagnostics_redact_source_values",
+        "line": 1168,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_rejects_malformed_flags",
+        "line": 1201,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_rejects_allowed_reference_overlaps_test",
+        "line": 1235,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_raw_file_symlink_escapes",
+        "line": 1279,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_raw_parent_symlink_escapes",
+        "line": 1306,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_converted_file_symlink_escapes",
+        "line": 1336,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_converted_parent_symlink_escapes",
+        "line": 1356,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_audit_arithmetic_reconciles",
+        "line": 1385,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_semantic_caveat_present",
+        "line": 1399,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_unknown_wainject_path_rejected",
+        "line": 1411,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "norm_hash",
+        "line": 395,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "tests/test_release.py",
+    "definitions": [
+      {
+        "name": "test_selection_names_the_frozen_tfidf_pair",
+        "line": 11,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "fixture_models",
+        "line": 20,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_hash_checks_precede_model_deserialization",
+        "line": 32,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_selected_loader_passes_pinned_cards_hash",
+        "line": 42,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_release_refuses_model_file_symlinks",
+        "line": 51,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "neutral_backend",
+        "line": 59,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_score_output_contains_no_text_and_executes_nothing",
+        "line": 65,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_invalid_request_has_no_decision_output",
+        "line": 75,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_input_line_has_a_memory_bound",
+        "line": 82,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_backend_exceptions_are_redacted",
+        "line": 89,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_model_state_ignores_only_vectorizer_process_cache",
+        "line": 100,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_model_state_detects_weight_and_dtype_changes",
+        "line": 113,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_model_state_rejects_opaque_objects",
+        "line": 121,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "fail",
+        "line": 91,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "tests/test_replay_harness.py",
+    "definitions": [
+      {
+        "name": "fixtures",
+        "line": 22,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "config",
+        "line": 34,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "paired",
+        "line": 40,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_stream_is_deterministic_and_without_replacement",
+        "line": 53,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_paired_positive_control_preserves_inputs_and_isolates_response",
+        "line": 68,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_unapproved_or_late_response_is_not_counted_as_restoration",
+        "line": 87,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_response_delay_beyond_episode_never_applies_retroactively",
+        "line": 93,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_stationary_negative_control_is_observed_not_universal_proof",
+        "line": 100,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_natural_shift_with_preserved_gap_is_not_falsely_claimed_detected",
+        "line": 106,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_label_purpose_and_splits_protect_evaluation",
+        "line": 114,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_injection_benign_is_not_universal_harmful_request_label",
+        "line": 128,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_full_fixture_replay_and_scorecard_regeneration_are_byte_repeatable",
+        "line": 135,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "FakeScorer",
+        "line": 159,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "score",
+        "line": 160,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "tests/test_runtime_supervision.py",
+    "definitions": [
+      {
+        "name": "healthy",
+        "line": 18,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "Backend",
+        "line": 22,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "references",
+        "line": 55,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "setup",
+        "line": 61,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "stream",
+        "line": 80,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_healthy_checks_continue_without_any_response",
+        "line": 91,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "traffic_config",
+        "line": 100,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_early_traffic_warning_does_not_consume_later_runtime_response",
+        "line": 106,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_multiple_incidents_probe_the_active_backend",
+        "line": 127,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_real_whole_pair_faults_recover",
+        "line": 139,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_persistent_fault_holds_without_claiming_recovery",
+        "line": 149,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_containment_requires_separate_approval_and_no_fallthrough",
+        "line": 162,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_invalid_output_immediately_prevents_execution",
+        "line": 171,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_fault_after_activation_enters_hold_and_reaches_verified_restart",
+        "line": 179,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_hold_release_requires_fresh_full_pair_verification",
+        "line": 196,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_release_then_refault_opens_a_new_incident_without_healthy_tick",
+        "line": 206,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_failed_current_samples_still_allow_independently_verified_restart",
+        "line": 221,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_failed_samples_do_not_bypass_restart_approval",
+        "line": 234,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_unreadable_runtime_and_bad_restart_remain_held",
+        "line": 242,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_restart_only_plan_keeps_authority_identity_and_fresh_verification",
+        "line": 250,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_selective_fault_outside_panel_remains_explicit_blind_spot",
+        "line": 268,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_runtime_sequence_and_authority_validation",
+        "line": 275,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 25,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 29,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "restart",
+        "line": 68,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "tests/test_runtime_watch.py",
+    "definitions": [
+      {
+        "name": "Backend",
+        "line": 12,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "watch",
+        "line": 25,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_independent_schedule_and_no_false_runtime_confirmation",
+        "line": 31,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_two_incidents_after_successful_recovery",
+        "line": 38,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_healthy_again_does_not_consume_a_future_incident",
+        "line": 54,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_rejected_check_keeps_health_checks_but_does_not_retry_forever",
+        "line": 65,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_canary_only_and_score_failure_confirm_without_private_text",
+        "line": 77,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_invalid_input_does_not_advance_sequence_or_accept_wrong_probe_role",
+        "line": 88,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 18,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "tests/test_synthetic.py",
+    "definitions": [
+      {
+        "name": "catalog_fixture",
+        "line": 15,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "records",
+        "line": 26,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_family_split_and_roles_are_fixed_before_expansion",
+        "line": 30,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_semantic_aliases_stay_in_train_across_domains",
+        "line": 42,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_catalog_rejects_unsafe_format_fields_and_duplicate_prototypes",
+        "line": 51,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_binary_policy_has_no_review_or_conformal_claim",
+        "line": 62,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_threshold_uses_balanced_accuracy_and_safe_fpr_cap",
+        "line": 71,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_nonconvergence_records_one_failed_candidate_without_retry",
+        "line": 82,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_local_execution_requires_explicit_operator_flag",
+        "line": 93,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_external_regression_paths_are_required",
+        "line": 102,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_streams_pair_arms_and_keep_fault_scenarios_on_same_inputs",
+        "line": 110,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_holds_do_not_count_as_correct_automatic_decisions",
+        "line": 121,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "NeutralFeatures",
+        "line": 129,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "NeutralEstimator",
+        "line": 134,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "NeutralBackend",
+        "line": 142,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "test_full_native_runtime_with_binary_policy",
+        "line": 158,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "warn_once",
+        "line": 84,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "transform",
+        "line": 130,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "predict_proba",
+        "line": 137,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "__init__",
+        "line": 147,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "score",
+        "line": 150,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "tests/test_traffic_profiles.py",
+    "definitions": [
+      {
+        "name": "config",
+        "line": 15,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_profile_rejects_unknown_source_without_state_change",
+        "line": 21,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_profile_resets_generation_windows_and_enforces_total_budget",
+        "line": 31,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_profile_binds_revision_preprocessing_and_calibration",
+        "line": 46,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_exact_source_groups_exclusions_and_role_separation",
+        "line": 56,
+        "kind": "FunctionDef"
+      }
+    ]
+  },
+  {
+    "path": "tests/test_train_classifiers.py",
+    "definitions": [
+      {
+        "name": "_fixture_prompt",
+        "line": 42,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_fixture_frame",
+        "line": 48,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "_write_fixture",
+        "line": 70,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "trained_runs",
+        "line": 111,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_label_logic",
+        "line": 157,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_normalization_is_idempotent_and_collapses_whitespace",
+        "line": 167,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_dedupe_removes_test_overlaps_and_logs_them",
+        "line": 175,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_determinism_two_runs_identical_scores",
+        "line": 196,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_artifacts_created_and_scorer_outputs_well_formed",
+        "line": 213,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_model_card_contains_required_keys",
+        "line": 264,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_missing_env_vars_fail_fast",
+        "line": 326,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_compute_labels_rejects_missing_or_nonbinary_labels",
+        "line": 339,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_human_annotation_accepts_only_binary_flags",
+        "line": 346,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_load_csv_validates_labels_flags_and_nonempty_prompts",
+        "line": 358,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_load_csv_preserves_literal_strings_and_requires_columns",
+        "line": 368,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_invalid_overlap_label_is_not_silently_removed",
+        "line": 385,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_group_within_train_uses_positions_not_dataframe_index",
+        "line": 394,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_partition_roles_is_deterministic_stratified_and_disjoint",
+        "line": 411,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_choose_threshold_honors_inclusive_ties_and_exact_fpr_cap",
+        "line": 427,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_choose_threshold_recall_ties_choose_largest_threshold",
+        "line": 444,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_choose_threshold_uses_explicit_above_max_sentinel",
+        "line": 459,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_choose_threshold_matches_exhaustive_policy",
+        "line": 469,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_choose_threshold_rejects_invalid_inputs",
+        "line": 489,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_choose_threshold_requires_benign_validation_rows",
+        "line": 494,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_binary_metrics_names_average_precision_and_reports_fpr",
+        "line": 499,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_error_correlation_includes_common_error_contingency",
+        "line": 515,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_manifest_has_source_provenance_hashes_and_isolated_roles",
+        "line": 526,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_fit_only_vocabulary_no_refit_no_reference_scoring_and_one_test_score",
+        "line": 556,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_frozen_test_metrics_and_both_cohorts_match_scorer",
+        "line": 586,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_model_settings_are_pinned",
+        "line": 605,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_convergence_warning_is_fatal",
+        "line": 622,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_refuses_nonempty_output_without_modifying_it",
+        "line": 632,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_scorer_empty_input_performs_no_inference",
+        "line": 645,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_scorer_normalization_zero_features_and_inclusive_decision",
+        "line": 656,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_scorer_rejects_corruption_before_any_joblib_load",
+        "line": 676,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_scorer_rejects_sklearn_mismatch_before_joblib_load",
+        "line": 688,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_scorer_rejects_invalid_metadata_before_joblib_load",
+        "line": 703,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_command_records_external_thread_limits",
+        "line": 720,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "test_cli_uses_env_and_existing_empty_output_without_prompt_logging",
+        "line": 730,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "record_fit",
+        "line": 122,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "record_transform",
+        "line": 126,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "record_score",
+        "line": 130,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "NonConvergingClassifier",
+        "line": 623,
+        "kind": "ClassDef"
+      },
+      {
+        "name": "unexpected",
+        "line": 648,
+        "kind": "FunctionDef"
+      },
+      {
+        "name": "fit",
+        "line": 624,
+        "kind": "FunctionDef"
+      }
+    ]
+  }
+]

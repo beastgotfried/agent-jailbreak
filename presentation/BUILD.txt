@@ -1,0 +1,18 @@
+VEYRA PRESENTATION SOURCE
+
+The source includes the ten-slide content, voiceover, chart tables, diagrams, and export scripts.
+The tables contain aggregate results and numeric score traces, not request text.
+The evidence refers to the frozen original studies. A brand change does not create a new effectiveness trial.
+
+Use Python with matplotlib, Pillow, python-pptx, Markdown, ReportLab, and pypdf.
+Run from this directory:
+
+python3 build_visuals.py
+python3 render_document.py
+python3 build_pptx.py
+
+Export Veyra-IBM-Z-Datathon.pptx to PDF with PowerPoint or LibreOffice.
+The IBM Plex font license appears in assets/FONT-LICENSE.txt.
+
+The original private source snapshots and study archives keep their historical names and hashes.
+The public source retains selected aggregate evidence only.

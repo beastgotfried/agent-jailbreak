@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1152pt" height="648pt" viewBox="0 0 1152 648" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-18T07:19:31.120414</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.9.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 648 
+L 1152 648 
+L 1152 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 69.12 366.5088 
+L 829.44 366.5088 
+L 829.44 268.5312 
+L 69.12 268.5312 
+z
+" clip-path="url(#p29c9a1838c)" style="fill: #0f62fe"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 829.44 366.5088 
+L 913.92 366.5088 
+L 913.92 268.5312 
+L 829.44 268.5312 
+z
+" clip-path="url(#p29c9a1838c)" style="fill: #007d79"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 913.92 366.5088 
+L 1082.88 366.5088 
+L 1082.88 268.5312 
+L 913.92 268.5312 
+z
+" clip-path="url(#p29c9a1838c)" style="fill: #e0e0e0"/>
+   </g>
+   <g id="text_1">
+    <text style="fill: #ffffff; font: 600 22px 'IBM Plex Sans'" transform="translate(436.08 311.492)">45</text>
+    <text style="fill: #ffffff; font: 600 22px 'IBM Plex Sans'" transform="translate(402.980312 335.428)">Restored</text>
+   </g>
+   <g id="text_2">
+    <text style="fill: #ffffff; font: 600 17px 'IBM Plex Sans'" transform="translate(866.58 312.862)">5</text>
+    <text style="fill: #ffffff; font: 600 17px 'IBM Plex Sans'" transform="translate(853.225703 331.358)">Held</text>
+   </g>
+   <g id="text_3">
+    <text style="fill: #161616; font: 600 22px 'IBM Plex Sans'" transform="translate(985.2 311.492)">10</text>
+    <text style="fill: #161616; font: 600 22px 'IBM Plex Sans'" transform="translate(955.322969 335.428)">Controls</text>
+   </g>
+  </g>
+  <g id="text_4">
+   <text style="fill: #161616; font: 600 29px 'IBM Plex Sans'; text-anchor: start" x="63.36" y="56.43" transform="rotate(-0 63.36 56.43)">Confirm. Restore. Contain.</text>
+  </g>
+  <g id="text_5">
+   <text style="fill: #525252; font: 14px 'IBM Plex Sans'; text-anchor: start" x="63.36" y="84.78" transform="rotate(-0 63.36 84.78)">Selected native runtime experiment · 50 fault episodes and 10 no-fault controls</text>
+  </g>
+  <g id="text_6">
+   <text style="fill: #0f62fe; font: 600 47px 'IBM Plex Sans'; text-anchor: start" x="97.92" y="171.72" transform="rotate(-0 97.92 171.72)">55 / 55</text>
+  </g>
+  <g id="text_7">
+   <text style="fill: #161616; font: 15px 'IBM Plex Sans'; text-anchor: start" x="97.92" y="204.12" transform="rotate(-0 97.92 204.12)">Injected runtime incidents confirmed</text>
+  </g>
+  <g id="text_8">
+   <text style="fill: #007d79; font: 600 47px 'IBM Plex Sans'; text-anchor: start" x="633.6" y="171.72" transform="rotate(-0 633.6 171.72)">0 / 10</text>
+  </g>
+  <g id="text_9">
+   <text style="fill: #161616; font: 15px 'IBM Plex Sans'; text-anchor: start" x="633.6" y="204.12" transform="rotate(-0 633.6 204.12)">No-fault episodes with false confirmations</text>
+  </g>
+  <g id="text_10">
+   <text style="fill: #161616; font: 600 23px 'IBM Plex Sans'; text-anchor: start" x="86.4" y="476.28" transform="rotate(-0 86.4 476.28)">15 request positions</text>
+  </g>
+  <g id="text_11">
+   <text style="fill: #525252; font: 14px 'IBM Plex Sans'; text-anchor: start" x="86.4" y="505.44" transform="rotate(-0 86.4 505.44)">Confirmation delay at the tested fault onsets</text>
+  </g>
+  <g id="text_12">
+   <text style="fill: #525252; font: 13px 'IBM Plex Sans'; text-anchor: start" x="86.4" y="563.76" transform="rotate(-0 86.4 563.76)">Five recurrent-fault episodes contain two incidents each. Holds remain distinct from restored service.</text>
+  </g>
+  <g id="text_13">
+   <text style="fill: #525252; font: 12px 'IBM Plex Sans'; text-anchor: start" x="86.4" y="592.92" transform="rotate(-0 86.4 592.92)">Finite controlled suite. These results do not estimate a production-wide detection or false-alarm rate.</text>
+  </g>
+  <g id="text_14">
+   <text style="fill: #6f6f6f; font: 10px 'IBM Plex Sans'; text-anchor: start" x="86.4" y="628.56" transform="rotate(-0 86.4 628.56)">Source: synthetic-100k-20261017-01 / independent-audit.json and benchmark-report.json</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p29c9a1838c">
+   <rect x="69.12" y="226.8" width="1013.76" height="181.44"/>
+  </clipPath>
+ </defs>
+</svg>

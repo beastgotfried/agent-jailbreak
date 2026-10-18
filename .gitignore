@@ -9,17 +9,49 @@
 # Data and models (live on the VM)
 data/raw/
 data/pools/
-models/
+/models/
 results/
 logs/
 cache/
+/artifacts/
+/private/
+/release-bundles/
+*.joblib
+*.npz
+*.safetensors
+*.pkl
+*.pickle
+*.pt
+*.jsonl
+*.csv
+# Public chart tables contain only aggregate results and score traces, never request text.
+!presentation/tables/*.csv
+*.parquet
+catalog*.json
+*model-cards*.json
+*freeze-manifest*.json
+*.tar
+*.tar.gz
+*.zip
+*.whl
 
 # Python
 .venv/
 .venv-*/
 __pycache__/
 *.pyc
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.pi/
 .ipynb_checkpoints/
+
+# Web dependencies and deployment state
+node_modules/
+.next/
+.vercel/
+.vercel.env*
 
 # OS
 .DS_Store
