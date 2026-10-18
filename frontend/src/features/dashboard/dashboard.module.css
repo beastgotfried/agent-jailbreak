@@ -90,6 +90,12 @@
 @media (max-width: 1100px) { .workspace { padding-right: 20px; padding-left: 20px; } .primaryGrid { grid-template-columns: minmax(0, 1.15fr) minmax(300px, .9fr); } .panel { padding: 16px; } }
 @media (max-width: 760px) { .appShell { padding: 10px; } .workspace { min-height: calc(100vh - 20px); padding: 0 14px 18px; border-radius: 17px; } .content { padding-top: 22px; } .pageIntro { align-items: flex-start; flex-direction: column; gap: 14px; } .reportMeta { flex-wrap: wrap; } .releaseNotice { flex-direction: column; gap: 4px; } .primaryGrid, .secondaryGrid { grid-template-columns: minmax(0, 1fr); } .metricGrid { gap: 8px; } .panel { padding: 16px; } }
 @media (max-width: 480px) { .workspace { padding-right: 11px; padding-left: 11px; } .metricGrid { grid-template-columns: 1fr; } .metricCard { min-height: 100px; } .metricValue { font-size: 26px; } .panelHeading { flex-direction: column; } .regressionModels { grid-template-columns: minmax(0, 1fr); } .provenanceList div { grid-template-columns: minmax(82px, .7fr) minmax(0, 1.3fr); gap: 8px; } .footerNote { align-items: flex-start; flex-direction: column; } }
+/* Keep small evidence labels readable on pale surfaces. */
+.metricPlain p, .panel .eyebrow, .panelHeading p, .outcomeLegend,
+.outcomeFootnote, .holdNote span, .regressionFootnote,
+.provenanceList dt, .privateArtifactNote { color: #666666; }
+.outcomeHeading span, .recoveryHeadline > strong span,
+.overline span, .metricPlain .metricEmpty { color: #666666; }
 /* Keep the primary bento cards aligned and reveal detailed evidence on demand. */
 .primaryGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
 .primaryGrid > .panel { min-height: 360px; }

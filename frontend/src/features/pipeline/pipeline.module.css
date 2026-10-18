@@ -23,7 +23,7 @@
 .nodeEyebrow { display: block; margin-bottom: 11px; color: #929791; font-size: 7px; font-weight: 700; letter-spacing: .11em; }
 .nodeBody p { margin: 11px 0 0; color: #b6bab5; font-size: 9px; line-height: 1.55; }
 .nodeInput { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 36px; margin-top: 13px; padding: 0 11px; border-radius: 10px; background: #191b1a; color: #b9bdb8; font-size: 8px; }
-.nodeInput span { color: #737973; font-size: 12px; }
+.nodeInput span { color: #9ca19a; font-size: 12px; }
 .nodeLabel { position: absolute; right: 12px; bottom: -13px; padding: 5px 10px; border-radius: 8px; background: #d7dfd3; color: #263026; font-size: 7px; font-weight: 650; }
 .nodeLabel.green { background: #b3e2bd; }
 .nodeLabel.yellow { background: #e8e27a; }

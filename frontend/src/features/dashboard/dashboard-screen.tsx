@@ -15,7 +15,7 @@ export function DashboardScreen() {
     <div className={styles.appShell} id="overview">
       <div className={styles.workspace}>
         <WorkspaceHeader activePage="dashboard" />
-        <main className={styles.content}>
+        <main className={styles.content} id="main-content" tabIndex={-1}>
           <section className={styles.pageIntro}>
             <div>
               <div className={styles.overline}>VEYRA <span>·</span> RELEASE EVIDENCE</div>

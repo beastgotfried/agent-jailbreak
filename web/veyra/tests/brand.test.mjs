@@ -40,3 +40,19 @@ test('smooth scroll retains its reduced-motion alternative', () => {
   assert.match(css, /prefers-reduced-motion: reduce/)
   assert.match(css, /scroll-behavior: auto/)
 })
+
+test('static evidence supports keyboard access and stable image layout', () => {
+  const app = read('src/App.jsx')
+  const css = read('src/styles.css')
+  assert.match(app, /className="skip-link" href="#main-content"/)
+  assert.match(app, /<main id="main-content" tabIndex=\{-1\}/)
+  assert.match(app, /aria-label="Complete-stream benchmark comparison" tabIndex=\{0\}/)
+  assert.doesNotMatch(app, /<h[45]>/)
+  assert.doesNotMatch(css, /transition:\s*all\b/)
+  assert.match(css, /:focus-visible/)
+  for (const image of app.matchAll(/<img\b[^>]+>/g)) {
+    assert.match(image[0], /width=\{/)
+    assert.match(image[0], /height=\{/)
+    assert.match(image[0], /alt=/)
+  }
+})

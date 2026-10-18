@@ -16,14 +16,14 @@ function FlowNode({ className, eyebrow, title, status, label, children, input }:
 
 export function PipelineScreen() {
   return (
-    <main className={styles.page}>
+    <main className={styles.page} id="main-content" tabIndex={-1}>
       <WorkspaceHeader activePage="pipeline" />
       <section className={styles.workspace} aria-label="Safety monitoring pipeline diagram">
         <div className={styles.canvasTopline}>
           <div><span className={styles.canvasEyebrow}>WORKFLOW CANVAS / RELEASE IMPLEMENTATION</span><h1>Guardrail integrity flow</h1></div>
           <span className={styles.canvasState}><i />Offline replay · read only</span>
         </div>
-        <div className={styles.canvasScroll}>
+        <div className={styles.canvasScroll} role="region" aria-label="Scrollable pipeline diagram" tabIndex={0}>
           <div className={styles.canvas}>
             <svg className={styles.connections} viewBox="0 0 1480 720" preserveAspectRatio="none" aria-hidden="true">
               <path d="M322 277 C380 277 305 75 355 75" /><path d="M322 277 C390 277 304 381 355 381" />

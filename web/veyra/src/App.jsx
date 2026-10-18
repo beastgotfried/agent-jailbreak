@@ -65,7 +65,7 @@ function Hero() {
           </div>
           <figure className="hero-card reveal">
             <figcaption className="card-label">Recorded native replay — fault → confirm → verified recovery</figcaption>
-            <img src="./visuals/runtime-trace.svg" alt="Score error over 512 requests: guardrail-only stays elevated after a fault at request 128; Veyra returns to baseline after verified recovery at request 175." />
+            <img src="./visuals/runtime-trace.svg" width={809} height={253} fetchPriority="high" decoding="async" alt="Score error over 512 requests: guardrail-only stays elevated after a fault at request 128; Veyra returns to baseline after verified recovery at request 175." />
           </figure>
         </div>
         <div className="hero-stats reveal">
@@ -111,8 +111,8 @@ function Problem() {
           </div>
           <ul className="problem-list reveal">
             <li>A lower score can mean a safer request — or a changed scoring path. One number cannot tell you which.</li>
-            <li>Guardrails sit on the trust boundary, but almost nothing watches the guardrail itself.</li>
-            <li>By the time labels arrive, the changed behavior has already made thousands of decisions.</li>
+            <li>A score alone does not confirm that the runtime still matches the approved baseline.</li>
+            <li>Labels can arrive after the system makes affected decisions.</li>
           </ul>
         </div>
       </div>
@@ -180,13 +180,13 @@ function Benchmarks() {
           </div>
         </div>
         <figure className="fig reveal">
-          <img src="./visuals/stream-outcomes.svg" alt="Three bar comparisons: correct automatic decisions 75.64 versus 81.69 percent; harmful allow rate 29.91 versus 3.76 percent; safe refusal rate 18.44 versus 22.47 percent." />
+          <img src="./visuals/stream-outcomes.svg" width={949} height={166} loading="lazy" decoding="async" alt="Three bar comparisons: correct automatic decisions 75.64 versus 81.69 percent; harmful allow rate 29.91 versus 3.76 percent; safe refusal rate 18.44 versus 22.47 percent." />
           <figcaption>fig. 01 — complete-stream outcomes · guardrail only vs Veyra · 60 paired episodes</figcaption>
         </figure>
-        <div className="bench-wrap reveal">
+        <div className="bench-wrap reveal" role="region" aria-label="Complete-stream benchmark comparison" tabIndex={0}>
           <table className="bench-table">
             <thead>
-              <tr><th>Metric</th><th className="num">Guardrail only</th><th className="num">Veyra</th></tr>
+              <tr><th scope="col">Metric</th><th className="num" scope="col">Guardrail only</th><th className="num" scope="col">Veyra</th></tr>
             </thead>
             <tbody>
               {rows.map(([label, a, b, good]) => (
@@ -200,7 +200,7 @@ function Benchmarks() {
           </table>
         </div>
         <figure className="fig reveal">
-          <img src="./visuals/response-outcomes.svg" alt="Fifty fault episodes: 45 restored, 5 held; plus 10 no-fault control episodes with zero false confirmations." />
+          <img src="./visuals/response-outcomes.svg" width={882} height={139} loading="lazy" decoding="async" alt="Fifty fault episodes: 45 restored, 5 held; plus 10 no-fault control episodes with zero false confirmations." />
           <figcaption>fig. 02 — {detection.confirmed}/55 runtime incidents confirmed · 45 restored · 5 held · {detection.controlFalseConfirmations}/{detection.controlEpisodes} false confirmations in controls</figcaption>
         </figure>
       </div>
@@ -217,11 +217,11 @@ function Recovery() {
           A candidate becomes active only after it executes on real verification probes and matches the approved baseline — twice.
         </p>
         <div className="flow reveal">
-          <div className="flow-step"><span className="idx">128</span><h4>Fault begins</h4><p>A runtime change alters guardrail output mid-stream.</p></div>
-          <div className="flow-step"><span className="idx">143</span><h4>Probes confirm</h4><p>Eight matched probes detect the change in 15 requests.</p></div>
-          <div className="flow-step"><span className="idx">175</span><h4>Candidate executes</h4><p>The fix runs on 128 disjoint verification probes.</p></div>
-          <div className="flow-step"><span className="idx">→</span><h4>Verified activation</h4><p>Both models match the baseline. The plan activates once, approval-bound.</p></div>
-          <div className="flow-step hold"><span className="idx">else</span><h4>Explicit hold</h4><p>Nothing verified? Service holds. Never a silent pass.</p></div>
+          <div className="flow-step"><span className="idx">128</span><h3>Fault begins</h3><p>A runtime change alters guardrail output mid-stream.</p></div>
+          <div className="flow-step"><span className="idx">143</span><h3>Probes confirm</h3><p>Eight matched probes detect the change in 15 requests.</p></div>
+          <div className="flow-step"><span className="idx">175</span><h3>Candidate executes</h3><p>The fix runs on 128 disjoint verification probes.</p></div>
+          <div className="flow-step"><span className="idx">→</span><h3>Verified activation</h3><p>Both models match the baseline. The plan activates once, approval-bound.</p></div>
+          <div className="flow-step hold"><span className="idx">else</span><h3>Explicit hold</h3><p>Nothing verified? Service holds. Never a silent pass.</p></div>
         </div>
         <div className="terminal reveal" aria-label="Native LinuxONE verification terminal">
           <div><span className="p">$</span> uname -m <span className="dim"># on IBM LinuxONE</span></div>
@@ -255,7 +255,7 @@ function LinuxOne() {
           <ul className="z-list reveal">
             <li><span className="tick">✓</span><div><strong>Big-endian s390x, end to end</strong><span>Data generation, model fit, inference, recovery, and audit run on the same native architecture.</span></div></li>
             <li><span className="tick">✓</span><div><strong>Reproduced with the network off</strong><span>A fresh container with networking disabled regenerated 100,000 rows and matched every score, decision, and metric.</span></div></li>
-            <li><span className="tick">✓</span><div><strong>Private by construction</strong><span>Model artifacts and request data never leave the execution environment. No external API calls in the pipeline.</span></div></li>
+            <li><span className="tick">✓</span><div><strong>Local model inference</strong><span>The selected pipeline needs no external model API. Raw requests and model binaries stay outside public Git.</span></div></li>
             <li><span className="tick">✓</span><div><strong>Evidence you can re-run</strong><span>SHA-256 manifests bind every artifact. The audit recomputes all 30,720 events independently.</span></div></li>
           </ul>
         </div>
@@ -309,7 +309,7 @@ function Datasets() {
           The selected models train on our controlled synthetic study. External sources are pinned, hashed, and used only for their declared purpose.
         </p>
         <figure className="fig reveal">
-          <img src="./visuals/data-split.svg" alt="100,000 synthetic rows split into 70,000 train, 10,000 validation, and 20,000 test, class-balanced." />
+          <img src="./visuals/data-split.svg" width={882} height={125} loading="lazy" decoding="async" alt="100,000 synthetic rows split into 70,000 train, 10,000 validation, and 20,000 test, class-balanced." />
           <figcaption>fig. 03 — {dataset.total.toLocaleString()} rows · {dataset.families} template families · {dataset.groups} reviewed intent groups · zero cross-split overlap</figcaption>
         </figure>
         <div className="ds-grid reveal">
@@ -337,13 +337,13 @@ function Footer() {
           </div>
           <div className="foot-links">
             <div>
-              <h5>Project</h5>
+              <h3>Project</h3>
               <a href="#product">Product</a>
               <a href="#benchmarks">Benchmarks</a>
               <a href="#linuxone">LinuxONE</a>
             </div>
             <div>
-              <h5>Code</h5>
+              <h3>Code</h3>
               <a href={RELEASE_URL} target="_blank" rel="noreferrer">Release branch ↗</a>
               <a href="https://github.com/beastgotfried/agent-jailbreak" target="_blank" rel="noreferrer">Repository ↗</a>
             </div>
@@ -367,8 +367,9 @@ export default function App() {
   }, [])
   return (
     <>
+      <a className="skip-link" href="#main-content">Skip to content</a>
       <Nav />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <Hero />
         <Problem />
         <Product />
